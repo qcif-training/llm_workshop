@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Installing and checking Python packages – Fundamentals of Regression</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a35d343c8bdbcb87d3b82ed68e48a46c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_introduction_llm.html">Intro</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00_setup_guide.md" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_introduction_llm.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Intro</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./notebooks.zip" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">📦 Download All Notebooks</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction-to-large-language-models-llms-for-research" id="toc-introduction-to-large-language-models-llms-for-research" class="nav-link active" data-scroll-target="#introduction-to-large-language-models-llms-for-research">Introduction to Large Language Models (LLMs) for Research</a>
+  <ul class="collapse">
+  <li><a href="#background-very-briefly" id="toc-background-very-briefly" class="nav-link" data-scroll-target="#background-very-briefly">Background (very briefly)</a></li>
+  <li><a href="#environment-setup" id="toc-environment-setup" class="nav-link" data-scroll-target="#environment-setup">1) Environment Setup</a></li>
+  <li><a href="#configure-api-connection-groq" id="toc-configure-api-connection-groq" class="nav-link" data-scroll-target="#configure-api-connection-groq">2) Configure API Connection (Groq)</a></li>
+  <li><a href="#first-llm-call-hello-llm-llama-3-70b" id="toc-first-llm-call-hello-llm-llama-3-70b" class="nav-link" data-scroll-target="#first-llm-call-hello-llm-llama-3-70b">3) First LLM Call — “Hello LLM” (Llama-3 70B)</a>
+  <ul class="collapse">
+  <li><a href="#examining-the-response-object" id="toc-examining-the-response-object" class="nav-link" data-scroll-target="#examining-the-response-object">Examining the response object</a></li>
+  </ul></li>
+  <li><a href="#understanding-temperature" id="toc-understanding-temperature" class="nav-link" data-scroll-target="#understanding-temperature">4) Understanding <code>temperature</code></a></li>
+  <li><a href="#continuous-conversation-keeping-history" id="toc-continuous-conversation-keeping-history" class="nav-link" data-scroll-target="#continuous-conversation-keeping-history">5) Continuous Conversation (Keeping History)</a></li>
+  <li><a href="#exercise-your-first-prompt" id="toc-exercise-your-first-prompt" class="nav-link" data-scroll-target="#exercise-your-first-prompt">8) Exercise — Your First Prompt</a></li>
+  <li><a href="#wrap-up-next-steps" id="toc-wrap-up-next-steps" class="nav-link" data-scroll-target="#wrap-up-next-steps">9) Wrap-Up &amp; Next Steps</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/01_introduction_llm.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Installing and checking Python packages</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="716fd2b6" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># !pip install numpy pandas matplotlib openai rank-bm25 requests </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="ec16994e" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># !pip list | findstr "numpy pandas matplotlib openai rank-bm25 requests"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="introduction-to-large-language-models-llms-for-research" class="level1">
+<h1>Introduction to Large Language Models (LLMs) for Research</h1>
+<p>This notebook is the first module of a 4-hour workshop on using Large Language Models (LLMs) in research workflows. It focuses on:</p>
+<ul>
+<li>Setting up access to an LLM via the <strong>Groq</strong> API using the <strong>OpenAI-compatible</strong> Python client.</li>
+<li>Running your <strong>first query</strong> and understanding the request/response structure.</li>
+<li>Exploring the notion of <strong>temperature</strong> (randomness) in generation.</li>
+<li>Creating a <strong>continuous conversation</strong> by keeping your own chat history.</li>
+</ul>
+<p>We adopt a <strong>text-only</strong> approach (no image/graph understanding) to ensure minimal setup and maximum reproducibility.</p>
+<p>By the end of this notebook, you will be able to: 1. Configure a connection to the Groq API. 2. Send chat messages with the OpenAI-compatible client. 3. Control generation behaviour via <code>temperature</code>. 4. Maintain and reuse chat history for a continuing conversation.</p>
+<section id="background-very-briefly" class="level2">
+<h2 class="anchored" data-anchor-id="background-very-briefly">Background (very briefly)</h2>
+<p>An LLM is a probabilistic model over text. Given a sequence of tokens <span class="math inline">\(x_{1:t}\)</span>, it assigns probabilities to the next token <span class="math inline">\(x_{t+1}\)</span>. At inference, models sample from a distribution such as <span class="math display">\[p(x_{t+1}=i\mid x_{1:t}) = \mathrm{softmax}\!\left(\frac{z_i}{T}\right),\]</span> where <span class="math inline">\(z_i\)</span> is the logit for token <span class="math inline">\(i\)</span> and <span class="math inline">\(T&gt;0\)</span> is the <strong>temperature</strong>. Lower <span class="math inline">\(T\)</span> concentrates probability mass on high-logit tokens (more deterministic), while higher <span class="math inline">\(T\)</span> spreads it out (more diverse). We will <strong>demonstrate</strong> this behaviour below.</p>
+</section>
+<section id="environment-setup" class="level2">
+<h2 class="anchored" data-anchor-id="environment-setup">1) Environment Setup</h2>
+<p>This section prepares the Python environment. On QCIF’s HPC JupyterLab image, the required package (<code>openai</code>) should already be installed. If you’re running elsewhere and encounter an <code>ImportError</code>, uncomment the <code>%pip install</code> line.</p>
+<p><strong>What this cell does:</strong> - (Optionally) installs the OpenAI Python client. - Imports the required modules. - Does <strong>not</strong> make any external calls yet.</p>
+<div id="22dcf842" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># If running outside the provided environment, uncomment the next line:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># %pip install openai</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai <span class="im">import</span> OpenAI</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="configure-api-connection-groq" class="level2">
+<h2 class="anchored" data-anchor-id="configure-api-connection-groq">2) Configure API Connection (Groq)</h2>
+<p>LLM APIs are <strong>stateless</strong> web services. We’ll configure a client that speaks the OpenAI-compatible protocol, pointing it to Groq’s base URL.</p>
+<p><strong>What you’ll do in this cell:</strong> 1. Paste your Groq API key (created at <a href="https://console.groq.com" class="uri">https://console.groq.com</a>). 2. Set the base URL for Groq’s OpenAI-compatible endpoint. 3. Instantiate the client.</p>
+<p><strong>Notes:</strong> - Keep your API key private. In shared workshops, you can paste it, run this cell, and then clear the visible text. - You can also store keys in environment variables or use a <code>.env</code> file if preferred.</p>
+<div id="351a8f5e" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste your Groq API key below (between quotes). </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note this is not a secure way of entering API key because it is visible to everyone that sees your notebook.  </span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"GROQ_API_KEY"</span>] <span class="op">=</span> <span class="st">""</span>  <span class="co"># &lt;-- replace with your key.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="98b3a825" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="st">"llama-3.3-70b-versatile"</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Groq uses an OpenAI-compatible API surface; we just change the base URL.</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"BASE_URL"</span>] <span class="op">=</span> <span class="st">"https://api.groq.com/openai/v1"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the client</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span>os.environ[<span class="st">"GROQ_API_KEY"</span>],</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span>os.environ[<span class="st">"BASE_URL"</span>],</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Groq client initialized!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Groq client initialized!</code></pre>
+</div>
+</div>
+</section>
+<section id="first-llm-call-hello-llm-llama-3-70b" class="level2">
+<h2 class="anchored" data-anchor-id="first-llm-call-hello-llm-llama-3-70b">3) First LLM Call — “Hello LLM” (Llama-3 70B)</h2>
+<p>Here we send a <strong>single-turn</strong> prompt with minimal scaffolding. The API expects a list of <code>messages</code>, where each message has a <code>role</code> and <code>content</code>.</p>
+<p><strong>Roles:</strong> - <code>system</code>: high-level instructions (tone, persona, formatting). - <code>user</code>: your question or instruction. - <code>assistant</code>: the model’s reply (the API returns this).</p>
+<p><strong>What this cell does:</strong> - Creates a tiny conversation with <code>system</code> and <code>user</code> messages. - Calls the model <code>llama3-70b-8192</code> for higher-quality outputs compared to 8B. - Prints the model’s reply.</p>
+<p>You can modify the user content and re-run to see different responses.</p>
+<div id="e46e8bde" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>messages <span class="op">=</span> [</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: <span class="st">"You are a helpful research assistant. Be concise."</span>},</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"Explain what a Large Language Model is in two sentences."</span>}</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span>model,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>messages,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    temperature<span class="op">=</span><span class="dv">0</span> <span class="co"># lower temperature -&gt; more deterministic</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.choices[<span class="dv">0</span>].message.content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, generating human-like text based on the input it receives. LLMs are trained on vast amounts of text data, allowing them to learn patterns and relationships in language, and can be used for tasks such as language translation, text summarization, and conversation generation.</code></pre>
+</div>
+</div>
+<section id="examining-the-response-object" class="level3">
+<h3 class="anchored" data-anchor-id="examining-the-response-object">Examining the response object</h3>
+<div id="f44e07e3" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="bu">str</span> <span class="kw">in</span> response:</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="bu">str</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>('id', 'chatcmpl-60e9c394-acc3-4abb-b0e8-a0f03fdf247a')
+('choices', [Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, generating human-like text based on the input it receives. LLMs are trained on vast amounts of text data, allowing them to learn patterns and relationships in language, and can be used for tasks such as language translation, text summarization, and conversation generation.', refusal=None, role='assistant', annotations=None, audio=None, function_call=None, tool_calls=None))])
+('created', 1761253879)
+('model', 'llama-3.3-70b-versatile')
+('object', 'chat.completion')
+('service_tier', 'on_demand')
+('system_fingerprint', 'fp_4cfc2deea6')
+('usage', CompletionUsage(completion_tokens=78, prompt_tokens=57, total_tokens=135, completion_tokens_details=None, prompt_tokens_details=None, queue_time=0.17950201, prompt_time=0.004199205, completion_time=0.156019343, total_time=0.160218548))
+('usage_breakdown', None)
+('x_groq', {'id': 'req_01k89ejtxpegtvrr9b9v8ep3s6'})</code></pre>
+</div>
+</div>
+<div id="431ae070" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>response.choices[<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, generating human-like text based on the input it receives. LLMs are trained on vast amounts of text data, allowing them to learn patterns and relationships in language, and can be used for tasks such as language translation, text summarization, and conversation generation.', refusal=None, role='assistant', annotations=None, audio=None, function_call=None, tool_calls=None))</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="understanding-temperature" class="level2">
+<h2 class="anchored" data-anchor-id="understanding-temperature">4) Understanding <code>temperature</code></h2>
+<p>The <strong>temperature</strong> parameter adjusts the <strong>randomness</strong> of token sampling. Intuitively, the model produces a probability distribution over possible next tokens from its logits <span class="math inline">\(z\)</span>. The temperature rescales those logits:</p>
+<p><span class="math display">\[p_i = \mathrm{softmax}\!\left(\frac{z_i}{T}\right) = \frac{\exp(z_i/T)}{\sum_j \exp(z_j/T)}.\]</span></p>
+<ul>
+<li>Lower <span class="math inline">\(T\)</span> (e.g.&nbsp;<span class="math inline">\(T=0.2\)</span>): the distribution is <em>sharper</em> around high-probability tokens, yielding more <strong>stable</strong> outputs.</li>
+<li>Higher <span class="math inline">\(T\)</span> (e.g.&nbsp;<span class="math inline">\(T=0.8\)</span>): the distribution is <em>flatter</em>, encouraging <strong>diversity</strong> and sometimes creativity.</li>
+</ul>
+<p><strong>What this cell does:</strong> - Sends the <em>same</em> prompt twice, once with <code>temperature=0.2</code> and once with <code>temperature=0.8</code>. - Prints both answers so you can compare tone and variability.</p>
+<div id="a871a61b" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="st">"Describe the role of LLMs in academic research in one sentence."</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> temp <span class="kw">in</span> [<span class="fl">0.2</span>, <span class="fl">0.8</span>]:</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Temperature:"</span>, temp)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>            model<span class="op">=</span>model,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>            messages<span class="op">=</span>messages,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>            temperature<span class="op">=</span><span class="dv">0</span> <span class="co"># lower temperature -&gt; more deterministic</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(response.choices[<span class="dv">0</span>].message.content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Temperature: 0.2
+A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate human-like text, answer questions, and even engage in conversation, making them a powerful tool for various applications such as language translation, text summarization, and chatbots.
+A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate human-like text, answer questions, and even engage in conversation, making them a powerful tool for various applications such as language translation, text summarization, and chatbots.
+A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate coherent and contextually relevant text, answer questions, and even engage in conversation, mimicking human-like language abilities.
+A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate human-like text, answer questions, and even engage in conversation, making them a powerful tool for various applications such as language translation, text summarization, and chatbots.
+A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate human-like text, answer questions, and even engage in conversation, making them a powerful tool for various applications such as language translation, text summarization, and chatbots.
+Temperature: 0.8
+A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate human-like text, answer questions, and even engage in conversation, making them a powerful tool for various applications such as language translation, text summarization, and chatbots.
+A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate human-like text, answer questions, and even engage in conversation, making them a powerful tool for various applications such as language translation, text summarization, and chatbots.
+A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate human-like text, answer questions, and even engage in conversation, making them a powerful tool for various applications such as language translation, text summarization, and chatbots.
+A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate human-like text, answer questions, and even converse with users, making them a powerful tool for various applications, including language translation, text summarization, and chatbots.
+A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, generating text based on the patterns and structures it has learned from vast amounts of data. LLMs use complex algorithms and massive datasets to predict and create text, enabling applications such as language translation, text summarization, and conversational interfaces.</code></pre>
+</div>
+</div>
+</section>
+<section id="continuous-conversation-keeping-history" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-conversation-keeping-history">5) Continuous Conversation (Keeping History)</h2>
+<p>LLM APIs do <strong>not</strong> keep state between calls. To build a conversation, you keep a list of messages and send the <em>entire</em> recent history each time. We’ll implement a small helper that:</p>
+<ul>
+<li>Appends the user’s message to a global <code>chat_history</code> list.</li>
+<li>Calls the model with that history.</li>
+<li>Appends the assistant’s reply back into the history.</li>
+<li>Returns the latest reply for display.</li>
+</ul>
+<p>We also keep the temperature low for focused answers. For longer chats, you can cap history to the last <em>k</em> turns to control token usage.</p>
+<div id="bfd8bf51" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chat(user_input, temperature<span class="op">=</span><span class="fl">0.2</span>, max_turns<span class="op">=</span><span class="dv">8</span>):</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Send one user turn and get a reply, preserving context.</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">    - Keeps system prompt + last `max_turns` user/assistant messages.</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: user_input})</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Keep only the most recent `max_turns` pairs to control context size</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    system <span class="op">=</span> chat_history[:<span class="dv">1</span>]</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    recent <span class="op">=</span> chat_history[<span class="op">-</span>(max_turns<span class="op">*</span><span class="dv">2</span>):] <span class="cf">if</span> <span class="bu">len</span>(chat_history) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> []</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> system <span class="op">+</span> recent</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    resp <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>model,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>window,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>        temperature<span class="op">=</span>temperature,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    reply <span class="op">=</span> resp.choices[<span class="dv">0</span>].message.content</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: reply})</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> reply</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="1c533697" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>chat_history <span class="op">=</span> [</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: <span class="st">"Tailor your answers for a bioinformatician."</span>}</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>chat(<span class="st">"What is logistic regression?"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>chat(<span class="st">"How does it differ from linear regression?"</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ch <span class="kw">in</span> chat_history:</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(ch)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'role': 'system', 'content': 'Tailor your answers for a bioinformatician.'}
+{'role': 'user', 'content': 'What is logistic regression?'}
+{'role': 'assistant', 'content': '**Logistic Regression**\n=======================\n\nLogistic regression is a statistical method used for binary classification problems, where the goal is to predict a binary outcome (0/1, yes/no, etc.) based on one or more predictor variables. It is a widely used technique in bioinformatics, particularly in the analysis of high-throughput data, such as gene expression or genomic variation.\n\n**Mathematical Formulation**\n---------------------------\n\nLogistic regression models the probability of a positive outcome (e.g., disease presence) using a logistic function, also known as a sigmoid function. The logistic function maps any real-valued number to a value between 0 and 1, which represents the probability of the positive outcome.\n\nThe logistic regression model can be formulated as:\n\np = 1 / (1 + e^(-z))\n\nwhere:\n\n* p is the probability of the positive outcome\n* e is the base of the natural logarithm\n* z is a linear combination of the predictor variables, weighted by coefficients (β)\n\nz = β0 + β1 \\* x1 + β2 \\* x2 + … + βn \\* xn\n\nwhere:\n\n* β0 is the intercept or bias term\n* β1, β2, …, βn are the coefficients for each predictor variable\n* x1, x2, …, xn are the predictor variables\n\n**Interpretation of Coefficients**\n-------------------------------\n\nThe coefficients (β) in logistic regression represent the change in the log-odds of the positive outcome for a one-unit change in the predictor variable, while holding all other variables constant. The odds ratio (OR) can be calculated as e^β, which represents the multiplicative change in the odds of the positive outcome for a one-unit change in the predictor variable.\n\n**Common Applications in Bioinformatics**\n-----------------------------------------\n\n1. **Gene expression analysis**: Logistic regression can be used to identify genes associated with a specific disease or phenotype.\n2. **Genomic variation analysis**: Logistic regression can be used to identify genetic variants associated with a specific disease or trait.\n3. **Protein function prediction**: Logistic regression can be used to predict the function of a protein based on its sequence or structural features.\n4. **Classification of biological samples**: Logistic regression can be used to classify biological samples into different categories (e.g., cancer vs. normal tissue).\n\n**Example Code in Python**\n---------------------------\n\n```python\nimport pandas as pd\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\n\n# Load data\ndata = pd.read_csv("data.csv")\n\n# Split data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(data.drop("outcome", axis=1), data["outcome"], test_size=0.2, random_state=42)\n\n# Create logistic regression model\nmodel = LogisticRegression()\n\n# Train model\nmodel.fit(X_train, y_train)\n\n# Evaluate model\naccuracy = model.score(X_test, y_test)\nprint("Accuracy:", accuracy)\n```\n\nThis code snippet demonstrates how to use logistic regression to classify biological samples using the scikit-learn library in Python.'}
+{'role': 'user', 'content': 'How does it differ from linear regression?'}
+{'role': 'assistant', 'content': '**Differences between Logistic Regression and Linear Regression**\n===========================================================\n\nLogistic regression and linear regression are both supervised learning algorithms used for regression tasks. However, they differ in their approach, application, and interpretation.\n\n**1. Outcome Variable**\n----------------------\n\n* **Linear Regression**: The outcome variable is continuous, such as gene expression levels or protein concentrations.\n* **Logistic Regression**: The outcome variable is binary (0/1, yes/no, etc.), such as disease presence or absence.\n\n**2. Model Formulation**\n----------------------\n\n* **Linear Regression**: The model is formulated as a linear equation, where the outcome variable is a linear combination of the predictor variables.\n\t+ y = β0 + β1 \\* x1 + β2 \\* x2 + … + βn \\* xn\n* **Logistic Regression**: The model is formulated as a logistic function, where the probability of the positive outcome is a non-linear function of the predictor variables.\n\t+ p = 1 / (1 + e^(-z))\n\t+ z = β0 + β1 \\* x1 + β2 \\* x2 + … + βn \\* xn\n\n**3. Cost Function**\n-------------------\n\n* **Linear Regression**: The cost function is typically mean squared error (MSE) or mean absolute error (MAE).\n* **Logistic Regression**: The cost function is typically cross-entropy loss or log loss.\n\n**4. Interpretation of Coefficients**\n-----------------------------------\n\n* **Linear Regression**: The coefficients represent the change in the outcome variable for a one-unit change in the predictor variable.\n* **Logistic Regression**: The coefficients represent the change in the log-odds of the positive outcome for a one-unit change in the predictor variable.\n\n**5. Assumptions**\n-----------------\n\n* **Linear Regression**: Assumes linearity, independence, homoscedasticity, normality, and no multicollinearity.\n* **Logistic Regression**: Assumes independence, no multicollinearity, and a binary outcome variable.\n\n**Example Code in Python**\n---------------------------\n\n```python\nimport pandas as pd\nfrom sklearn.linear_model import LinearRegression, LogisticRegression\nfrom sklearn.model_selection import train_test_split\n\n# Load data\ndata = pd.read_csv("data.csv")\n\n# Split data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(data.drop("outcome", axis=1), data["outcome"], test_size=0.2, random_state=42)\n\n# Create linear regression model\nlinear_model = LinearRegression()\n\n# Train linear model\nlinear_model.fit(X_train, y_train)\n\n# Create logistic regression model\nlogistic_model = LogisticRegression()\n\n# Train logistic model\nlogistic_model.fit(X_train, (y_train &gt; 0).astype(int))\n\n# Evaluate models\nlinear_accuracy = linear_model.score(X_test, y_test)\nlogistic_accuracy = logistic_model.score(X_test, (y_test &gt; 0).astype(int))\nprint("Linear Regression Accuracy:", linear_accuracy)\nprint("Logistic Regression Accuracy:", logistic_accuracy)\n```\n\nThis code snippet demonstrates how to use both linear regression and logistic regression to model continuous and binary outcome variables, respectively, using the scikit-learn library in Python.\n\n**Choosing between Linear Regression and Logistic Regression**\n---------------------------------------------------------\n\n* Use linear regression when the outcome variable is continuous and the relationship between the predictor variables and the outcome variable is linear.\n* Use logistic regression when the outcome variable is binary and the relationship between the predictor variables and the outcome variable is non-linear.'}</code></pre>
+</div>
+</div>
+<div id="867fad61" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>chat(<span class="st">"what are some other classification methods?"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ch <span class="kw">in</span> chat_history:</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(ch)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'role': 'system', 'content': 'Tailor your answers for a bioinformatician.'}
+{'role': 'user', 'content': 'What is logistic regression?'}
+{'role': 'assistant', 'content': '**Logistic Regression**\n=======================\n\nLogistic regression is a statistical method used for binary classification problems, where the goal is to predict a binary outcome (0/1, yes/no, etc.) based on one or more predictor variables. It is a widely used technique in bioinformatics, particularly in the analysis of high-throughput data, such as gene expression or genomic variation.\n\n**Mathematical Formulation**\n---------------------------\n\nLogistic regression models the probability of a positive outcome (e.g., disease presence) using a logistic function, also known as a sigmoid function. The logistic function maps any real-valued number to a value between 0 and 1, which represents the probability of the positive outcome.\n\nThe logistic regression model can be formulated as:\n\np = 1 / (1 + e^(-z))\n\nwhere:\n\n* p is the probability of the positive outcome\n* e is the base of the natural logarithm\n* z is a linear combination of the predictor variables, weighted by coefficients (β)\n\nz = β0 + β1 \\* x1 + β2 \\* x2 + … + βn \\* xn\n\nwhere:\n\n* β0 is the intercept or bias term\n* β1, β2, …, βn are the coefficients for each predictor variable\n* x1, x2, …, xn are the predictor variables\n\n**Interpretation of Coefficients**\n-------------------------------\n\nThe coefficients (β) in logistic regression represent the change in the log-odds of the positive outcome for a one-unit change in the predictor variable, while holding all other variables constant. The odds ratio (OR) can be calculated as e^β, which represents the multiplicative change in the odds of the positive outcome for a one-unit change in the predictor variable.\n\n**Common Applications in Bioinformatics**\n-----------------------------------------\n\n1. **Gene expression analysis**: Logistic regression can be used to identify genes associated with a specific disease or phenotype.\n2. **Genomic variation analysis**: Logistic regression can be used to identify genetic variants associated with a specific disease or trait.\n3. **Protein function prediction**: Logistic regression can be used to predict the function of a protein based on its sequence or structural features.\n4. **Classification of biological samples**: Logistic regression can be used to classify biological samples into different categories (e.g., cancer vs. normal tissue).\n\n**Example Code in Python**\n---------------------------\n\n```python\nimport pandas as pd\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\n\n# Load data\ndata = pd.read_csv("data.csv")\n\n# Split data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(data.drop("outcome", axis=1), data["outcome"], test_size=0.2, random_state=42)\n\n# Create logistic regression model\nmodel = LogisticRegression()\n\n# Train model\nmodel.fit(X_train, y_train)\n\n# Evaluate model\naccuracy = model.score(X_test, y_test)\nprint("Accuracy:", accuracy)\n```\n\nThis code snippet demonstrates how to use logistic regression to classify biological samples using the scikit-learn library in Python.'}
+{'role': 'user', 'content': 'How does it differ from linear regression?'}
+{'role': 'assistant', 'content': '**Differences between Logistic Regression and Linear Regression**\n===========================================================\n\nLogistic regression and linear regression are both supervised learning algorithms used for regression tasks. However, they differ in their approach, application, and interpretation.\n\n**1. Outcome Variable**\n----------------------\n\n* **Linear Regression**: The outcome variable is continuous, such as gene expression levels or protein concentrations.\n* **Logistic Regression**: The outcome variable is binary (0/1, yes/no, etc.), such as disease presence or absence.\n\n**2. Model Formulation**\n----------------------\n\n* **Linear Regression**: The model is formulated as a linear equation, where the outcome variable is a linear combination of the predictor variables.\n\t+ y = β0 + β1 \\* x1 + β2 \\* x2 + … + βn \\* xn\n* **Logistic Regression**: The model is formulated as a logistic function, where the probability of the positive outcome is a non-linear function of the predictor variables.\n\t+ p = 1 / (1 + e^(-z))\n\t+ z = β0 + β1 \\* x1 + β2 \\* x2 + … + βn \\* xn\n\n**3. Cost Function**\n-------------------\n\n* **Linear Regression**: The cost function is typically mean squared error (MSE) or mean absolute error (MAE).\n* **Logistic Regression**: The cost function is typically cross-entropy loss or log loss.\n\n**4. Interpretation of Coefficients**\n-----------------------------------\n\n* **Linear Regression**: The coefficients represent the change in the outcome variable for a one-unit change in the predictor variable.\n* **Logistic Regression**: The coefficients represent the change in the log-odds of the positive outcome for a one-unit change in the predictor variable.\n\n**5. Assumptions**\n-----------------\n\n* **Linear Regression**: Assumes linearity, independence, homoscedasticity, normality, and no multicollinearity.\n* **Logistic Regression**: Assumes independence, no multicollinearity, and a binary outcome variable.\n\n**Example Code in Python**\n---------------------------\n\n```python\nimport pandas as pd\nfrom sklearn.linear_model import LinearRegression, LogisticRegression\nfrom sklearn.model_selection import train_test_split\n\n# Load data\ndata = pd.read_csv("data.csv")\n\n# Split data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(data.drop("outcome", axis=1), data["outcome"], test_size=0.2, random_state=42)\n\n# Create linear regression model\nlinear_model = LinearRegression()\n\n# Train linear model\nlinear_model.fit(X_train, y_train)\n\n# Create logistic regression model\nlogistic_model = LogisticRegression()\n\n# Train logistic model\nlogistic_model.fit(X_train, (y_train &gt; 0).astype(int))\n\n# Evaluate models\nlinear_accuracy = linear_model.score(X_test, y_test)\nlogistic_accuracy = logistic_model.score(X_test, (y_test &gt; 0).astype(int))\nprint("Linear Regression Accuracy:", linear_accuracy)\nprint("Logistic Regression Accuracy:", logistic_accuracy)\n```\n\nThis code snippet demonstrates how to use both linear regression and logistic regression to model continuous and binary outcome variables, respectively, using the scikit-learn library in Python.\n\n**Choosing between Linear Regression and Logistic Regression**\n---------------------------------------------------------\n\n* Use linear regression when the outcome variable is continuous and the relationship between the predictor variables and the outcome variable is linear.\n* Use logistic regression when the outcome variable is binary and the relationship between the predictor variables and the outcome variable is non-linear.'}
+{'role': 'user', 'content': 'what are some other classification methods?'}
+{'role': 'assistant', 'content': '**Other Classification Methods**\n=============================\n\nBesides logistic regression, there are several other classification methods used in bioinformatics and machine learning. Here are some of the most common ones:\n\n### 1. **Decision Trees**\n\n* **Description**: Decision trees are a type of supervised learning algorithm that uses a tree-like model to classify data.\n* **Application**: Decision trees are useful for handling categorical data and can be used for both classification and regression tasks.\n* **Example Code in Python**:\n```python\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.model_selection import train_test_split\n\n# Load data\ndata = pd.read_csv("data.csv")\n\n# Split data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(data.drop("outcome", axis=1), data["outcome"], test_size=0.2, random_state=42)\n\n# Create decision tree model\nmodel = DecisionTreeClassifier()\n\n# Train model\nmodel.fit(X_train, y_train)\n\n# Evaluate model\naccuracy = model.score(X_test, y_test)\nprint("Accuracy:", accuracy)\n```\n\n### 2. **Random Forests**\n\n* **Description**: Random forests are an ensemble learning method that combines multiple decision trees to improve the accuracy and robustness of the model.\n* **Application**: Random forests are useful for handling high-dimensional data and can be used for both classification and regression tasks.\n* **Example Code in Python**:\n```python\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.model_selection import train_test_split\n\n# Load data\ndata = pd.read_csv("data.csv")\n\n# Split data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(data.drop("outcome", axis=1), data["outcome"], test_size=0.2, random_state=42)\n\n# Create random forest model\nmodel = RandomForestClassifier(n_estimators=100)\n\n# Train model\nmodel.fit(X_train, y_train)\n\n# Evaluate model\naccuracy = model.score(X_test, y_test)\nprint("Accuracy:", accuracy)\n```\n\n### 3. **Support Vector Machines (SVMs)**\n\n* **Description**: SVMs are a type of supervised learning algorithm that uses a hyperplane to separate the data into different classes.\n* **Application**: SVMs are useful for handling high-dimensional data and can be used for both classification and regression tasks.\n* **Example Code in Python**:\n```python\nfrom sklearn.svm import SVC\nfrom sklearn.model_selection import train_test_split\n\n# Load data\ndata = pd.read_csv("data.csv")\n\n# Split data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(data.drop("outcome", axis=1), data["outcome"], test_size=0.2, random_state=42)\n\n# Create SVM model\nmodel = SVC(kernel="linear")\n\n# Train model\nmodel.fit(X_train, y_train)\n\n# Evaluate model\naccuracy = model.score(X_test, y_test)\nprint("Accuracy:", accuracy)\n```\n\n### 4. **K-Nearest Neighbors (KNN)**\n\n* **Description**: KNN is a type of supervised learning algorithm that uses the k-nearest neighbors to classify new data points.\n* **Application**: KNN is useful for handling small datasets and can be used for both classification and regression tasks.\n* **Example Code in Python**:\n```python\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import train_test_split\n\n# Load data\ndata = pd.read_csv("data.csv")\n\n# Split data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(data.drop("outcome", axis=1), data["outcome"], test_size=0.2, random_state=42)\n\n# Create KNN model\nmodel = KNeighborsClassifier(n_neighbors=5)\n\n# Train model\nmodel.fit(X_train, y_train)\n\n# Evaluate model\naccuracy = model.score(X_test, y_test)\nprint("Accuracy:", accuracy)\n```\n\n### 5. **Neural Networks**\n\n* **Description**: Neural networks are a type of supervised learning algorithm that uses a network of interconnected nodes (neurons) to classify data.\n* **Application**: Neural networks are useful for handling complex, high-dimensional data and can be used for both classification and regression tasks.\n* **Example Code in Python**:\n```python\nfrom sklearn.neural_network import MLPClassifier\nfrom sklearn.model_selection import train_test_split\n\n# Load data\ndata = pd.read_csv("data.csv")\n\n# Split data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(data.drop("outcome", axis=1), data["outcome"], test_size=0.2, random_state=42)\n\n# Create neural network model\nmodel = MLPClassifier(hidden_layer_sizes=(10, 10))\n\n# Train model\nmodel.fit(X_train, y_train)\n\n# Evaluate model\naccuracy = model.score(X_test, y_test)\nprint("Accuracy:", accuracy)\n```\n\n### 6. **Gradient Boosting**\n\n* **Description**: Gradient boosting is an ensemble learning method that combines multiple weak models to create a strong predictive model.\n* **Application**: Gradient boosting is useful for handling high-dimensional data and can be used for both classification and regression tasks.\n* **Example Code in Python**:\n```python\nfrom sklearn.ensemble import GradientBoostingClassifier\nfrom sklearn.model_selection import train_test_split\n\n# Load data\ndata = pd.read_csv("data.csv")\n\n# Split data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(data.drop("outcome", axis=1), data["outcome"], test_size=0.2, random_state=42)\n\n# Create gradient boosting model\nmodel = GradientBoostingClassifier(n_estimators=100)\n\n# Train model\nmodel.fit(X_train, y_train)\n\n# Evaluate model\naccuracy = model.score(X_test, y_test)\nprint("Accuracy:", accuracy)\n```\n\nThese are just a few examples of the many classification methods available in bioinformatics and machine learning. The choice of method depends on the specific problem, dataset, and performance metrics.'}</code></pre>
+</div>
+</div>
+</section>
+<section id="exercise-your-first-prompt" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-your-first-prompt">8) Exercise — Your First Prompt</h2>
+<p>Try your own research-related prompts. A few ideas:</p>
+<ol type="1">
+<li>Summarise your current project in <strong>one paragraph</strong>.</li>
+<li>Ask for <strong>three open research questions</strong> in your field.</li>
+<li>Request a <strong>draft methods paragraph</strong> describing your dataset and analysis steps.</li>
+</ol>
+<p>Remember you can tweak <code>temperature</code> to trade off consistency vs creativity.</p>
+<div id="36d1cda6" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>chat_history <span class="op">=</span> [</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: <span class="st">"Tailor your answers for a bioinformatician."</span>}</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="58ace76d" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: replace with your own question(s)</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(<span class="st">"Summarise the challenges in renewable energy policy research."</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>As a bioinformatician, you're likely familiar with complex systems and data-driven approaches. Renewable energy policy research presents several challenges that can be broken down into the following categories:
+
+1. **Integration and Interoperability**: Renewable energy sources, such as solar and wind power, have variable output, making it challenging to integrate them into existing energy grids. This requires advanced forecasting, grid management, and energy storage systems.
+2. **Data Quality and Availability**: High-quality, granular data on energy production, consumption, and grid operations is essential for informed policy decisions. However, data gaps, inconsistencies, and lack of standardization hinder research and policy development.
+3. **Complexity and Uncertainty**: Renewable energy systems involve complex interactions between technological, economic, social, and environmental factors. Uncertainties, such as climate change and policy fluctuations, make it difficult to predict outcomes and develop effective policies.
+4. **Scalability and Spatial Analysis**: Renewable energy deployment requires consideration of spatial factors, such as land use, resource availability, and infrastructure. Scalability issues arise when trying to balance local, regional, and global energy demands with available resources.
+5. **Stakeholder Engagement and Social Acceptance**: Effective policy development requires engagement with diverse stakeholders, including communities, industries, and governments. Social acceptance of renewable energy technologies and infrastructure can be a significant challenge.
+6. **Economic and Financial Analysis**: Renewable energy policies often involve economic incentives, subsidies, and investments. Accurate economic and financial analysis is necessary to evaluate policy effectiveness, but this can be complicated by factors like technology costs, market volatility, and externalities.
+7. **Policy Frameworks and Governance**: Renewable energy policies must navigate existing regulatory frameworks, which can be inadequate or inconsistent. Effective governance structures, including international cooperation and national policies, are essential for supporting the transition to renewable energy.
+8. **Technological Innovation and Deployment**: The rapid evolution of renewable energy technologies creates challenges for policy development, as new technologies and innovations can disrupt existing markets and infrastructure.
+9. **Energy Justice and Equity**: Renewable energy policies must address issues of energy access, affordability, and equity, particularly for marginalized communities. This requires careful consideration of social and environmental impacts.
+10. **Long-term Planning and Scenario Development**: Renewable energy policy research requires long-term planning and scenario development to anticipate future energy demands, technology advancements, and potential risks.
+
+To address these challenges, researchers can employ a range of bioinformatics-inspired approaches, such as:
+
+* Data integration and analytics
+* Machine learning and predictive modeling
+* Network analysis and simulation
+* Spatial analysis and geospatial modeling
+* Stakeholder engagement and participatory modeling
+* Scenario planning and uncertainty analysis
+
+By leveraging these approaches, researchers can develop more effective renewable energy policies that balance technological, economic, social, and environmental considerations.</code></pre>
+</div>
+</div>
+</section>
+<section id="wrap-up-next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="wrap-up-next-steps">9) Wrap-Up &amp; Next Steps</h2>
+<ul>
+<li>You configured an OpenAI-compatible client to talk to <strong>Groq</strong>.</li>
+<li>You sent your first prompts using <strong>Llama-3 70B</strong> and explored the impact of <code>temperature</code>.</li>
+<li>You kept conversation state locally in a Python list and learned how to save it.</li>
+</ul>
+<p>In the <strong>next notebook</strong>, we’ll connect to a scholarly API to fetch abstracts and practice <strong>literature summarisation</strong> and <strong>structured extraction</strong>.</p>
+<p><strong>Key terms:</strong> tokens, temperature, logits, softmax, stateless API, chat history.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/01_introduction_llm.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
