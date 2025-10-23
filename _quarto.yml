@@ -12,21 +12,12 @@ website:
     style: "docked"
     contents:
       - text: "Setup"
-        href: 00_setup.md
+        href: 00_setup_guide.md
       - text: "Intro"
-        href: 01_introduction_to_regression.ipynb
-      - text: "Linear Regression"
-        href: 02_linear_regression.ipynb
-      - text: "Model Evaluation"
-        href: 03_model_evaluation.ipynb
-      - text: "Regularization"
-        href: 04_regularization.ipynb
-      - text: "Bayesian"
-        href: 05_bayesian_regression.ipynb
-      - text: "Neural Networks"
-        href: 06_neural_network.ipynb
-      - text: "Decision Trees"
-        href: 07_tree_regression.ipynb
+        href: 01_introduction_llm.ipynb
+      - text: 📦 Download All Notebooks
+        href: notebooks.zip
+
   repo-url: "https://github.com/Moji131/Fundamentals-of-Regression"   # <-- replace after creating repo
   repo-actions: [source, issue]
 
