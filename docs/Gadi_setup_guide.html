@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Large Language Models for Research - QCIF – Fundamentals of Regression</title>
+<title>gadi_setup_guide – Fundamentals of Regression</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,41 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -117,7 +82,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Large Language Models for Research - QCIF</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -169,135 +134,92 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#setup-guide-for-python-and-jupyterlab" id="toc-setup-guide-for-python-and-jupyterlab" class="nav-link active" data-scroll-target="#setup-guide-for-python-and-jupyterlab">Setup Guide for Python and JupyterLab</a>
-  <ul class="collapse">
-  <li><a href="#install-python-recommended-version-3.10-or-newer" id="toc-install-python-recommended-version-3.10-or-newer" class="nav-link" data-scroll-target="#install-python-recommended-version-3.10-or-newer">🐍 1. Install Python (Recommended: Version 3.10 or newer)</a>
-  <ul class="collapse">
-  <li><a href="#windows" id="toc-windows" class="nav-link" data-scroll-target="#windows"><strong>Windows</strong></a></li>
-  <li><a href="#macos-linux" id="toc-macos-linux" class="nav-link" data-scroll-target="#macos-linux"><strong>macOS / Linux</strong></a></li>
-  </ul></li>
-  <li><a href="#install-jupyterlab" id="toc-install-jupyterlab" class="nav-link" data-scroll-target="#install-jupyterlab">📦 2. Install jupyterlab</a></li>
-  <li><a href="#launch-jupyterlab" id="toc-launch-jupyterlab" class="nav-link" data-scroll-target="#launch-jupyterlab">🧠 3. Launch JupyterLab</a></li>
-  <li><a href="#running-on-hpc" id="toc-running-on-hpc" class="nav-link" data-scroll-target="#running-on-hpc">⚙️ 4. Running on HPC</a></li>
-  <li><a href="#install-required-python-packages" id="toc-install-required-python-packages" class="nav-link" data-scroll-target="#install-required-python-packages">📦 5. Install Required Python Packages</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">✅ Summary</a></li>
-  </ul></li>
+  <li><a href="#nci-account-setup" id="toc-nci-account-setup" class="nav-link active" data-scroll-target="#nci-account-setup">NCI Account Setup</a></li>
+  <li><a href="#nci-australian-research-environment-are" id="toc-nci-australian-research-environment-are" class="nav-link" data-scroll-target="#nci-australian-research-environment-are">NCI Australian Research Environment (ARE)</a></li>
+  <li><a href="#transferring-workshop-notebooks" id="toc-transferring-workshop-notebooks" class="nav-link" data-scroll-target="#transferring-workshop-notebooks">Transferring workshop notebooks</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/00_setup_guide.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/Gadi_setup_guide.md" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Large Language Models for Research - QCIF</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<p>Author: Moji Ghadimi https://www.linkedin.com/in/moji-ghadimi/</p>
-<p><br> <br> <br></p>
-<section id="setup-guide-for-python-and-jupyterlab" class="level1">
-<h1>Setup Guide for Python and JupyterLab</h1>
-<p>This guide explains how to install <strong>Python</strong>, <strong>essential packages</strong>, and <strong>JupyterLab</strong> for running the LLM workshop notebooks on your computer or HPC environment.</p>
+<section id="nci-account-setup" class="level2">
+<h2 class="anchored" data-anchor-id="nci-account-setup">NCI Account Setup</h2>
+<p>Sign up for an <a href="https://opus.nci.org.au/spaces/Help/pages/12583153/How+to+create+an+NCI+user+account">NCI account</a> if you don’t already have one.</p>
+<p>Select <strong>Projects and groups</strong> from the left hand side menu and then select the <strong>Find project or group</strong> tab. Search for <strong>cd82</strong>, the NCI-QCIF Training Partnership Project, and ask to join. <img src="imgs/0_my_nci_project_cd82.png" class="img-fluid"></p>
+</section>
+<section id="nci-australian-research-environment-are" class="level2">
+<h2 class="anchored" data-anchor-id="nci-australian-research-environment-are">NCI Australian Research Environment (ARE)</h2>
 <hr>
-<section id="install-python-recommended-version-3.10-or-newer" class="level2">
-<h2 class="anchored" data-anchor-id="install-python-recommended-version-3.10-or-newer">🐍 1. Install Python (Recommended: Version 3.10 or newer)</h2>
-<section id="windows" class="level3">
-<h3 class="anchored" data-anchor-id="windows"><strong>Windows</strong></h3>
-<ol type="1">
-<li><p>Go to the official Python website: <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p></li>
-<li><p>Download the latest <strong>Python 3.x installer</strong>.</p></li>
-<li><p>Run the installer and <strong>check the box</strong> that says:</p>
-<ul>
-<li>✅ <em>Add Python to PATH</em></li>
-</ul></li>
-<li><p>Choose <em>Install Now</em> and follow the prompts.</p></li>
-</ol>
-<p>To verify installation, open <strong>Command Prompt (cmd)</strong> and type:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You should see something like:</p>
-<pre><code>Python 3.11.6</code></pre>
-<hr>
+<p>Connect to <a href="https://are.nci.org.au/">NCI Australian Research Environment</a>.</p>
+<p>Be sure you use your NCI ID (eg, ab1234) for the username and not your email address.</p>
+<p>Under <strong>Featured Apps</strong>, find and click the <strong>JupterLab: Start a JupyterLab instance</strong> option. <img src="imgs/0_nci_are_mainpage.png" class="img-fluid"></p>
+<p>To Launch a JuptyerLab session, set these resource requirements:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 61%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Resource</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Walltime (hours)</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>Queue</td>
+<td>normal</td>
+</tr>
+<tr class="odd">
+<td>Compute Size</td>
+<td>small</td>
+</tr>
+<tr class="even">
+<td>Project</td>
+<td>cd82</td>
+</tr>
+<tr class="odd">
+<td>Storage</td>
+<td>scratch/cd82</td>
+</tr>
+<tr class="even">
+<td>Advanced Options…</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Modules</td>
+<td>python3/3.9.2</td>
+</tr>
+<tr class="even">
+<td>Python or Conda virtual environment base</td>
+<td>/scratch/cd82/venv_workshop</td>
+</tr>
+</tbody>
+</table>
+<p>Then click the Launch button.</p>
+<p>This will take you to your interactive session page you will see that that your JupyterLab session is Queued while ARE is searching for a compute node that will satisfy your requirements.</p>
+<p>Once found, the page will update with a button that you can click to Open JupyterLab.</p>
+<p>Here is a screenshot of a JupyterLab landing page that should be similar to the one that opens in your web browser after starting the JupyterLab server on either macOS or Windows.</p>
+<p><img src="imgs/0_jupyterlab_landing_page.png" class="img-fluid"></p>
 </section>
-<section id="macos-linux" class="level3">
-<h3 class="anchored" data-anchor-id="macos-linux"><strong>macOS / Linux</strong></h3>
-<p>Most systems come with Python preinstalled. You can check your version:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If Python is not installed, install it using your system package manager:</p>
-<p><strong>macOS (Homebrew):</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install python</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Ubuntu / Debian:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt install python3 python3-pip <span class="at">-y</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
-</section>
-</section>
-<section id="install-jupyterlab" class="level2">
-<h2 class="anchored" data-anchor-id="install-jupyterlab">📦 2. Install jupyterlab</h2>
-<p>Once Python is installed, you can install packages using <code>pip</code> (Python’s package manager).</p>
-<p>Run this command in your terminal or command prompt:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install jupyterlab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
-</section>
-<section id="launch-jupyterlab" class="level2">
-<h2 class="anchored" data-anchor-id="launch-jupyterlab">🧠 3. Launch JupyterLab</h2>
-<p>Open terminal or command prompt and navigate to the folder containing your workshop notebooks (or navigate then open), then run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> lab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This will open a new tab in your default web browser with the JupyterLab interface.</p>
-<p>You can then click on any notebook to open it.</p>
-<hr>
-</section>
-<section id="running-on-hpc" class="level2">
-<h2 class="anchored" data-anchor-id="running-on-hpc">⚙️ 4. Running on HPC</h2>
-<p>If you’re using a hosted JupyterLab instance on HPC infrastructure, Python and most dependencies are already installed. You typically only need to:</p>
-<ol type="1">
-<li>Open the web-based JupyterLab interface.</li>
-<li>Load the correct Python environment (via module or dropdown).</li>
-<li>Start a notebook directly.</li>
-</ol>
-</section>
-<section id="install-required-python-packages" class="level2">
-<h2 class="anchored" data-anchor-id="install-required-python-packages">📦 5. Install Required Python Packages</h2>
-<p>Open a notebook and in a cell run the command below to install packages:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pandas matplotlib openai rank<span class="op">-</span>bm25 requests </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This will install:</p>
-<ul>
-<li><code>numpy</code> – for handling arrays.</li>
-<li><code>pandas</code> – for handling data.</li>
-<li><code>matplotlib</code> – for plotting.</li>
-<li><code>openai</code> – to connect to Groq or OpenAI-compatible APIs.</li>
-<li><code>rank-bm25</code> – for retrieval-based tasks.</li>
-<li><code>requests</code> – for fetching data from APIs.</li>
-<li><code>jupyterlab</code> – for running notebooks interactively.</li>
-</ul>
-<p>To verify installation:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> list <span class="kw">|</span> <span class="ex">findstr</span> <span class="st">"numpy pandas matplotlib openai rank-bm25 requests"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You should see all packages listed.</p>
-<hr>
-</section>
-<section id="summary" class="level2">
-<h2 class="anchored" data-anchor-id="summary">✅ Summary</h2>
-<ul>
-<li>Install Python ≥ 3.10</li>
-<li>Use <code>pip</code> to install required packages</li>
-<li>Run <code>jupyter lab</code></li>
-<li>Verify everything by opening the example notebooks</li>
-</ul>
+<section id="transferring-workshop-notebooks" class="level2">
+<h2 class="anchored" data-anchor-id="transferring-workshop-notebooks">Transferring workshop notebooks</h2>
+<p>When you have a Jupyter server running use JupyterLab file navigator to go the folder that has the same name as your username. Then make a new Jupyter notebook by clicking on the “Python 3” icon under “Notebook” section and run the following code in a cell:</p>
+<pre><code>!rm -rf /scratch/cd82/$USER/notebooks
+!mkdir -p /scratch/cd82/$USER/notebooks
+!cp /scratch/cd82/regression_notebooks/* /scratch/cd82/$USER/notebooks/
+!ls /scratch/cd82/$USER/notebooks/</code></pre>
+<p>And then use the Jupyter file browser to navigate to the directory: /scratch/cd82/$USER/notebooks/ (where $USER is your NCI username)</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -706,4 +628,4 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/00_setup_guide.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/Gadi_setup_guide.md" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

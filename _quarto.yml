@@ -11,10 +11,12 @@ website:
   sidebar:
     style: "docked"
     contents:
-      - text: "Setup"
-        href: 00_setup_guide.md
-      - text: "Intro"
+      - text: "00_setup_guide"
+        href: 00_setup_guide.ipynb
+      - text: "01_introduction_llm"
         href: 01_introduction_llm.ipynb
+      - text: "02_theory_and_concepts"
+        href: 02_theory_and_concepts.ipynb
       - text: 📦 Download All Notebooks
         href: notebooks.zip
 
