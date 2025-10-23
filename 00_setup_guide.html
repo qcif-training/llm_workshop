@@ -117,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Large Language Models for Research - QCIF</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./00_setup_guide.html">00_setup_guide</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -143,14 +143,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00_setup_guide.md" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Setup</span></a>
+  <a href="./00_setup_guide.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">00_setup_guide</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./01_introduction_llm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Intro</span></a>
+ <span class="menu-text">01_introduction_llm</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_theory_and_concepts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">02_theory_and_concepts</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -207,7 +213,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Author: Moji Ghadimi https://www.linkedin.com/in/moji-ghadimi/</p>
+<p>Author: Moji Ghadimi</p>
+<p><a href="https://www.linkedin.com/in/moji-ghadimi/">https://www.linkedin.com/in/moji-ghadimi/</a></p>
 <p><br> <br> <br></p>
 <section id="setup-guide-for-python-and-jupyterlab" class="level1">
 <h1>Setup Guide for Python and JupyterLab</h1>
@@ -374,7 +381,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/qcif-training\.github\.io\/llm_workshop\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
