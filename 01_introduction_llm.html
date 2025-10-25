@@ -318,24 +318,12 @@ requests                2.32.5</code></pre>
 <p>LLM APIs are <strong>stateless</strong> web services. We’ll configure a client that speaks the OpenAI-compatible protocol, pointing it to Groq’s base URL.</p>
 <p><strong>What you’ll do in this cell:</strong> 1. Paste your Groq API key (created at <a href="https://console.groq.com" class="uri">https://console.groq.com</a>). 2. Set the base URL for Groq’s OpenAI-compatible endpoint. 3. Instantiate the client.</p>
 <p><strong>Notes:</strong> - Keep your API key private. In shared workshops, you can paste it, run this cell, and then clear the visible text. - You can also store keys in environment variables or use a <code>.env</code> file if preferred.</p>
-<div id="351a8f5e" class="cell">
+<div id="351a8f5e" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste your Groq API key below (between quotes). </span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note this is not a secure way of entering API key because it is visible to everyone that sees your notebook.  </span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"GROQ_API_KEY"</span>] <span class="op">=</span> <span class="st">""</span>  <span class="co"># &lt;-- replace with your key.</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="st">"llama-3.3-70b-versatile"</span> <span class="co"># Select your model https://console.groq.com/docs/models</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"BASE_URL"</span>] <span class="op">=</span> <span class="st">"https://api.groq.com/openai/v1"</span> <span class="co"># Groq uses an OpenAI-compatible API surface; we just change the base URL.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-error">
-<div class="ansi-escaped-output">
-<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
-<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[4]</span><span class="ansi-green-fg">, line 5</span>
-<span class="ansi-green-fg">      3</span> os.environ[<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">GROQ_API_KEY</span><span class="ansi-yellow-fg">"</span>] = <span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">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</span><span class="ansi-yellow-fg">"</span>  <span style="font-style:italic;color:rgb(95,135,135)"># &lt;-- replace with your key.</span>
-<span class="ansi-green-fg">      4</span> model = <span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">llama-3.3-70b-versatile</span><span class="ansi-yellow-fg">"</span> <span style="font-style:italic;color:rgb(95,135,135)"># Select your model https://console.groq.com/docs/models</span>
-<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">5</span> <span class="ansi-yellow-bg">os</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">enviro</span>[<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">BASE_URL</span><span class="ansi-yellow-fg">"</span>] = <span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">https://api.groq.com/openai/v1</span><span class="ansi-yellow-fg">"</span> <span style="font-style:italic;color:rgb(95,135,135)"># Groq uses an OpenAI-compatible API surface; we just change the base URL.</span>
-
-<span class="ansi-red-fg">AttributeError</span>: module 'os' has no attribute 'enviro'</pre>
-</div>
-</div>
 </div>
 <div id="98b3a825" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the client</span></span>
