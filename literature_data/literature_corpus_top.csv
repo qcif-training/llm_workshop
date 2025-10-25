@@ -1,0 +1,2153 @@
+title,summary,published,link,pdf,authors,summary_llm,structured,pdf_file,crude_text
+Local-projective-measurement-enhanced quantum battery capacity,"Quantum batteries have significant potential applications for future industry and daily life. The capacity is an important indicator for a battery. Methods to improve the capacity of quantum batteries are important. We consider quantum batteries given by bipartite quantum systems and study the enhancement of the battery capacity under local projective measurements on a subsystem of the quantum state. By using two-qubit Bell-diagonal states and X-type states as examples, we show that quantum battery capacity with respect to the whole system or a subsystem can be improved by local projective measurements. Our theoretical analysis will provide ideas for the experimental development of quantum batteries.",2024-05-06,,http://arxiv.org/pdf/2405.03093v1,"Tinggui Zhang, Hong Yang, Shao-Ming Fei","This study explores methods to enhance the capacity of quantum batteries, which have significant potential for future applications. The researchers investigate the effect of local projective measurements on a subsystem of a bipartite quantum system, using two-qubit Bell-diagonal states and X-type states as examples. They find that these measurements can improve the quantum battery capacity, both for the whole system and a subsystem. The study's theoretical analysis aims to inform the experimental development of quantum batteries, providing new ideas for improving their performance.","{'methodology': 'Local projective measurements on bipartite quantum systems', 'data': 'Two-qubit Bell-diagonal and X-type states', 'finding': 'Local measurements can improve quantum battery capacity', 'limitations': 'Theoretical analysis, experimental development needed'}",2405.03093v1.pdf,"arXiv:2405.03093v1  [quant-ph]  6 May 2024
+Local projective measurement-enhanced quantum battery capacity
+Tinggui Zhang 1, †, Hong Yang 2 and Shao-Ming Fei 3
+1 School of Mathematics and Statistics,
+Hainan Normal University, Haikou, 571158, China
+2 School of Physics and Electronic Engineering,
+Hainan Normal University, Haikou, 571158, China
+3 School of Mathematical Sciences,
+Capital Normal University, Beijing 100048, China
+† Correspondence to tinggui333@163.com
+Quantum battery is of signiﬁcant potential applications in future industry and daily life. The
+battery capacity is an important indicator of a battery. How to improve the capacity of quantum
+batteries is of importance. We consider quantum batteries g iven by bipartite quantum systems, and
+study the enhancement of the battery capacity under local pr ojective measurements on a subsystem
+of the quantum state. By using the two-qubit Bell diagonal st ates and the X-type states as examples,
+we show that the quantum battery capacity with respect to the whole system or the subsystem could
+be improved by local projective measurements. Our theoreti cal analysis will provide new ideas for
+the experimental development of quantum battery.
+Keywords: quantum measurement; quantum battery capacity; quantum e ntanglement
+PACS numbers: 04.70.Dy, 03.65.Ud, 04.62.+v
+INTRODUCTION
+As an energy storage system, the battery plays sig-
+niﬁcant roles in both industry and daily life. With
+the development of quantum technology and informa-
+tion science, the quantum battery has emerged and
+been expected to balance the advantages of small size,
+large capacity, portability, rapid charging etc. R. Al-
+icki and M. Fannes ﬁrst formally introduced the idea
+of quantum batteries in an informational theoretic con-
+text by characterizing the maximum amount of energy
+that can be extracted from a quantum system under
+unitary operations [1]. Since then there have been ex-
+tensive theoretical [2–53] and experimental[54–58] stud-
+ies on quantum batteries. For example, many theo-
+retical protocols have been proposed, such as charg-
+ing by entangling operations[6, 7, 9, 14, 29, 36], charg-
+ing with dissipative[29, 30], charging collectively and in
+parallel[10, 30]. Many-body interaction and energy ﬂuc-
+tuation were also explored[11, 13, 25–27, 37, 38, 48]. The
+ﬁrst model of a quantum battery that could be engineered
+in a solid-state architecture, was proposed by Ferraro et
+al.[10]. Many other concrete quantum battery models
+have been also proposed[11, 19, 52]. However, many as-
+pects of the physics of quantum batteries remain unex-
+plored, experimental work on quantum batteries is still in
+its infancy and a fully-operational proof of principle is yet
+to be demonstrated. For a review of quantum batteries,
+we refer to Ref.[50].
+An important quantitative indicator of the quality of
+quantum batteries is the capacity (charging power, work
+storage, work extraction) [31, 42]. The commonly used
+quantity is the ergotropy functional [31],
+E(ρ,H) = max
+U∈U(d)
+{Tr[ρH] − Tr[UρU†H]},
+where ρ is the quantum state of a d-dimensional quan-
+tum system Qwith Hamiltonian H, the maximum takes
+over the states under all unitary evolution ρ → UρU†,
+with U(d) the set of the unitary operators acting on Q.
+More recently, in Ref. [42] the authors provided a new
+deﬁnition of quantum battery capacity,
+C(ρ,H) :=
+d−1∑
+i=0
+ǫi(λi − λd−1−i), (1)
+where λ0 ≤ λ1 ≤ · · · ≤ λd−1 denote the eigenvalues of
+the quantum state ρ and ǫ0 ≤ ǫ1 ≤ · · · ≤ ǫd−1 denote
+the eigenenergies of the Hamiltonian H = ∑
+i ǫi|εi⟩⟨εi|.
+C(ρ,H) is a Schur-convex functional of the quantum
+state and does not change when the battery is unitar-
+ily charged or discharged.
+Quantum measurements, particularly the projections
+onto a chosen state, could change the transition rate of
+the measured system [59]. Numerous measurement-based
+control schemes have been applied to state puriﬁcation
+[60, 61], information gain [62] and entropy production
+[63]. The measurement on auxiliary systems may help to
+control the target systems, serving as state-engineering
+scheme through a nonunitary procedure [64, 65]. In deed,
+the idea of improving the desired eﬀect of the target sys-
+tem by measuring the auxiliary system has recently been
+applied to quantum battery charging [41] and power ex-
+traction [49]. In [41], the authors established for quantum
+battery a charging by-measurement framework based on
+rounds of joint evolution and partial-projection. Start-
+ing from a thermal state, the battery could also achieve a
+2
+near-unit ratio of ergotropy and energy through less than
+N measurements, when a population inversion is realized
+by measurements. In [49] the authors focused on the en-
+ergy extraction instead of charging, that is, the protocol
+includes only one measurement on the auxiliary qubit,
+but not a sequence of measurements. Scenarios are in-
+vestigated for both that the initial state of the battery
+and the auxiliary is a product and an entangled one. It is
+shown that the measurement-based protocol provides sig-
+niﬁcantly better energy extraction from a quantum bat-
+tery than that based on unitary operations.
+Consider a bipartite system composed of the target
+quantum state Aand the auxiliary system B. Our ques-
+tion is how the quantum measurements on the systems B
+would aﬀect the quantum battery capacity of the system
+A or the whole bipartite system. In this paper, we for-
+mulate a unilateral measurement protocol and study such
+local projective measurement-enhanced quantum battery
+capacity by starting directly from general bipartite quan-
+tum states. In general, a complete quantum battery con-
+sists of a battery part and a charger part. Here, we only
+consider the battery part, that is, the whole system bat-
+tery is composed by two-particle quantum state ρAB and
+the system Hamiltonian HAB . And the battery of the
+subsystem is composed by the reduced state ρA and the
+Hamiltonian HA corresponding to the subsystem A. We
+use the deﬁnition of quantum battery capacity given by
+Eq.(1). We ﬁnd that for two-qubit Werner states, the
+local measurements can enhance the overall or the sub-
+system battery capacity.
+MEASUREMENT-BASED PROTOCOL
+Let ρAB be an m⊗ n bipartite state in Hilbert space
+HA ⊗ H B . Let HA = ∑ m−1
+i=0 ǫA
+i |εi⟩A⟨εi| and HB =∑ n−1
+i=0 ǫB
+i |εi⟩B⟨εi| be the Hamiltonian associated with the
+systems A and B, respectively. The Hamiltonian of the
+joint system is HAB = HA ⊗In +Im ⊗HB, where In (Im)
+denotes the n× n(m× m) identity matrix. The battery
+capacity C(ρAB,HAB) can be calculated by using Eq.(1).
+Let ρA = ∑ m−1
+i=0 λi|ψi⟩⟨ψi| be the reduced state of the
+subsystem A. We have the battery capacity with respect
+to the subsystem A, C(ρA,HA) = ∑ m−1
+i=0 ǫA
+i (λi −λd−1−i).
+Let {Bk}n−1
+k=0 be a rank-1 local projective measurement
+on the subsystem B. Conditioned on the measurement
+outcome k, the quantum state ρAB changes to be
+ρk
+AB = 1
+Pk
+(Im ⊗ Bk)ρAB (Im ⊗ Bk) (2)
+with probability Pk = Tr(Im ⊗ Bk)ρAB(Im ⊗ Bk) for
+k = 0 ,1,2,· · · ,n − 1. The ﬁnal state ρ′
+AB depends on
+the measurement basis as well as the outcomes. Under
+average probability (the group of measurements selected
+and the corresponding outputs are equally distributed),
+Aρ Aρ′
+
+
+AB ρ ′
+
+   
+
+
+
+
+0
+AB ρ
+1
+AB ρ
+1n
+AB ρ −
+ 
+Local PM  AB ρ
+FIG. 1: A initilaly shared bipartite quantum state ρAB under-
+goes local projective measurements {Bk}n−1
+k=0 on the subsys-
+tem B. States ρk
+AB are obtained with probability Pk. From
+the ﬁnal state ρ′
+AB and its reduced density matrix ρ′
+A, we
+study the changes of the battery capacities before and after
+the measurement.
+the ﬁnal state is given by
+ρ′
+AB = 1
+n
+n−1∑
+k=0
+ρk
+AB. (3)
+With arbitrary randomness probability, namely, the mea-
+surement that one chooses to use is according to the idea
+of freedom and the probability of diﬀerent outputs of the
+same measurement is also diﬀerent, one has
+ρ′
+AB =
+n−1∑
+k=0
+µkρk
+AB, (4)
+where ∑ n−1
+k=0 µk = 1, µk ≥ 0. From the spectral decom-
+position of the reduced density matrix ρ′
+A = TrB(ρ′
+AB) =∑ m−1
+i=0 λ′
+i|ψi⟩′⟨ψi|′, we obtain the capacity associated
+with the subsystem A after projective measurement,
+C(ρ′
+A,HA) = ∑ m−1
+i=0 ǫA
+i (λ′
+i − λ′
+d−1−i), see Fig. 1. for
+the schematic diagram. In the following we focus on two
+particular classes of initial states.
+Two-qubit Bell-diagonal states
+We ﬁrst consider the initial states to be the two-qubit
+Bell-diagonal ones:
+ρAB = 1
+4 (I2 ⊗ I2 +
+3∑
+i=1
+ciσi ⊗ σi),
+where σ1,σ2,σ3 are the standard Pauli matrices, ci are
+real constants such that ρAB is a well deﬁned density
+matrix. ρAB have eigenvalues λ0 = (1 − c1 − c2 − c3)/4,
+λ1 = (1 − c1 + c2 + c3)/4, λ2 = (1 + c1 − c2 + c3)/4 and
+λ3 = (1+ c1 +c2 −c3)/4. The coeﬃcients ci are so chosen
+that λj ∈ [0,1] for j = 0 ,1,2,3. For the convenience
+of future analysis, we assume that |c1| ≥ | c2| ≥ | c3|.
+3
+We consider the following Hamiltonian for the two-qubit
+system,
+HAB = ǫAσ3 ⊗ I2 + ǫBI2 ⊗ σ3, (5)
+where ǫA ≥ ǫB ≥ 0. The eigenvalues of HAB are −ǫA −
+ǫB, −ǫA + ǫB, ǫA − ǫB and ǫA + ǫB in ascending order.
+Therefore, we have
+C(ρAB ,HAB) = ( |c1|+|c2|)(ǫA+ǫB)+(|c1|−|c2|)(ǫA−ǫB).
+The reduced states of ρAB are ρA = I2/2 and ρB = I2/2.
+Consequently, we have C(ρA,HA) = 0.
+Consider local projective measurement given by the
+computational base {|k⟩}, {Π k = |k⟩⟨k|, k = 0 ,1}. The
+measurement gives rise to the ensemble {ρk
+AB,Pk}. We
+have
+Pkρk
+AB = ( I2 ⊗ Π k)ρAB(I2 ⊗ Π k)
+= 1
+4[I2 ⊗ Π k +
+3∑
+i=1
+ciσi ⊗ (Π kσiΠ k)]
+= 1
+4[I2 ⊗ Π k + (−1)kc3σ3 ⊗ Π k], (6)
+where we have used the relations Π kσj Π k = 0 for k =
+0,1, j= 1 ,2, Π 0σ3Π 0 = Π 0 and Π 1σ3Π 1 = −Π 1. From
+Eq.(6) we get
+ρ0
+AB = 1
+2
+
+
+
+
+1 + c3 0 0 0
+0 0 0 0
+0 0 1 − c3 0
+0 0 0 0
+
+
+
+ ,
+ρ1
+AB = 1
+2
+
+
+
+
+0 0 0 0
+0 1 − c3 0 0
+0 0 0 0
+0 0 0 1 + c3
+
+
+
+
+as P0 = P1 = 1
+2 .
+By straightforward calculation we have the following
+observations.
+(i) Taking the ﬁnal state to be the one given by (3), we
+have ρ′
+AB = 1
+2
+∑ 1
+k=0 ρk
+AB. Then C(ρ′
+AB ,HAB) = 2 |c3|ǫA
+and C(ρ′
+A,HA) = 0. Therefore, F := C(ρ′
+AB,HAB) −
+C(ρAB ,HAB) ≤ 0, namely, the local measurement weak-
+ens the battery capacity of the whole bipartite system,
+but does not change the battery capacity of the subsys-
+tem A.
+(ii) Taking the ﬁnal state to be the one given by (4), we
+have ρ′
+AB = µ0ρ0
+AB + µ1ρ1
+AB. Without loss of generality,
+let µ0 > µ1. We obtain C(ρ′
+AB,HAB) = ( µ0 − µ1 +
+|c3|)(ǫA +ǫB)+( µ1 −µ0 +|c3|)(ǫA −ǫB) and C(ρ′
+A,HA) =
+2(µ0 − µ1)ǫA|c3|. In this case, the local measurement
+could either reduce or increase the battery capacity of the
+whole system, but always increase the battery capacity
+of the subsystem A.
+(iii) When c3 = 0, f := C(ρ′
+A,HA) − C(ρA,HA) is
+always zero. However, for the ρ′
+AB given in (ii), one has
+C(ρ′
+AB,HAB) = 2( µ0 − µ1)ǫB.
+The above observations show that the unilateral mea-
+surement on subsystem B may increase the battery ca-
+pacity of the subsystem A, but not always the entire sys-
+tem.
+Example 1: Let us consider a speciﬁc Bell-diagonal
+state with c1 = c2 = c3 = −a, i.e., the two-qubit Werner
+state [66],
+ρW = a|ψ−⟩⟨ψ−| + 1 − a
+4 I4,
+where |ψ−⟩ = ( |01⟩ − | 10⟩)/
+√
+2 is the maximally entan-
+gled state and 0 ≤ a ≤ 1. ρW is separable when a ≤ 1
+3
+and entangled otherwise. From the observation (ii), we
+see that after the projective measurement on subsystem
+B, the battery capacity of the subsystem A increases as
+long as a̸= 0 and ǫA >0, no matter if the original state is
+separable or entangled. When µ0 − µ1 >a, the measure-
+ment on the subsystem B can also increase the battery
+capacity of the whole system. When µ0 − µ1 = a, the
+battery capacity of the whole system keeps unchanged.
+Therefore, for a random probability combination Eq.(4),
+by choosing appropriate parameters the local projective
+measurement may enhance the battery capacity of the
+overall or the individual subsystem.
+Two-qubit X-states
+We consider the initial states to be the two-qubit X-
+type ones,
+ρX =
+
+
+
+
+ρ11 0 0 ρ14
+0 ρ22 ρ23 0
+0 ρ32 ρ33 0
+ρ41 0 0 ρ44
+
+
+
+ , (7)
+where ∑ 4
+i=1 ρii = 1, ρ22ρ33 ≥ | ρ23|2 and ρ11ρ44 ≥ | ρ14|2.
+ρX is entangled if and only if either ρ11ρ44 ≤ | ρ23|2 or
+ρ22ρ33 ≤ | ρ14|2 [67]. The eigenvalues of the two-qubit
+X-states are given by
+λ0 = 1
+2 [(ρ11 + ρ44) +
+√
+(ρ11 − ρ44)2 + 4|ρ14|2],
+λ1 = 1
+2 [(ρ11 + ρ44) −
+√
+(ρ11 − ρ44)2 + 4|ρ14|2],
+λ2 = 1
+2 [(ρ22 + ρ33) +
+√
+(ρ22 − ρ33)2 + 4|ρ23|2],
+λ3 = 1
+2 [(ρ22 + ρ33) −
+√
+(ρ22 − ρ33)2 + 4|ρ23|2].
+The reduced density matrix of the subsystem A,
+ρA
+X =
+(
+ρ11 + ρ22 0
+0 ρ33 + ρ44
+)
+, (8)
+has eigenvalues λA
+0 = ρ11 + ρ22 and λA
+1 = ρ33 + ρ44. With
+respect to the Hamiltonian (5), one has C(ρX ,HAB) and
+C(ρA
+X ,HA).
+ρX can be rewritten as in Bloch representation,
+ρX = 1
+4(I2 ⊗ I2 + a3σ3 ⊗ I2 + b3I2 ⊗ σ3 +
+3∑
+i=1
+ciσi ⊗ σi),
+4
+where a3 = ρ11 + ρ22 − (ρ33 + ρ44), b3 = ρ11 + ρ33 −
+(ρ22 + ρ44), c1 = 2( ρ33 + ρ44), c2 = 2( ρ23 − ρ14) and
+c3 = ρ11 + ρ44 − (ρ22 + ρ33). After the measurement
+Π k = |k⟩⟨k| on subsystem B, we obtain
+Pkρk
+X = ( I2 ⊗ Π k)ρX (I2 ⊗ Π k)
+= 1
+4 [I2 ⊗ Π k + a3σ3 ⊗ Π k + b3I2 ⊗ (Π kσ3Π k)
++
+3∑
+i=1
+ciσi ⊗ (Π kσiΠ k)]
+= 1
+4 [I2 ⊗ Π k + a3(σ3 ⊗ Π k)
++(−1)kb3(I2 ⊗ Π k) + ( −1)kc3(σ3 ⊗ Π k)]. (9)
+Taking k = 0 ,1 into Π k, we obtain speciﬁc probabilities
+and corresponding quantum states. Namely, P0 = 1+b3
+2 ,
+P1 = 1−b3
+2 and
+ρ0
+X = 1
+2(1 + b3)
+
+
+
+
+1 + b3 + a3 + c3 0 0 0
+0 0 0 0
+0 0 1 + b3 − a3 − c3 0
+0 0 0 0
+
+
+
+ ,
+ρ1
+X = 1
+2(1 − b3)
+
+
+
+
+0 0 0 0
+0 1 − b3 + a3 − c3 0 0
+0 0 0 0
+0 0 0 1 − b3 − a3 + c3
+
+
+
+ .
+From Eq.(3) or Eq.(4) we can investigate the projective
+measurement impact on the battery capacity of subsys-
+tem A and the whole bipartite system.
+Example 2: Consider the following speciﬁc state,
+ρAB = 1
+3 [(1 − x)|00⟩⟨00| + 2|ψ+⟩⟨ψ+| + x|11⟩⟨11|],
+where x∈ [0,1/2] and |ψ+⟩ = ( |01⟩+ ⟨10|)/
+√
+2. ρAB has
+eigenvalues λ0 = 0, λ1 = x/3, λ2 = (1 − x)/3 and λ3 =
+2/3. The reduced density matrix ρA has eigenvalues δ0 =
+(1 + x)/3 and δ1 = (2 − x)/3. Therefore, C(ρAB,HAB) =
+2
+3 (ǫA + ǫB) + 1−2x
+3 (ǫA − ǫB) and C(ρA,HA) = 2 1−2x
+3 ǫA.
+Adopting Eq.(3) for ρ′
+AB, we obtain
+ρ′
+AB =
+
+
+
+
+1−x
+4−2x 0 0 0
+0 1
+2+2x 0 0
+0 0 1
+4−2x 0
+0 0 0 x
+2+2x
+
+
+
+ .
+Therefore, C(ρ′
+AB ,HAB) = 1−x
+2+2x (ǫA+ǫB)+ x
+4−2x (ǫA−ǫB)
+and C(ρ′
+A,HA) = 2 1−2x
+(2−x)(1+x) ǫA.Thus, f = C(ρ′
+A,HA)−
+C(ρA,HA) ≥ 0 for all x ∈ [0,1
+2 ), namely, the battery
+capacity of the subsystem A will be always enhanced,
+see Fig. 2.
+If we adopt Eq.(4) for ρ′
+AB, similarly we obtain
+ρ′
+AB =
+
+
+
+
+µ 0(1−x)
+2−x 0 0 0
+0 µ 1
+1+x 0 0
+0 0 µ 0
+2−x 0
+0 0 0 µ 1x
+1+x
+
+
+
+ .
+    
+[
+
+
+
+
+
+
+I
+FIG. 2: The variation of the battery capacity of the sub-
+system A for ρAB in Example 2, where f = C(ρ′
+A, HA) −
+C(ρA, HA) is a function of x for ǫA = 0 .5.
+    
+[
+
+
+
+)
+FIG. 3: The variation of the battery capacity of the whole
+system for ρAB in Example 2. Here, F = C(ρ′
+AB , HAB) −
+C(ρAB, HAB) is a function of x for ǫA = 0 .5, ǫB = 0 .3,
+µ1 = 0 .9 and µ0 = 0 .1, where µ1 and µ2 correspond to the
+probabilities of choosing diﬀerent measurement operators , re-
+spectively.
+Therefore, C(ρ′
+AB,HAB) = (1−x)µ 1
+1+x (ǫA + ǫB) + xµ 0
+2−x (ǫA −
+ǫB) and C(ρ′
+A,HA) = 2 (µ 1−µ 0)x2+2µ 1−(3µ 1+µ 0)x
+(2−x)(1+x) ǫA.Here,
+we have assumed that µ1 >µ0 >2xµ1.Taking ǫA = 0 .5,
+ǫB = 0 .3, µ1 = 0 .9 and µ0 = 0 .1 with µ0 > 2xµ1 as
+an example, we get x <0.056. It is seen from Fig. 3
+that F = C(ρ′
+AB,HAB) − C(ρAB ,HAB) is greater than
+0, namely, the battery capacity of the entire system also
+increases. On the other hand, as long as xtends to 0 and
+µ1 tends to 1, we have C(ρ′
+A,HA) − C(ρA,HA) >0, i.e.,
+the battery capacity of the subsystem A increases too.
+CONCLUSIONS AND OUTLOOK
+We have studied the enhancement of the quantum bat-
+tery capacities for bipartite systems under local projec-
+tive measurements. In particular, we have investigated
+the cases that the initial states are two-qubit Bell diag-
+onal and X-type ones. We have provided analytical re-
+5
+sults for these general initial states, which indicated that
+our scheme can improve the battery capacity of the en-
+tire or the subsystems, regardless of whether the original
+quantum state is entangled or separable. There are also
+other studies on quantum batteries by using quantum
+measurements [7, 9, 41, 43, 49], but with diﬀerent ex-
+traction protocols. Our study has some advantages com-
+pared with, for example, the one in the latest Ref.[41].
+Firstly, we adopted the latest deﬁnition of quantum bat-
+tery capacity, and our protocol starts directly from the
+bipartite quantum states, without considering the auxil-
+iary systems. Secondly, Ref.[41] requires multiple mea-
+surements and the assistance of POVM measurements.
+Here, our protocol only involves one projective measure-
+ment. Moreover, we have provided the analytical results
+when the initial state is a general 2-qubit quantum state.
+The quantum battery capacity is unitary invariant and
+solely given by the eigenvalues of the quantum states
+and the Hamiltonian. There are relationships between
+the battery capacity and the quantum resources such as
+quantum entropy, entanglement and coherence [36, 42].
+We have shown that the improvement of quantum bat-
+tery capacity is related to both the initial states and the
+combination forms of the ﬁnal states. Our results indi-
+cate that the local projection measurement is a kind of
+important resource for improving the capacity of quan-
+tum batteries. It would also interesting to investigate the
+impact of general positive operator-valued measures on
+the improvement of quantum battery capacities.
+Acknowledgments: This work is supported by the
+Hainan Provincial Natural Science Foundation of China
+under Grant No.121RC539; the National Natural Sci-
+ence Foundation of China (NSFC) under Grant Nos.
+12204137, 12075159 and 12171044; the speciﬁc research
+fund of the Innovation Platform for Academicians of
+Hainan Province under Grant No. YSPTZX202215 and
+Hainan Academician Workstation (Changbin Yu).
+[1] R. Alicki and M. Fannes, Entanglement boost for ex-
+tractable work from ensembles of quantum batteries,
+Phys. Rev. E 87, 042123 (2013).
+[2] M. Frey, K. Funo, and M. Hotta, Strong local passivity in
+ﬁnite quantum systems, Phys. Rev. E 90, 012127 (2014).
+[3] M. Perarnau-Llobet, K. V. Hovhannisyan, M. Huber, P.
+Skrzypczyk, J. Tura, and A. Ac ´ ın, Most energetic passive
+states, Phys. Rev. E 92, 042147 (2015).
+[4] E.G. Brown, N. Friis, and M. Huber, Passivity and prac-
+tical work extraction using gaussian operations, New. J.
+Phys. 18, 113028 (2016).
+[5] C. Sparaciari, D. Jennings, and J. Oppenheim, Energetic
+instability of passive states in thermodynamics, Nature
+Communications 8, 1895 (2017).
+[6] F. Campaioli, F. A. Pollock, F. C. Binder, L. C´ eleri, J.
+Goold, S. Vinjanampathy, and K. Modi, Enhancing the
+charging power of quantum batteries, Phys. Rev. Lett.
+118, 150601 (2017).
+[7] G. Francica, J. Goold, F. Plastina, and M. Paternos-
+tro, Daemonic ergotropy: enhanced work extraction from
+quantum correlations, njp Quant. Info. 3, 12 (2017).
+[8] G. M. Andolina, D. Farina, A. Mari, V. Pellegrini, V.
+Giovannetti, and M. Polini, Charger-mediated energy
+transfer in exactly solvable models for quantum batteries,
+Phys. Rev. B 98, 205423 (2018).
+[9] G. Manzano, F. Plastina, and R. Zambrini, Optimal
+work extraction and thermodynamics of quantum mea-
+surements and correlations, Phys. Rev. Lett. 121, 120602
+(2018).
+[10] D. Ferraro, M. Campisi, G. M. Andolina, V. Pellegrini,
+and M. Polini, High-Power collective charging of a solid-
+state quantum battery, Phys. Rev. Lett. 120, 117702
+(2018).
+[11] T. P. Le, J. Levinsen, K. Modi, M. M. Parish, and F.
+A. Pollock, Spin-chain model of a many-body quantum
+battery, Phys. Rev. A 97, 022106 (2018).
+[12] ´A. M. Alhambra, G. Styliaris, N. A. R. Briones, J. Sikora,
+and E. M. Martnez, Fundamental limitations to local en-
+ergy extraction in quantum systems, Phys. Rev. Lett.
+123, 190601 (2019).
+[13] D. Rossini, G. M. Andolina, and M. Polini, Many-body
+localized quantum batteries, Phys. Rev. B 100, 115142
+(2019).
+[14] G. M. Andolina, M. Keck, A. Mari, V. Giovannetti, and
+M. Polini, Quantum versus classical many-body batter-
+ies, Phys. Rev. B 99, 205437 (2019).
+[15] R. Alicki, A quantum open system model of molecular
+battery charged by excitons, Jour. of Chem. Phys. 150,
+214110 (2019).
+[16] A. Crescente, M. Carrega, M. Sassetti, and D. Ferraro,
+Ultrafast charging in a two-photon Dicke quantum bat-
+tery, Phys. Rev. B 102, 245407 (2020).
+[17] S. Ghosh, T. Chanda, and A. Sen(De), Enhancement
+in the performance of a quantum battery by ordered
+and disordered interactions, Phys. Rev. A 101, 032115
+(2020).
+[18] S. Gherardini, F. Campaioli, F. Caruso, and F. C. Binder ,
+Stabilizing open quantum batteries by sequential mea-
+surements, Phys. Rev. Res. 2, 013095 (2020).
+[19] D. Rossini, G. M. Andolina, D. Rosa, M. Carrega, and
+M. Polini, Quantum advantage in the charging process
+of Sachdev-Ye-Kitaev batteries, Phys. Rev. Lett. 125,
+236402 (2020).
+[20] M. T. Mitchison, J. Goold, and J. Prior, Charging a
+quantum battery with linear feedback control, Quantum
+5, 500 (2021).
+[21] S. Ghosh, T. Chanda, S. Mal, and A. Sen(De), Fast
+charging of a quantum battery assisted by noise, Phys.
+Rev. A 104, 032207 (2021).
+[22] F. Zhao, F.Q. Dou, and Q. Zhao, Quantum battery of
+interacting spins with environmental noise, Phys. Rev. A
+103, 033715 (2021).
+[23] K. Sen and U. Sen, Local passivity and entanglement in
+shared quantum batteries, Phys. Rev. A 104, L030402
+(2021).
+[24] S. Tirone, R. Salvia, and V. Giovannetti, Quantum en-
+ergy lines and the optimal output ergotropy problem,
+Phys. Rev. Lett. 127, 210601 (2021).
+[25] Y. Yao and X.Q. Shao, Stable charging of a Rydberg
+6
+quantum battery in an open system, Phys. Rev. E 104,
+044116 (2021).
+[26] S. Zakavati, F. T. Tabesh, and S. Salimi, Bounds on
+charging power of open quantum batteries, Phys. Rev.
+E 104, 054117 (2021).
+[27] K. Xu, H.J. Zhu, G.F. Zhang, and W.M. Liu, Enhancing
+the performance of an open quantum battery via envi-
+ronment engineering, Phys. Rev. E 104, 064143 (2021).
+[28] S. Ghosh and A. Sen(De), Dimensional enhancements in
+a quantum battery with imperfections, Phys. Rev. A 105,
+022628 (2022).
+[29] F. Mayo and A. J. Roncaglia, Collective eﬀects and quan-
+tum coherence in dissipative charging of quantum batter-
+ies, Phys. Rev. A 105, 062203 (2022).
+[30] J. Carrasco, R. Maze, Jeronimo, C. Hermann-Avigliano,
+and F. Barra, Collective enhancement in dissipative
+quantum batteries, Phys. Rev. E 105, 064119 (2022).
+[31] S. Tirone, R. Salvia, S. Chessa, and V. Giovannetti,
+Quantum work capacitances, arXiv:2211.02685 (2022).
+[32] F.Q. Dou, H. Zhou, and J.A. Sun, Cavity heisenbergspin-
+chain quantum battery, Phys. Rev. A 106, 032212
+(2022).
+[33] R. R. Rodriguez, B. Ahmadi, G. Suarez, P. Mazurek, S.
+Barzanjeh, and P. Horodecki, Optimal quantum control
+of charging quantum batteries, arXiv:2207.00094 (2022).
+[34] K. Xu, H.G. Li, Z.G. Li, H.J. Zhu, G.F. Zhang, and
+W.M. Liu, Charging performance of quantum batteries
+in a double-layer environment, Phys. Rev. A 106, 012425
+(2022).
+[35] T. K. Konar, L. G. C. Lakkaraju, S. Ghosh, and A.
+Sen(De), Quantum battery with ultracold atoms: Bosons
+versus fermions, Phys. Rev. A 106, 022618 (2022).
+[36] H.L. Shi, S. Ding, Q.K. Wan, X.H. Wang, and W.L.
+Yang, Entanglement, coherence, and extractable work in
+quantum batteries, Phys. Rev. Lett. 129, 130602 (2022).
+[37] F.Q. Dou, Y.Q. Lu, Y.J. Wang, and J.A. Sun, Extended
+Dicke quantum battery with interatomic interactions and
+driving ﬁeld, Phys. Rev. B 105, 115405 (2022).
+[38] F.Q. Dou, Y.J. Wang, J.A. Sun, Highly eﬃcient charg-
+ing and discharging of three-level quantum batteries
+through shortcuts to adiabaticity, Front. Phys. 17(3),
+31503 (2022).
+[39] R. Salvia, G. De Palma, and V. Giovannetti, Optimal
+local work extraction from bipartite quantum systems in
+the presence of Hamiltonian couplings, Phys. Rev. A 107,
+012405 (2023).
+[40] K. Xu, H.J. Zhu, H. Zhu, G.F. Zhang and W.M. Liu,
+Charging and self-discharging process of a quantum bat-
+tery in composite environments. Front. Phys. 18(3),
+31301 (2023).
+[41] J. S. Yan and J. Jing, Charging by quantum measure-
+ment, Phys. Rev. Appl. 19, 064069 (2023).
+[42] X. Yang, Y. H. Yang, M. Alimuddin, R. Salvia, S. M. Fei,
+L. M. Zhao, S. Nimmrichter, and M. X. Luo, The battery
+capacity of energy-storing quantum systems, Phys. Rev.
+Lett. 131, 030402 (2023).
+[43] S. Tirone, R. Salvia, S. Chessa, and V. Giovannetti, Wor k
+extraction processes from noisy quantum batteries: the
+role of non local resources, Phys. Rev. Lett. 131, 060402
+(2023).
+[44] F.Q. Dou and F.M. Yang, Superconducting transmon
+qubit-resonator quantum battery, Phys. Rev. A 107,
+023725(2023).
+[45] K. Sen, U. Sen, Noisy quantum batteries,
+arXiv:2302.07166v1 (2023).
+[46] S. Tirone, R. Salvia, S. Chessa, and V. Giovannetti,
+Quantum work extraction eﬃciency for noisy quantum
+batteries: the role of coherence, arXiv:2305.16803 (2023) .
+[47] B. A. Mohammad, H. Mohammad, A. Saguia, M. S.
+Sarandy, and A. C. Santos, Localization eﬀects in dis-
+ordered quantum batteries, arXiv:2306.13164 (2023)
+[48] A. G. Catalano, S. M. Giampaolo, O. Morsch, V. Giovan-
+netti, and F. Franchini, Frustrating quantum batteries,
+arXiv:2307.02529 (2023).
+[49] P. Chaki, A. Bhattacharyya, K. Sen, U.Sen, Auxiliary-
+assisted stochastic energy extraction from quantum bat-
+teries, arXiv:2307.16856v1(2023).
+[50] F. Campaioli, S. Gherardini, J. Q. Quach, M. Polini,
+G. M. Andolina, Colloquium: Quantum batteries,
+arXiv:2308.02277 (2023).
+[51] D. Morrone, M. A. C. Rossi, A. Smirne, and M. G.
+Genoni, Charging a quantum battery in a nonmarkovian
+environment: a collisional model approach, Quant. Sci-
+ence and Tech. 8, 035007 (2023).
+[52] H.Y. Yang, H.L. Shi, Q.K. Wan, K. Zhang, X.H. Wang,
+and W.L. Yang, Optimal energy storage in the Tavis-
+Cummings quantum battery, Phys. Rev. A 109, 012204
+(2024).
+[53] P. Bakhshinezhad, B. R. Jablonski, F. C. Binder, and
+N. Friis, Trade-oﬀs between precision and ﬂuctuations
+in charging ﬁnite-dimensional quantum batteries, Phys.
+Rev. E 109, 014131 (2024).
+[54] J. Q. Quach, K. E. McGhee, L. Ganzer, D. M. Rouse, B.
+W. Lovett, E. M. Gauger, J. Keeling, G. Cerullo, D. G.
+Lidzey, and T. Virgili, Superabsorption in an organic mi-
+crocavity: Toward a quantum battery, Science Advances
+8, 3160 (2022).
+[55] A. Delgado, P. A. M. Casares, R. dos Reis, M. S. Zini,
+R. Campos, N. Cruz-Hernandez, A. C. Voigt, A. Lowe,
+S. Jahangiri, M. A. Martin-Delgado, J. E. Mueller, and
+J. M. Arrazola, Simulating key properties of lithiumion
+batteries with a fault-tolerant quantum computer, Phys.
+Rev. A 106, 032428 (2022).
+[56] J. Joshi and T. S. Mahesh, Experimental investigation o f
+a quantum battery using star-topology nmr spin systems,
+Phys. Rev. A 106, 042601 (2022).
+[57] N. C. Rubin, D. W. Berry, F. D. Malone, A. F. White, T
+Khattar, A. E. De Prince III au2, S. Sicolo, M. K¨ uhn,
+M. Kaicher, J. Lee, and R. Babbush, Fault-tolerant
+quantum simulation of materials using bloch orbitals,
+arXiv:2302.05531 (2023).
+[58] J. Franklin, J. Bedard, and I. Sochnikov, Versatile mil -
+likelvin hybrid cooling platform for superconductivity re -
+search, IEEE Transactions on Applied Superconductivity
+33, 1600303 (2023).
+[59] D. Home and M. Whitaker, A conceptual analysis of
+quantum zeno; paradox, measurement, and experiment,
+Ann. Phys. (N.Y.) 258, 237 (1997).
+[60] H.M. Wiseman and J.F. Ralph, Reconsidering rapid
+qubit puriﬁcation by feedback, New J. Phys. 8, 90 (2006).
+[61] J. Combes, H. M. Wiseman, K. Jacobs, and A. J.
+O’Connor, Rapid puriﬁcation of quantum systems by
+measuring in a feedback-controlled unbiased basis, Phys.
+Rev. A 82, 022307 (2010).
+[62] J. Combes and H. M. Wiseman, Maximum informa-
+tion gain in weak or continuous measurements of qudits:
+Complementarity is not enough, Phys. Rev. X 1, 011012
+(2011).
+7
+[63] G.T. Landi, M. Paternostro, and A. Belenchia, Informa-
+tional steady states and conditional entropy production
+in continuously monitored systems, PRX Quantum 3,
+010303 (2022).
+[64] C. Elouard and A. N. Jordan, Eﬃcient quantum mea-
+surement engines, Phys. Rev. Lett. 120, 260601 (2018).
+[65] S. Rogers and A. N. Jordan, Postselection and quantum
+energetics, Phys. Rev. A 106, 052214 (2022).
+[66] R.F. Werner, Quantum states with Einstein-Podolsky-
+Rosen correlations admitting a hidden-variable model,
+Phys. Rev. A 40, 4277 (1989).
+[67] A. Sanpera, R. Tarrach, and G. Vidal, Local description
+of quantum inseparability, Phys. Rev. A 58, 826 (1998)."
+Optimizing quantum battery performance by reducing battery influence in charging dynamics,"Quantum batteries have emerged as promising devices that work within the quantum regime and provide energy storage and power delivery. We investigate the interplay between the battery and charger Hamiltonians, with a particular focus on minimizing the battery s influence during the charging dynamics. To achieve this, we introduce a control parameter that allows us to suppress the battery s contribution during the charging dynamics. We explore various configurations, including a non-interacting many-body battery with an interacting many-body charger, an interacting battery with a non-interacting charger, and systems where both the battery and charger are interacting many-body systems. Our results reveal a notable enhancement in stored energy and charging power when the battery s influence is suppressed, underscoring the pivotal role of the charger in optimizing performance. Remarkably, across all scenarios, we observe that the presence of the battery s countereffect within the charger Hamiltonian consistently leads to improved storage characteristics, highlighting a fresh direction in designing efficient quantum batteries",2025-05-12,,http://arxiv.org/pdf/2505.08029v1,"Rohit Kumar Shukla, Rajiv Kumar, Ujjwal Sen, Sunil K. Mishra","Researchers investigated the dynamics of quantum batteries, focusing on minimizing the battery's influence during charging to optimize performance. They introduced a control parameter to suppress the battery's contribution and explored various configurations, including interacting and non-interacting many-body systems. The results showed a significant enhancement in stored energy and charging power when the battery's influence was suppressed, highlighting the importance of the charger's role. The study also revealed that accounting for the battery's countereffect in the charger's Hamiltonian consistently led to improved storage characteristics, offering a new direction for designing efficient quantum batteries.","{'methodology': 'Investigating interplay between battery and charger Hamiltonians', 'data': 'Various configurations of interacting and non-interacting many-body systems', 'finding': ""Suppressing battery's influence enhances stored energy and charging power"", 'limitations': 'Not explicitly mentioned'}",2505.08029v1.pdf,"arXiv:2505.08029v1  [quant-ph]  12 May 2025
+Optimizing quantum battery performance by reducing battery influence in charging
+dynamics
+Rohit Kumar Shukla, 1, ∗ Rajiv Kumar, 2, † Ujjwal Sen,3, ‡ and Sunil K. Mishra 2, §
+1Department of Chemistry; Institute of Nanotechnology and Advanced
+Materials; Center for Quantum Entanglement Science and Technology,
+Bar-Ilan University, Ramat-Gan, 5290002, Israel
+2Department of Physics, Indian Institute of Technology (Banaras Hindu University) Varanasi - 221005, India
+3Harish-Chandra Research Institute, A CI of Homi Bhabha National Institute,
+Chhatnag Road, Jhunsi, Prayagraj 211019, India
+Quantum batteries have emerged as promising devices that work within the quantum regime
+and provide energy storage and power delivery. We investigate the interplay between the battery
+and charger Hamiltonians, with a particular focus on minimizing the battery’s influence during the
+charging dynamics. To achieve this, we introduce a control parameter that allows us to suppress the
+battery’s contribution during the charging dynamics. We explore various configurations, including a
+non-interacting many-body battery with an interacting many-body charger, an interacting battery
+with a non-interacting charger, and systems where both the battery and charger are interacting
+many-body systems. Our results reveal a notable enhancement in stored energy and charging power
+when the battery’s influence is suppressed, underscoring the pivotal role of the charger in optimiz-
+ing performance. Remarkably, across all scenarios, we observe that the presence of the battery’s
+countereffect within the charger Hamiltonian consistently leads to improved storage characteristics,
+highlighting a fresh direction in designing efficient quantum batteries.
+I. INTRODUCTION
+A quantum battery is a device designed to harness
+quantum properties to improve the efficiency of energy
+storage and retrieval. Traditional batteries store en-
+ergy in chemical reactions [1–5], while quantum batter-
+ies would utilize the principles of quantum mechanics to
+store and release energy in a more efficient and poten-
+tially higher-capacity manner [6–13]. The basic idea be-
+hind a quantum battery is that quantum systems can ex-
+ist in superposition states, meaning they can be in a com-
+bination of multiple states simultaneously. This property
+could potentially allow quantum batteries to store energy
+in a more distributed and efficient way compared to tra-
+ditional batteries. Additionally, quantum entanglement,
+where particles become correlated in such a way that the
+state of one particle determines the state of the other par-
+ticle, might enable quantum batteries to further enhance
+their energy storage capacity.
+Quantum batteries have attracted significant attention
+in recent years [6–21]. The primary goal of these ef-
+forts is to demonstrate how quantum mechanical systems
+and operations can enhance the stored energy or charg-
+ing power of a battery. A variety of approaches—ranging
+from single-qubit protocols to many-body systems—have
+been explored to showcase this quantum advantage [8,
+10, 16, 19, 20, 22, 23]. Notable models include the Dicke
+quantum battery, which achieves modest speedups due
+to collective effects [16, 17], and qubit-based schemes
+∗ rohitkrshukla.rs.phy17@itbhu.ac.in
+† rajivkumar.rs.phy22@iitbhu.ac.in
+‡ ujjwal@hri.res.in
+§ sunilkm.app@iitbhu.ac.in
+that demonstrate an N-fold power advantage, point-
+ing to strong scalability [8]. Moreover, coherent quan-
+tum charging protocols have shown superior performance
+compared to classical strategies, with significantly en-
+hanced power and robustness against decoherence and
+loss [24]. Recent studies have also underscored the im-
+portance of interaction topology: optimal performance
+in fermionic systems is observed when the interaction
+connectivity aligns with the interaction order [23]. In
+addition, alternative charging mechanisms such as those
+based on the Jaynes–Cummings model reveal that non-
+Gaussian cavity states can minimize energy fluctuations
+and achieve near-perfect charging fidelity [25]. These the-
+oretical developments have been paralleled by experimen-
+tal advances, with successful realizations using supercon-
+ducting circuits and trapped ions [26–29]. Periodic mod-
+ulation techniques have also been applied to spin systems
+for efficient charging [30], and the role of dissipation in
+open quantum systems has been investigated as a tool
+for enhancing performance [12, 31–38]. Notably, global
+charging methods—where all cells are charged simultane-
+ously—have been shown to offer the strongest quantum
+advantage, with power scaling quadratically with the sys-
+tem size [21].
+There has been a lack of discussion on the combined ef-
+fect of the battery and charger in the charging dynamics,
+particularly in the context of spin systems. Addressing
+this gap, our study explores the interplay between the
+battery and charger during the charging process, empha-
+sizing their joint influence on energy storage and power
+output. Our objective is to understand how optimizing
+their interactions can enhance overall performance while
+overcoming inherent limitations in the battery’s contri-
+bution.
+In quantum spin systems, both the battery and the
+2
+charger play a role in charging dynamics for storing en-
+ergy and power. However, we observe that the battery’s
+ability to achieve maximum storage energy and power is
+often constrained by the charger, which diminishes the
+battery’s effect during the charging process. To address
+this, we propose introducing an additional term in the
+charger Hamiltonian to counteract this limitation. By in-
+corporating the battery’s countereffect into the charger,
+we enhance both storage energy and power across all con-
+sidered configurations. This approach shifts the primary
+responsibility for energy storage to the charger, allowing
+the battery to adopt a more passive role, thereby optimiz-
+ing the charging process and maximizing the efficiency of
+quantum batteries.
+The manuscript is organized as follows: Section II in-
+troduces the setup involving the combined battery and
+charger system and defines the key physical quantities
+used in the analysis. Section III presents the results of
+energy storage and power calculations. Specifically, Sub-
+section III A examines the scenario where the battery is
+non-interacting and the charger is interacting, while Sub-
+section III B addresses the case of an interacting battery
+coupled to a non-interacting charger. Subsection III C
+explores the dynamics when both the battery and the
+charger are interacting. Finally, Section IV summarizes
+the main findings and concludes the manuscript.
+II. SET-UP
+A quantum battery typically comprises a finite num-
+ber of quantum systems, such as spins, that can store and
+transfer energy at the quantum level. The charger, also a
+quantum system composed of spins, is designed to inject
+energy into the battery. The dynamics of these spin-
+based systems are described by their respective Hamil-
+tonians. The battery Hamiltonian, ˆHB, describes the
+internal energy levels and/or interactions within the bat-
+tery, whereas the charger Hamiltonian, ˆHe
+C, encapsulates
+the dynamics and properties of the charger.
+To initiate the charging process, the charger is con-
+nected to the battery, allowing them to interact. This
+interaction results in the formulation of the total charg-
+ing Hamiltonian, which combines the contributions from
+both the battery and the charger. It is expressed as the
+sum of the battery Hamiltonian, ˆHB, and the charger
+Hamiltonian, ˆHe
+C, capturing the dynamics of energy ex-
+change between the two systems. Mathematically, it is
+expressed as
+ˆH = ˆHB + ˆHe
+C. (1)
+To extend the formulation, we treat the charger Hamil-
+tonian in a unique way by considering both interacting
+and non-interacting forms. In each case, we incorporate
+the countereffect of the battery into the charger Hamil-
+tonian to account for the mutual influence between the
+battery and charger during the charging dynamics. The
+1
+2
+3
+N
+N-1
+4
+5
+Figure 1. Illustration of all-to-all interaction of spins.
+strength of this countereffect is controlled by a parame-
+ter, λ, referred to as the battery’s countereffect param-
+eter. This modified Hamiltonian is termed the effective
+charger Hamiltonian, as it accounts for both the intrinsic
+dynamics of the charger and the influence of the battery.
+Mathematically, it is given as:
+ˆHe
+C = ˆHC − λ ˆHB. (2)
+This effective charger Hamiltonian is introduced during
+the charging process, where it operates alongside the bat-
+tery Hamiltonian. By incorporating the battery’s coun-
+tereffect into the charger dynamics, the total Hamilto-
+nian governing the charging process is updated. Substi-
+tuting the effective charger Hamiltonian into the total
+Hamiltonian [Eq. 1], we obtain:
+ˆH = ˆHB + ˆHC − λ ˆHB = ˆHC + (1 − λ) ˆHB, (3)
+Physically interesting range of λ lies between [0 , 1].
+When λ = 0, the battery fully contributes to energy stor-
+age and power during the charging process. Conversely,
+when λ = 1, the battery’s influence is completely nulli-
+fied during charging. For intermediate values of λ, the
+battery’s effect is progressively reduced, with the extent
+of this reduction determined by the strength of λ.
+To analyze the counter effect of the battery during the
+charging process, we calculate two key metrics: storage
+energy and power. The energy stored in the battery dur-
+ing the charging process is defined as:
+∆E = Tr[ˆρ(t) ˆHB] − Tr[ˆρ(0) ˆHB], (4)
+where ˆρ(0) = |ψ0⟩⟨ψ0|, and |ψ0⟩ is the ground state of the
+battery Hamiltonian. The time evolution of the system’s
+state is given as: |ψ(t)⟩ = ˆU(t) |ψ0⟩, where ˆU(t) = e−i ˆHt
+is the time-evolution operator.
+The storage power quantifies the rate at which energy
+is transferred into the system during the charging process
+and is given by:
+P = ∆E
+T . (5)
+Here, P represents the average power over the entire
+charging duration, and T denotes the total charging time.
+3
+This formulation provides a measure of how efficiently en-
+ergy is accumulated, offering insight into the performance
+and effectiveness of the energy storage process.
+III. RESULT
+To evaluate the performance of the quantum battery,
+we compute the stored energy and charging power across
+three distinct scenarios. In the first scenario, the battery
+is modeled as a non-interacting spin system, while the
+charger consists of interacting spins. In the second, the
+battery is an interacting spin system, and the charger is
+non-interacting. The third configuration involves both
+the battery and the charger as interacting spin systems.
+These setups allow us to systematically explore how the
+battery’s intrinsic properties influence the energy stor-
+age and power delivery during the charging process. We
+begin our analysis with the first scenario.
+A. Non-interacting battery and interacting charger
+Hamiltonian
+The non-interacting battery is modeled as a collection
+of spins aligned along the z-direction, with each spin hav-
+ing a strength h. The battery Hamiltonian is defined as:
+ˆHB = h
+NX
+j=1
+ˆσz
+j , (6)
+where N is the total number of spins. In its spectral
+decomposition, the battery Hamiltonian can be expressed
+as:
+ˆHB = h
+2N
+X
+n=1
+En|En⟩⟨En|, (7)
+where En are the eigenvalues, ranging from −N (ground
+state energy) to N (highest energy level). The total num-
+ber of energy levels is 2 N , with the ground state and the
+highest energy state being non-degenerate. The remain-
+ing energy levels exhibit degeneracy, given byN Cl, where
+l = 1, 2, . . . , N−1, corresponding to intermediate energy
+levels.
+The goal of charging the battery is to transition it from
+the ground energy state |E1⟩ with energy −Nh to the
+highest energy state |E2N ⟩ with energy Nh. The maxi-
+mum storage energy ∆Emax is defined as:
+∆Emax =
+
+Tr
+h
+ˆρ(0) ˆHB
+i
+max
+−
+
+Tr
+h
+ˆρ(0) ˆHB
+i
+min
+,
+=
+h
+Nh − (−Nh)
+i
+= 2Nh. (8)
+The maximum storage energy of the non-interacting bat-
+tery, as described by Eq. (6), is given by 2 Nh.
+Figure 2. Non-interacting battery with ATA interacting Ising
+spin charger. (a) ∆ E and (b) P vs. t for different values of
+λ with fixed system size N = 10. (c 1) and (c 2) show ∆ E
+vs. t for systems with (c 1) odd and (c 2) even N with fixed
+λ = 1. (d) P vs. t for various N. The parameters used are
+J = h = 1, with periodic boundary conditions applied.
+Figure 3. Maximum storage (a) energy and (b) power as
+functions of the battery’s countereffect strength λ, for two in-
+teraction scenarios and their special cases, with system size
+fixed at N = 10. Maximum storage (c) energy and (d)
+power as functions of system size N, with the battery counter
+strength fixed at λ = 1. In all cases, the parameters used are
+J = h = 1, and γ = 0.5.
+To examine the influence of the battery’s countereffect
+on its storage energy and power, we consider an all-to-
+all (ATA) interacting Ising spin system as an interacting
+charger, as illustrated in Fig. 1. The interaction strength
+between a spin and its k-th neighbor decays as 1
+2k−1 . The
+corresponding Hamiltonian is given by:
+ˆHC = J
+NX
+j=1
+ KX
+k=1
+1
+2k−1 σx
+j σx
+j+k
+!
+, (9)
+where K represents the maximum interaction range. We
+4
+assume periodic boundary conditions, i.e., ˆ σN+k = ˆσk,
+to preserve translational symmetry and eliminate edge
+effects. To avoid redundancy under periodic boundary
+conditions, we fix K = N−1
+2 for odd N and K = N
+2 for
+even N, ensuring that each spin pair is included only
+once.
+We calculate the storage energy of the non-interacting
+battery Hamiltonian with the ATA connected Ising spin
+system as the charger Hamiltonian for different values
+of λ ranging from [0 , 1]. It is observed that for all val-
+ues of λ (except at λ = 1), the storage energy increases
+and eventually oscillates about a particular value with
+random amplitudes and frequencies. At λ = 1, the stor-
+age energy increases and saturates at a particular value.
+However, at a certain time, a sudden jump occurs, lead-
+ing to the highest storage energy, ∆ Emax = 2hN. This
+suggests that at this value of λ, the battery reaches its
+highest energy state [Fig. 2(a)].
+The storage power exhibits a similar behavior for all
+values of λ, increases, reaches its maximum value at a
+specific time, and then starts to decrease. As the value
+of λ increases, the maximum storage power also increases.
+[Fig. 2(b)].
+The storage energy is analyzed as a function of the sys-
+tem size, with the parameter λ fixed at 1, revealing an
+odd-even effect in its behaviour. For odd system sizes,
+the storage energy increases, saturates at a particular
+value with very small oscillation amplitudes, and then
+decreases to zero at a specific time. The region of satu-
+ration also depends on the system size. As the system size
+increases, the time regime of constant energy increases.
+In other words, the storage energy exhibits periodic be-
+havior, with the period of the storage energy increasing
+as the system size grows [Fig. 2(c1)]. Additioanlay, max-
+ima of the storage energy also increase with increasing
+system size. Conversely, for even system sizes, the stor-
+age energy increases as time progresses, saturates for a
+fixed period, and reaches its maximum value at a specific
+time. The maximum value of the storage energy suggests
+that, in this scenario, the battery attains its highest en-
+ergy state, 2hN. Similar to odd system sizes, the storage
+energy for even system sizes also exhibits periodic behav-
+ior, with the period increasing as the system size grows [
+Fig. 2(c2)].
+The storage power of the battery is analyzed as a func-
+tion of the system size with a fixed value of λ = 1. It
+is observed that while the storage power depends on the
+system size, it does not exhibit the odd-even effect. For
+all system sizes, the storage power increases over time,
+reaches a maximum value, and then begins to decline.
+The maximum storage energy increases with the growth
+of the system size. [Fig. 2(d)].
+Optimum storage energy and power
+To better understand how the counter effect influences
+the charging process, we investigate how the maximum
+storage energy and charging power vary with the counter
+effect parameter λ. We also examine how these quantities
+scale with the system size. For this purpose, we consider
+two distinct types of charger Hamiltonians.
+The first type is defined in Eq. (9) and corresponds to
+the Ising spin system with ATA interactions. As a special
+case, we also study the nearest-neighbor (NN) Ising spin
+system by setting the interaction range K = 1. In this
+case, the charger Hamiltonian simplifies to the standard
+NN Ising model:
+ˆHC = J
+NX
+j=1
+ˆσx
+j ˆσx
+j+1. (10)
+The second type of charger is qualitatively different and
+is based on the XY spin system with ATA interactions.
+The Hamiltonian is given by:
+ˆHC = (1 + γ)
+NX
+j=1
+ KX
+k=1
+1
+2k−1 ˆσx
+j ˆσx
+j+k
+!
++(1 − γ)
+NX
+j=1
+ KX
+k=1
+1
+2k−1 ˆσy
+j ˆσy
+j+k
+!
+, (11)
+where γ is the anisotropy parameter and K denotes the
+interaction range. We also consider the NN case of the
+Eq. (11)that is obtained by setting K = 1, resulting in
+the following Hamiltonian:
+ˆHC = (1 + γ)
+NX
+j=1
+ˆσx
+j ˆσx
+j+1 + (1 − γ)
+NX
+j=1
+ˆσy
+j ˆσy
+j+1. (12)
+By analyzing these different charger configurations, we
+systematically compare their influence on the battery’s
+maximum storage energy and power. This comparison
+provides valuable insights into how the type and range of
+interactions affect the performance and optimization of
+quantum batteries.
+By employing two types of charger Hamiltoni-
+ans—Ising and XY models—with both ATA interactions
+and their special case of NN interactions, we investigate
+the maximum storage energy and power of the battery
+as functions of the countereffect strength and the system
+size.
+In all considered cases, the maximum storage energy
+increases with increasing λ and reaches its optimum at
+λ = 1. [Fig. 3(a)]. For the Ising spin system with ATA in-
+teractions, the maximum storage energy reaches the up-
+per bound of 2 hN at λ = 1. In contrast, when restricted
+to NN interactions, the storage energy only reaches half
+this value, i.e., hN, at the same λ. In the case of the
+XY ATA interacting charger, the battery attains a maxi-
+mum storage energy greater than hN, though not reach-
+ing 2hN. For the XY NN case, the energy remains below
+hN even at λ = 1. These observations highlight that
+long-range interactions (especially ATA) significantly en-
+hance the energy storage capacity of the quantum bat-
+tery. Thus, λ = 1 marks an optimal point where energy
+5
+transfer during the charging protocol becomes most ef-
+ficient, particularly in systems with long-range interac-
+tions.
+The behavior of the storage power also supports the
+efficiency of the charging protocol with increasing coun-
+tereffect. As shown in Fig. 3(b), the maximum stor-
+age power increases approximately linearly with λ in
+all the considered cases, reaching its optimum value at
+λ = 1. These results reinforce the conclusion that the
+countereffect of the battery—modeled by the parameter
+λ—facilitates more efficient energy transfer and charg-
+ing dynamics. In particular, λ = 1 consistently yields
+the best performance in terms of both storage energy
+and power across all interacting charger configurations.
+Among the different interaction types, the Ising spin sys-
+tems (both NN and ATA) exhibit higher storage power
+compared to their XY counterparts. This indicates that
+the nature of the spin-spin interaction affects the storage
+capacity.
+Furthermore, we investigate how the system size N in-
+fluences the maximum storage energy and power, keeping
+the countereffect parameter fixed at λ = 1. Interestingly,
+for chargers with ATA interactions, we observe an odd-
+even effect in the storage energy behavior. In the Ising
+ATA case, when the system size N is even, the max-
+imum storage energy reaches its upper bound of 2 hN,
+whereas for odd N, it only attains half of that value,
+i.e., hN. On the other hand, in the NN Ising interaction
+case, the storage energy consistently reaches half of the
+maximum possible value, hN, regardless of system size.
+A similar odd-even behavior appears in the XY ATA in-
+teracting charger. For odd system sizes, the storage en-
+ergy remains below half of the maximum value ( < hN),
+while for even system sizes, it exceeds half the maximum
+(> hN). In contrast, the XY NN configuration yields
+a storage energy that remains below hN for all system
+sizes [Fig. 3(c)].
+The storage power exhibits a linear increase with sys-
+tem size N across all the considered charger configura-
+tions. Among them, the Ising ATA interaction yields the
+highest storage power, demonstrating superior charging
+efficiency. In contrast, the XY ATA configuration results
+in the lowest storage power, indicating relatively less ef-
+ficient energy transfer dynamics [Fig. 3(d)].
+B. Interacting battery and non-interacting charger
+Hamiltonian
+To generalize our observation that the countereffect of
+a battery in the charging dynamics enhances storage en-
+ergy and power, we now consider a reversed setup: an
+interacting battery coupled to a non-interacting charger.
+The interacting battery Hamiltonians considered are of
+two types: Ising spin system with NN interaction de-
+fined by Eq.(10), i.e., ˆHB = J PN
+j=1 σx
+j σx
+j+1, and XY
+spin system with NN interaction defined by Eq.(12), i.e.,
+ˆHB = (1 + γ) PN
+j=1 σx
+j σx
+j+1 + (1 − γ) PN
+j=1 σy
+j σy
+j+1. The
+Figure 4. (a) ∆ E and (b) P vs. t for NN Ising interacting
+Hamiltonian as a battery and non-interacting Hamiltonian as
+a charger. (c) ∆ E and (d) P vs. t for NN interacting XY
+spin system as a battery and non-interacting Hamiltonian as
+a charger. Parameterse are: N = 12, J = 1, h = 1, and
+γ = 0.5. Periodic boundary conditions are considered.
+non-interacting charger Hamiltonian is given by Eq. (6),
+i.e., ˆHC = h PN
+j=1 ˆσz
+j .
+We analyze the storage energy and power of the bat-
+tery in two scenarios: one where the battery’s influence
+on the charger is present (λ = 0) and another where it is
+absent (λ = 1). The results demonstrate that, for both
+Ising and XY interacting batteries, storage energy and
+power are notably higher when λ = 1, underscoring the
+beneficial role of the battery’s countereffect in the charg-
+ing dynamics. Additionally, the Ising model consistently
+yields superior performance over the XY model in both
+metrics, as shown in Fig. 4(a–d).
+C. Interacting battery and interacting charger
+Hamiltonian
+We consider the scenario where both the battery and
+charger are governed by interacting Hamiltonians. First,
+we analyze the case where the battery is modeled by an
+Ising spin system with NN interactions [Eq. (10)], and
+the charger is described by an NN XY-interacting Hamil-
+tonian [Eq. (12)]. We calculate the storage energy and
+power in two situations: when the battery’s influence is
+present in the charging dynamics ( λ = 0) and when it is
+absent (λ = 1). Our results indicate that the presence
+of the counter effect of battery during charging leads to
+an advantage in both the stored energy and the power
+[Fig. 5(a,b)].
+Next, we examine the reverse configuration: the bat-
+tery is now represented by an NN XY-interacting spin
+system [Eq. (12)], while the charger is governed by an
+NN Ising-type interaction [Eq. (10)]. In this case, we
+again compute the storage energy and power, and we
+6
+Figure 5. (a) ∆ E and (b) P as a function of time t for a
+NN interacting Ising spin system as the battery and NN inter-
+acting XY spin system as the charger Hamiltonian. (c) ∆ E
+and (d) P vs. t for a NN interacting XY spin system as the
+battery and NN interacting Ising spin system as the charger
+Hamiltonian. The system parameters are N = 12, J = 1, and
+γ = 0.5. Periodic boundary conditions are considered.
+find that when the battery’s influence is absent in the
+charging dynamics (λ = 1), the system exhibits improved
+performance in terms of both energy storage and power
+[Fig. 5(c,d)].
+In nutshell, across all scenarios considered, the pres-
+ence of the battery’s counter effect in the charging dy-
+namics consistently provides an advantage in both en-
+ergy storage and power. This advantage is consistent for
+being independent of the interaction and noniteration of
+the battery and charger Hamiltonians.
+IV. CONCLUSION
+In this work, we explored the role of the battery’s coun-
+tereffect in the charging dynamics of quantum batteries
+composed of spin systems. By analyzing various config-
+urations involving both non-interacting and interacting
+Hamiltonians for the battery and charger, we demon-
+strated how their interplay significantly impacts storage
+energy and power.
+We began by examining a non-interacting battery cou-
+pled to an interacting charger modeled by an ATA Ising
+spin system. Our results revealed that incorporating the
+battery’s countereffect into the dynamics ( λ = 1) leads
+to optimal performance, with the storage energy reaching
+its theoretical maximum 2 Nh and the power also peak-
+ing. Notably, an odd-even parity effect emerged in energy
+storage for increasing system sizes, while power remained
+parity-independent.
+To further understand the influence of interaction
+types and ranges, we compared Ising and XY charger
+models with both ATA and NN interactions. Across all
+these cases, the optimum storage energy and power con-
+sistently occurred at λ = 1, emphasizing the constructive
+role of the countereffect in enhancing energy transfer.
+Both quantities exhibited linear scaling with system size,
+confirming the scalability of our protocol.
+Extending the analysis to interacting batteries with
+non-interacting chargers, where the battery is governed
+by either Ising or XY NN interactions, we observed that
+the inclusion of the countereffect continued to offer su-
+perior energy and power outcomes. This advantage per-
+sisted even in the most general scenario where both the
+battery and charger are interacting systems, reinforcing
+the robustness of our findings across diverse interaction
+frameworks.
+Interestingly, in cases where the charger is modeled
+with ATA interactions, the charging power peaks be-
+yond the physically meaningful range ( λ >1). Although
+this shift lies outside the regime of practical relevance, it
+suggests the presence of underlying physical mechanisms
+that merit deeper investigation. A detailed discussion of
+this anomaly is provided in Appendix A.
+Altogether, our study establishes the critical impor-
+tance of retaining the battery’s countereffect in the
+charger Hamiltonian for optimizing quantum battery per-
+formance. These insights offer valuable guidance for the
+design of efficient and scalable quantum energy storage
+devices and open new avenues for exploring interaction-
+driven enhancements in quantum thermodynamic proto-
+cols.
+[1] G. Liu, L. Lu, H. Fu, J. Hua, J. Li, M. Ouyang, Y. Wang,
+S. Xue, and P. Chen, A comparative study of equivalent
+circuit models and enhanced equivalent circuit models of
+lithium-ion batteries with different model structures, in
+2014 IEEE Conference and Expo Transportation Electri-
+fication Asia-Pacific (ITEC Asia-Pacific) (IEEE, 2014)
+pp. 1–6.
+[2] H. Chaoui, C. C. Ibe-Ekeocha, and H. Gualous, Aging
+prediction and state of charge estimation of a lifepo4 bat-
+tery using input time-delayed neural networks, Electric
+Power Systems Research 146, 189 (2017).
+[3] Z. Chen, Y. Fu, and C. C. Mi, State of charge estimation
+of lithium-ion batteries in electric drive vehicles using ex-
+tended kalman filtering, IEEE Transactions on Vehicular
+Technology 62, 1020 (2012).
+[4] C. Fleischer, W. Waag, Z. Bai, and D. U. Sauer, Adaptive
+on-line state-of-available-power prediction of lithium-ion
+batteries, Journal of Power Electronics 13, 516 (2013).
+[5] J. P. Rivera-Barrera, N. Mu˜ noz-Galeano, and H. O.
+Sarmiento-Maldonado, Soc estimation for lithium-ion
+batteries: Review and future challenges, Electronics 6,
+102 (2017).
+[6] R. Alicki and M. Fannes, Entanglement boost for ex-
+tractable work from ensembles of quantum batteries,
+7
+Physical Review E 87, 042123 (2013).
+[7] K. V. Hovhannisyan, M. Perarnau-Llobet, M. Huber,
+and A. Ac´ ın, Entanglement generation is not necessary
+for optimal work extraction, Physical review letters 111,
+240401 (2013).
+[8] F. C. Binder, S. Vinjanampathy, K. Modi, and J. Goold,
+Quantacell: powerful charging of quantum batteries, New
+Journal of Physics 17, 075015 (2015).
+[9] F. Campaioli, F. A. Pollock, F. C. Binder, L. C´ eleri,
+J. Goold, S. Vinjanampathy, and K. Modi, Enhancing
+the charging power of quantum batteries, Physical review
+letters 118, 150601 (2017).
+[10] T. P. Le, J. Levinsen, K. Modi, M. M. Parish, and F. A.
+Pollock, Spin-chain model of a many-body quantum bat-
+tery, Physical Review A 97, 022106 (2018).
+[11] S. Ghosh, T. Chanda, A. Sen, et al. , Enhancement in
+the performance of a quantum battery by ordered and
+disordered interactions, Physical Review A 101, 032115
+(2020).
+[12] D. Farina, G. M. Andolina, A. Mari, M. Polini, and
+V. Giovannetti, Charger-mediated energy transfer for
+quantum batteries: An open-system approach, Physical
+Review B 99, 035421 (2019).
+[13] S. Ghosh and A. Sen(De), Dimensional enhancements in
+a quantum battery with imperfections, Phys. Rev. A105,
+022628 (2022).
+[14] X. Yang, Y.-H. Yang, M. Alimuddin, R. Salvia, S.-M.
+Fei, L.-M. Zhao, S. Nimmrichter, and M.-X. Luo, Bat-
+tery capacity of energy-storing quantum systems, Physi-
+cal Review Letters 131, 030402 (2023).
+[15] L. Peng, W.-B. He, S. Chesi, H.-Q. Lin, and X.-W. Guan,
+Lower and upper bounds of quantum battery power in
+multiple central spin systems, Physical Review A 103,
+052220 (2021).
+[16] D. Ferraro, M. Campisi, G. M. Andolina, V. Pelle-
+grini, and M. Polini, High-power collective charging of a
+solid-state quantum battery, Physical review letters 120,
+117702 (2018).
+[17] G. M. Andolina, M. Keck, A. Mari, V. Giovannetti, and
+M. Polini, Quantum versus classical many-body batter-
+ies, Physical Review B 99, 205437 (2019).
+[18] N. Friis and M. Huber, Precision and work fluctuations
+in gaussian battery charging, Quantum 2, 61 (2018).
+[19] S. Juli` a-Farr´ e, T. Salamon, A. Riera, M. N. Bera, and
+M. Lewenstein, Bounds on the capacity and power of
+quantum batteries, Physical Review Research 2, 023113
+(2020).
+[20] D. Rossini, G. M. Andolina, D. Rosa, M. Carrega, and
+M. Polini, Quantum advantage in the charging process
+of sachdev-ye-kitaev batteries, Physical Review Letters
+125, 236402 (2020).
+[21] J.-Y. Gyhm, D. ˇSafr´ anek, and D. Rosa, Quantum charg-
+ing advantage cannot be extensive without global opera-
+tions, Physical Review Letters 128, 140501 (2022).
+[22] D. Rosa, D. Rossini, G. M. Andolina, M. Polini, and
+M. Carrega, Ultra-stable charging of fast-scrambling
+syk quantum batteries, Journal of High Energy Physics
+2020, 1 (2020).
+[23] G. Francica, Quantum advantage in batteries for
+sachdev-ye-kitaev interactions, Physical Review A 110,
+062209 (2024).
+[24] R. Salvia, M. Perarnau-Llobet, G. Haack, N. Brunner,
+and S. Nimmrichter, Quantum advantage in charging
+cavity and spin batteries by repeated interactions, Phys-
+ical Review Research 5, 013155 (2023).
+[25] D. Rinaldi, R. Filip, D. Gerace, and G. Guarnieri, Re-
+liable quantum advantage in quantum battery charging,
+arXiv preprint arXiv:2412.15339 (2024).
+[26] J. Q. Quach, K. E. McGhee, L. Ganzer, D. M. Rouse,
+B. W. Lovett, E. M. Gauger, J. Keeling, G. Cerullo, D. G.
+Lidzey, and T. Virgili, Superabsorption in an organic mi-
+crocavity: Toward a quantum battery, Science advances
+8, eabk3160 (2022).
+[27] C.-K. Hu, J. Qiu, P. J. Souza, J. Yuan, Y. Zhou,
+L. Zhang, J. Chu, X. Pan, L. Hu, J. Li, et al. , Optimal
+charging of a superconducting quantum battery, Quan-
+tum Science and Technology 7, 045018 (2022).
+[28] F.-Q. Dou and F.-M. Yang, Superconducting transmon
+qubit-resonator quantum battery, Physical Review A
+107, 023725 (2023).
+[29] J. Joshi and T. Mahesh, Experimental investigation of a
+quantum battery using star-topology nmr spin systems,
+Physical Review A 106, 042601 (2022).
+[30] S. Mondal and S. Bhattacharjee, Periodically driven
+many-body quantum battery, Physical Review E 105,
+044125 (2022).
+[31] S. Ghosh, T. Chanda, S. Mal, A. Sen, et al., Fast charging
+of a quantum battery assisted by noise, Physical Review
+A 104, 032207 (2021).
+[32] S.-Q. Liu, L. Wang, H. Fan, F.-L. Wu, and S.-Y. Liu,
+Better performance of quantum batteries in different en-
+vironments compared to closed batteries, Physical Re-
+view A 109, 042411 (2024).
+[33] A. C. Santos, Quantum advantage of two-level batteries
+in the self-discharging process, Physical Review E 103,
+042118 (2021).
+[34] S.-Y. Bai and J.-H. An, Floquet engineering to reactivate
+a dissipative quantum battery, Physical Review A 102,
+060201 (2020).
+[35] J. Q. Quach and W. J. Munro, Using dark states to
+charge and stabilize open quantum batteries, Physical
+Review Applied 14, 024092 (2020).
+[36] M. Carrega, A. Crescente, D. Ferraro, and M. Sassetti,
+Dissipative dynamics of an open quantum battery, New
+Journal of Physics 22, 083085 (2020).
+[37] F. Zhao, F.-Q. Dou, and Q. Zhao, Quantum battery of
+interacting spins with environmental noise, Physical Re-
+view A 103, 033715 (2021).
+[38] F. Barra, Dissipative charging of a quantum battery,
+Physical review letters 122, 210601 (2019).
+8
+Figure 6. Storage power P(t) as a function of time t for
+ATA interacting (a) Ising and (b) XY charger Hamiltonian,
+shown for various values of the countereffect parameter λ.
+The insets display the corresponding maximum storage power
+as a function of λ. Parameters used: J = h = 1, N = 10, and
+γ = 0.5.
+Appendix A: Charging dynamics beyond physical
+regime
+In the main manuscript, we investigate the charging
+dynamics of quantum batteries within the physically ac-
+ceptable range of the countereffect parameter, λ ∈ [0, 1].
+Within this regime, both the storage energy and power
+attain their maximum at λ = 1. Interestingly, our analy-
+sis further reveals that the storage power reaches an even
+higher value beyond this physical regime ( λ >1) in the
+case of ATA interacting Ising and XY charger Hamil-
+tonians. However, the storage energy still achieves its
+maximum at λ = 1. Although the region λ > 1 falls
+outside the standard physical constraints, we emphasize
+this result to highlight its potential implications and to
+encourage future investigations into such unconventional
+regimes.
+We analyze the storage power for a non-interacting
+battery defined by Eq. (6) and ATA-interacting Ising and
+XY chargers described by Eq. (9) and Eq. (11), respec-
+tively, considering the countereffect parameter of the bat-
+tery in the range λ ∈ [0, 5]. In both cases, for all values
+of λ, the storage power exhibits a consistent trend: it
+initially increases, reaches a maximum value, and subse-
+quently decreases after a certain time [Fig. 6(a,b)]. The
+maximum storage power, Pmax, depends on λ and in-
+creases with it, attaining its peak at λ = 1 .6 for the
+ATA interacting Ising charger and λ = 2.8 for the ATA
+interacting XY charger. Beyond these points, the stor-
+age power decreases with further increases in λ [inset of
+Fig. 6(a,b)]. Remarkably, the highest Pmax values occur
+outside the physically accepted regime ( λ >1)."
+Efficient charging of multiple open quantum batteries through dissipation and pumping,"We explore a protocol that efficiently charges multiple open quantum batteries in parallel using a single charger. This protocol shows super-extensive charging through collective coupling of the charger and the battery to the same thermal reservoir. When applied to multiple quantum batteries, each coupled to different thermal reservoirs, the energy cannot be efficiently transferred from the charger to the battery via collective dissipation alone. We show that the counter-intuitive act of incorporating both dissipation and incoherent collective pumping on the charger enables efficient parallel charging of many quantum batteries.",2024-10-25,,http://arxiv.org/pdf/2410.19303v1,"Josephine Dias, Hui Wang, Kae Nemoto, Franco Nori, William J. Munro","This study aims to develop an efficient protocol for charging multiple open quantum batteries in parallel using a single charger. The researchers explore the use of collective coupling to a thermal reservoir to achieve super-extensive charging. However, they find that when batteries are coupled to different reservoirs, collective dissipation alone is insufficient for efficient energy transfer. By incorporating both dissipation and incoherent collective pumping, the study demonstrates a counter-intuitive approach that enables efficient parallel charging of multiple quantum batteries.","{'methodology': 'protocol using collective coupling and incoherent collective pumping', 'data': 'multiple open quantum batteries and thermal reservoirs', 'finding': 'efficient parallel charging via collective dissipation and pumping', 'limitations': 'inefficient transfer when batteries coupled to different reservoirs'}",2410.19303v1.pdf,"Efficient charging of multiple open quantum batteries through dissipation and
+pumping
+Josephine Dias,1, 2,∗ Hui Wang (王惠),3, † Kae Nemoto,1, 4Franco Nori (野理),3, 5, 6and William J. Munro 1, 4
+1Okinawa Institute of Science and Technology Graduate University, Onna-son, Okinawa 904-0495, Japan
+2Centre for Quantum Computation and Communication Technology,
+School of Mathematics and Physics, University of Queensland, St Lucia, Queensland 4072, Australia
+3Theoretical Quantum Physics Laboratory, Cluster for Pioneering Research, RIKEN, Wakoshi, Saitama 351-0198, Japan
+4National Institute of Informatics, 2-1-2 Hitotsubashi, Chiyoda, Tokyo 101-0003, Japan
+5Quantum Computing Center, RIKEN, Wakoshi, Saitama 351-0198, Japan
+6Department of Physics, The University of Michigan, Ann Arbor, Michigan 48109-1040, USA
+(Dated: October 28, 2024)
+We explore a protocol that efficiently charges multiple open quantum batteries in parallel using
+a single charger. This protocol shows super-extensive charging through collective coupling of the
+charger and the battery to the same thermal reservoir. When applied to multiple quantum batteries,
+each coupled to different thermal reservoirs, the energy cannot be efficiently transferred from the
+charger to the battery via collective dissipation alone. We show that the counter-intuitive act of
+incorporating both dissipation and incoherent collective pumping on the charger enables efficient
+parallel charging of many quantum batteries.
+Quantum batteries (QB) have attracted significant re-
+cent attention for the potential of transferring and stor-
+ing energy via quantum mechanically enhanced processes
+[1–9]. Such devices could prove useful in the control, ma-
+nipulation and powering of quantum technologies. Ini-
+tially, QBs were considered in a closed system with uni-
+tary dynamics, where it was demonstrated that using en-
+tangling unitary operations allows for the extraction of
+more work [1]. QBs have since been considered in several
+open system frameworks [10, 11]. In particular, the Dicke
+model [12], which considers an ensemble of spins collec-
+tively coupled to a photon mode, can be employed to
+speed up the charging time of a QB [13–18]. The crucial
+aspect is that quantum characteristics—such as entan-
+glement, quantum coherence, and superradiant (collec-
+tive) behaviours—can enable more powerful and efficient
+charging processes compared to classical methods [2, 19].
+Recently, an open quantum battery protocol was intro-
+duced where a charger, initially comprising an ensemble
+of spins in the excited state, charges a battery consisting
+of a smaller spin ensemble [20]. The charger and battery
+are not directly coupled to each other, but are collectively
+coupled to a single thermal reservoir. The charging pro-
+cess is initiated by switching on the coupling between
+the spin ensembles and the reservoir. Collective dissipa-
+tion in the entire system leads to spin inversion [21, 22],
+thereby charging the battery. Counter-intuitively, the
+energy stored in the spins of the battery does not de-
+cay to the ground state even in the presence of a zero-
+temperature thermal reservoir: the charged state of the
+battery remains stable while connected to the charger.
+This phenomenon arises because the steady state of the
+charger and battery includes a component that does not
+interact with the reservoir and thus avoids decaying to
+the ground state. Such states are known as dark states,
+which emerge when multiple spins are collectively cou-
+pled to a bosonic mode [23, 24]. This is due to the collec-
+tive coupling of all the spins in the battery and charger to
+the thermal reservoir and should not be viewed as energy
+transfer due to the emission of a photon by the charger
+followed by the absorption of that photon by the battery.
+Provided the number of spins in the charger is signif-
+icantly larger than the number of the spins in the bat-
+tery, all the spins in the battery will transition to the
+excited state [20]. As part of our research, we take the
+next critical step to simultaneously charge multiple bat-
+teries in parallel, each located in separate reservoirs using
+a single, centralized charger. Our method for efficiently
+charging multiple quantum batteries incorporates exter-
+nal resources to continuously pump the charger, thereby
+providing a steady supply of energy to the charger-QB
+system. This protocol relies on multiple incoherent pro-
+cesses including collective dissipation and pumping.
+We start by exploring the model of a general charger-
+battery system, consisting of two ensembles of identical
+spin−1/2 particles with frequency ω0/2π. Both ensem-
+bles are collectively coupled to the same bosonic reser-
+voir. One ensemble is designated as the charger C, and
+the other as the battery B. The Hamiltonian for this
+system is:
+H =ℏω0(Jz
+C + Jz
+B) +
+X
+k
+ℏωka†
+kak
++
+X
+k
+h
+λk
+ 
+J+
+C + J+
+B
+
+ak + λ∗
+ka†
+k
+ 
+J−
+C + J−
+B
+i
+.
+(1)
+Here, the first term represents the spins in the QB
+and charger, the second term is the Hamiltonian of the
+bosonic reservoir, the third term represents the collective
+interaction of all spins in the QB and charger with the
+bosonic modes, while JB, JC are the collective spin op-
+erators for the battery and charger respectively. These
+are defined as Jα
+C,B = 1 /2ΣNC,NB
+i=1 σα
+i , with α = x, y, z,
+arXiv:2410.19303v1  [quant-ph]  25 Oct 2024
+2
+where σα
+i is the Pauli operator of the ith spin. The col-
+lective spin raising and lowering operators are J±
+C,B =
+Jx
+C,B ± iJy
+C,B. The operators a†
+k (ak) represent the cre-
+ation (annihilation) operators of the kth bosonic mode of
+the reservoirs. The parameters λk (λ∗
+k) represent emis-
+sion (absorption) amplitudes that fix the spectral density
+of the reservoirs Γ( ω) = 2π P
+k |λk|2δ(ω − ωk). Turning
+on or off the collective coupling will start or stop the
+charging process.
+Under the Born-Markov approximation, in the weak-
+coupling limit, the master equation describing the dy-
+namics of the combined system can be written in the
+rotating frame as:
+˙ρ =γ⇓L
+
+J−
+C + J−
+B
+
+ρ , (2)
+for a zero-temperature reservoir. Here, γ⇓ is the dissipa-
+tive collective coupling constant between spin-ensembles
+and reservoir with γ⇓ = Γ(ω0) = Γ ω0 in the wide band
+limit. The superoperator L is defined by L[O] ρ =
+2OρO† − O†Oρ − ρO†O. Next the energy density of the
+spin ensembles is defined as:
+Eµ(t)
+ℏω0
+= ⟨Jz
+µ(t)⟩
+Nµ
++ 1
+2 , (3)
+where the subscript µ denotes the charger C or bat-
+tery B. Initially, the energy densities of the system are
+EC (0) /(ℏω0) = 1 and EB (0) /(ℏω0) = 0. Efficient trans-
+fer means the energy density of the battery will go to
+EB (tf) /(ℏω0) ∼ 1 at some time tf.
+Nominally, there are two scales for which we can look
+at this open quantum battery protocol [20]. Small scale
+systems for which the number of spins in the batteries
+and the charger are kept small, these can be modeled via
+solving the master equation directly. In systems where
+the battery and the charger have large spin numbers,
+solving the master equation exactly is challenging. Here,
+we can employ a mean-field approximation to solve for
+the dynamics at large scales.
+In general, for this process to transfer energy from the
+charger to the QB [ EB(tf) > EC(tf)], it requires the con-
+dition NC > NB; that is, the charger must be larger than
+the battery. Efficient energy transfer [ EB/(ℏω0) → 1] oc-
+curs when NC ≫ NB. Notably, this charging process is
+most efficient for zero-temperature reservoirs. However,
+as the reservoir temperature increases, energy transfer
+can still be achieved, albeit the process is less efficient
+[EB(tf)/(ℏω0) < 1]. Importantly, while the spins in the
+battery and the charger are not directly coupled, the col-
+lective coupling between all spins and the thermal reser-
+voir allows for effective long range interactions between
+the battery and the charger. Entanglement is generated
+between the battery and the charger through this process
+[21, 25].
+In the following, we explore how to utilize this process
+to charge multiple QBs in parallel. While it is known that
+battery
+batterybattery
+collective 
+pumping
+charger
+Figure 1. Open quantum battery protocol for efficient charg-
+ing of many QBs coupled to separate thermal reservoirs. A
+central spin ensemble labelled ‘charger’ is coupled to three
+separate thermal reservoirs. Each individual reservoir con-
+tains a QB (a spin ensemble smaller than the charger). Pic-
+tured here is the initial state of the total system, with all spins
+in the charger prepared in the excited state and all spins in
+all QBs in the ground state. Through the combination of
+the collective spin relaxation and the collective pumping on
+the charger, the energy density can be transferred from the
+charger to the battery.
+many QBs can be efficiently charged if they are coupled
+to the same reservoir [13], this induces a severe spatial
+constraint on the location of the QBs, as they must all
+couple to the same field. Ideally, we would want to utilize
+a central charger that can be coherently coupled to many
+different thermal reservoirs, with each reservoir holding
+its own QB. This allows the QBs to be potentially fur-
+ther apart and can in principle direct energy towards
+other devices. Another advantage of coupling to inde-
+pendent reservoirs could be the ability to accommodate
+asymmetrical coupling configurations [26].
+Extending the model from a single QB in one reservoir
+(2) to multiple QBs each in its own separate reservoir,
+yields the following master equation:
+˙ρ =γ⇓
+X
+m
+L
+
+J−
+C + J−
+Bm
+
+ρ + γ⇑L
+
+J+
+C
+
+ρ , (4)
+where the presence of m zero-temperature reservoirs
+yields incoherent dissipative processes between the cen-
+tral charger and the m QBs. This system is depicted in
+Fig. 1 for m = 3. The last term in (4) corresponds to
+incoherent collective pumping on the charger withγ⇑ rep-
+resenting the rate of collective pumping. We use a mean-
+field approximation on (4) to model the system. The en-
+ergy density dynamics of the charger and the QBs is given
+in Fig. 2. First, in Fig. 2(a), we present the large-scale
+dynamics of the charger and a single QB from the original
+proposal in Ref. [20]. This scheme does not involve collec-
+tive pumping (γ⇑ = 0). This dynamics shows the charger
+3
+10−7 10−5
+γ⇓t
+10−7 10−5
+γ⇓t
+10−7 10−5
+γ⇓t
+10−7 10−5
+γ⇓t
+10−7 10−5
+γ⇓t
+0
+0.25
+0.5
+0.75
+1
+E / ¯hσ0
+10−7 10−5
+γ⇓t
+Two QBs Three QBsOne QB
+(c)(a) (b) (d) (e) (f)
+10−710−5
+0
+1
+Figure 2. Energy density charging QBs with collective dissipation and pumping. The red curve corresponds to the ‘charger’
+with a spin population of NC = 107. The three batteries correspond to the solid dark blue, dashed yellow and dashed green
+curves, each with the same spin population of NB1 = NB2 = NB3 = 102. The battery curves of each plot all overlap. In (a),
+the charger is coupled to a single reservoir with one QB using collective dissipation and no collective pumping ( γ⇑ = 0). In (b),
+the charger is coupled to two reservoirs each holding a QB of NB = 102 spins and no collective pumping is applied to the
+charger (γ⇑ = 0). In (c), the system is the same as (b), but an incoherent collective pump of strength γ⇑ = γ⇓ is now applied
+to the charger. In (d), the charger is coupled to three reservoirs each holding a QB and no collective pumping is applied to the
+charger (γ⇑ = 0). In (e), the system is the same as (d), but an incoherent collective pump of strength γ⇑ = γ⇓ is now applied
+to the charger. In (f), the system is the same as (e), with an incoherent collective pump of strength γ⇑ = 2γ⇓. The inset shows
+dynamics with collective pumping ( γ⇑ = 2γ⇓) but with EC(0) = 0, indicating that it is both the collective spin relaxation and
+collective pumping combined that facilitates the charging of these QBs.
+being initialized with EC(0)/(ℏω0) = 1, corresponding to
+all spins in the charger being in the excited state. Here,
+we can see efficient charging showing EB/(ℏω0) → 1, and
+this happens on a superradiant time-scale, demonstrating
+the collective speed up due to the presence of many spins.
+In Figs. 2 (b, c), the charger is coupled to two reservoirs
+each holding a QB of NB = 102 spins. In Figs. 2 (d -
+f), the charger is coupled to three reservoirs each hold-
+ing a QB. Figs. 2 (b, d) illustrate what happens when
+this system is extended to charge more batteries in more
+reservoirs without collective pumping. The steady-states
+of the two [Fig. 2(b)] and three [Fig. 2(d)] QB systems re-
+veal a crucial limitation when this scheme is extended to
+multiple thermal reservoir couplings. While only one spe-
+cific spin population configuration is shown here, through
+numerical exploration, for two reservoirs, we find that
+with no collective pumping, the limit of EB/(ℏω0) → 1/2
+cannot be surpassed no matter how much larger NC is
+than NB. For three reservoirs, this limit is further re-
+duced to EB/(ℏω0) → 1/4. It is important to stress that
+this effect is due to the presence of additional decay chan-
+nels through the coupling to multiple thermal reservoirs.
+If the three QBs were all contained in the same reser-
+voir with the charger, one could witness efficient charg-
+ing. However, the presence of multiple thermal reservoirs
+severely diminishes the charging capability of this proto-
+col using dissipation alone.
+In the case of a single thermal reservoir, collective dissi-
+pation is sufficient to achieve high power collective charg-
+ing of a QB. However, when this model is extended to
+multiple reservoirs with multiple QBs, the presence of
+these decay channels mean that many QBs cannot be
+efficiently charged in parallel via the same mechanism.
+Therefore, one might conclude that charging multiple
+QBs through multiple collective dissipation channels is
+not a viable strategy. To address this, we will now in-
+troduce the main result of this work. Here, we present
+an adapted strategy to efficiently charge multiple QBs
+in parallel. Our protocol is pictured schematically in
+Fig. 1 and depicts a central spin ensemble labeled as the
+‘charger’ coupled to three separate thermal reservoirs.
+Coupled to each individual reservoir is its own QB. The
+initial state of the system before charging the QBs has
+the charger initialized in the fully excited state and all
+QBs in their ground state. To efficiently charge all three
+QBs in parallel, continuous collective pumping must be
+applied to the central charger as the system simultane-
+ously experiences collective dissipation. Results are given
+in Figs. 2 (c, f). Here, we see that through the addition of
+a incoherent collective pump on the charger only, we can
+achieve efficient energy transfer from charger to battery.
+By comparison with Fig. 2(a), our scheme can produce
+the same highly efficient energy transfer, from charger to
+multiple batteries in separate reservoirs. We empahsize
+that this effect cannot be seen if the charger is coherently
+pumped. It is the presence of the incoherent collective
+pump that facilitates efficient energy transfer.
+From Fig. 2, we observe that the presence of the inco-
+herent pump slightly slows the superradiant decay when
+the number of QBs is fixed. While the pump adds more
+energy, the entire system takes longer to relax, thereby
+slightly extending the charging time. Nonetheless, the
+4
+charging process still occurs on the timescales of collec-
+tive effects. Lastly, while entanglement can be generated
+between spins in different spin ensembles (QBs and the
+charger) in the absence of pumping [25], we find that with
+collective pumping, there is little to no entanglement be-
+tween the QBs and the charger. Despite the absence of
+entanglement, we find efficient energy transfer between a
+charger and multiple QBs. We note it has recently been
+shown [18] that entanglement is not associated with the
+collective charging speed up in the Dicke quantum bat-
+tery, rather the enhancement is due to coherent cooper-
+ative interactions.
+The collective pumping strength γ⇑ required for effi-
+cient charging depends on the number of thermal reser-
+voirs coupled to the charger. In Fig. 2 (d, e, f), we focus
+on the three reservoir system (depicted in Fig. 1) and
+show the dynamics for pumping strength γ⇑ = γ⇓ in
+Fig. 2(e). We observe that γ⇑ = γ⇓ can only half excite
+the QBs, and γ⇑ = 2 γ⇓ [Fig. 2(f)] is required to fully
+charge the three QBs in the system. In principle, our
+strategy could be adapted to charge more QBs from one
+single centralized charger. However, we expect that as
+more reservoirs are utilized, higher collective pumping
+strengths are likely needed for efficient charging in this
+system. The ergotropy of this quantum battery proto-
+col has already been considered for the single QB system
+[20].
+Our scheme can be implemented in many different hy-
+brid quantum systems [27], including spin ensembles in
+the microwave regime coupled to waveguide or microwave
+resonators, which act as reservoirs. A possible implemen-
+tation could utilize diamond samples with nitrogen va-
+cancy defect centers as the spin ensembles [28, 29]. In this
+system, coherent coupling of two distinct spin ensembles
+has been realized [30]. Additionally, another candidate
+for the spin ensembles could be erbium dopants, which
+operate in the optical region [31].
+Lastly, we remark on a few key aspects of this work.
+While the dynamics presented does not include individ-
+ual effects such as individual decay, we emphasize that
+these effects occur on timescales that are much slower
+than collective effects for large ensemble sizes. Further,
+one may wonder if superradiant decay of the charger is
+necessary for efficient energy transfer in our scheme with
+collective pumping. To address this, we refer to the inset
+in Fig. 2(f). This inset shows the energy density dy-
+namics following (4) with EC(0) = 0. On comparable
+timescales, no transfer of energy is observed and therefore
+we stress that it is the combination of both the spin relax-
+ation and collective pumping that enables this charging
+process.
+In conclusion, we have introduced a method that cir-
+cumvents limitations induced on charging multiple quan-
+tum batteries in separate reservoirs through collective
+dissipation alone. By performing incoherent, collective
+pumping on the charger, we can fully charge many QBs
+while they are indirectly coupled to the charger through
+independent reservoirs. This protocol permits the QBs
+to be somewhat spatially separated as they do not all
+need to be coupled to the same reservoir. Our method
+can be scaled to charge more batteries than shown here,
+although a stronger collective pump is likely needed in
+such a case. This protocol can also be applied to transfer
+energy and quantum correlations between multiple spin
+ensembles arranged in series [25, 32, 33]. Our results have
+important implications of how the flow of energy can be
+manipulated in quantum devices. This paves the way
+for advances in quantum thermodynamics and outlines
+potential directions for quantum technologies.
+We thank Neil Lambert, Dario Poletti, and Christo-
+pher W. W¨ achtler for fruitful discussions. This work was
+supported by the MEXT Quantum Leap Flagship Pro-
+gram (MEXT QLEAP) Grant No. JPMXS0118069605.
+This research was partially supported by the Australian
+Research Council Centre of Excellence for Quantum
+Computation and Communication Technology (Project
+No. CE170100012). F.N. is supported in part by: Nip-
+pon Telegraph and Telephone Corporation (NTT) Re-
+search, the Japan Science and Technology Agency (JST)
+[via the CREST Quantum Frontiers program Grant No.
+JPMJCR24I2, the Quantum Leap Flagship Program (Q-
+LEAP), and the Moonshot R&D Grant Number JP-
+MJMS2061], and the Office of Naval Research (ONR)
+Global (via Grant No. N62909-23-1-2074).
+∗ j.dias@uq.edu.au; These authors contributed equally
+† huiwangph@gmail.com; These authors contributed
+equally
+[1] R. Alicki and M. Fannes, Entanglement boost for ex-
+tractable work from ensembles of quantum batteries,
+Physical Review E 87, 042123 (2013).
+[2] F. C. Binder, S. Vinjanampathy, K. Modi, and J. Goold,
+Quantacell: powerful charging of quantum batteries, New
+Journal of Physics 17, 075015 (2015).
+[3] P. Skrzypczyk, A. J. Short, and S. Popescu, Work extrac-
+tion and thermodynamics for individual quantum sys-
+tems, Nature Communications 5, 4185 (2014).
+[4] K. V. Hovhannisyan, M. Perarnau-Llobet, M. Huber, and
+A. Ac´ ın, Entanglement generation is not necessary for
+optimal work extraction, Phys. Rev. Lett. 111, 240401
+(2013).
+[5] T. P. Le, J. Levinsen, K. Modi, M. M. Parish, and F. A.
+Pollock, Spin-chain model of a many-body quantum bat-
+tery, Phys. Rev. A 97, 022106 (2018).
+[6] A. Crescente, M. Carrega, M. Sassetti, and D. Ferraro,
+Charging and energy fluctuations of a driven quantum
+battery, New Journal of Physics 22, 063057 (2020).
+[7] F. Barra, Dissipative charging of a quantum battery,
+Phys. Rev. Lett. 122, 210601 (2019).
+[8] S. Ghosh, T. Chanda, and A. Sen(De), Enhancement
+in the performance of a quantum battery by ordered
+and disordered interactions, Phys. Rev. A 101, 032115
+5
+(2020).
+[9] F. Campaioli, S. Gherardini, J. Q. Quach, M. Polini, and
+G. M. Andolina, Colloquium: Quantum batteries, Rev.
+Mod. Phys. 96, 031001 (2024).
+[10] D. Farina, G. M. Andolina, A. Mari, M. Polini, and
+V. Giovannetti, Charger-mediated energy transfer for
+quantum batteries: An open-system approach, Physical
+Review B 99, 035421 (2019).
+[11] J. Liu, D. Segal, and G. Hanna, Loss-Free Excitonic
+Quantum Battery, The Journal of Physical Chemistry
+C 123, 18303 (2019).
+[12] R. H. Dicke, Coherence in spontaneous radiation pro-
+cesses, Phys. Rev. 93, 99 (1954).
+[13] D. Ferraro, M. Campisi, G. M. Andolina, V. Pellegrini,
+and M. Polini, High-Power Collective Charging of a Solid-
+State Quantum Battery, Physical Review Letters 120,
+117702 (2018).
+[14] A. Crescente, M. Carrega, M. Sassetti, and D. Ferraro,
+Ultrafast charging in a two-photon Dicke quantum bat-
+tery, Phys. Rev. B 102, 245407 (2020).
+[15] F.-Q. Dou, Y.-Q. Lu, Y.-J. Wang, and J.-A. Sun, Ex-
+tended Dicke quantum battery with interatomic interac-
+tions and driving field, Physical Review B 105, 115405
+(2022).
+[16] F.-M. Yang and F.-Q. Dou, Resonator-qutrit quantum
+battery, Phys. Rev. A 109, 062432 (2024).
+[17] J. Carrasco, J. R. Maze, C. Hermann-Avigliano, and
+F. Barra, Collective enhancement in dissipative quantum
+batteries, Physical Review E 105, 064119 (2022).
+[18] X. Zhang and M. Blaauboer, Enhanced energy transfer in
+a Dicke quantum battery, Frontiers in Physics10 (2023).
+[19] F. Campaioli, F. A. Pollock, F. C. Binder, L. C´ eleri,
+J. Goold, S. Vinjanampathy, and K. Modi, Enhancing
+the Charging Power of Quantum Batteries, Physical Re-
+view Letters 118, 150601 (2017).
+[20] J. Q. Quach and W. J. Munro, Using Dark States to
+Charge and Stabilize Open Quantum Batteries, Phys.
+Rev. Appl. 14, 024092 (2020).
+[21] Y. Hama, E. Yukawa, W. J. Munro, and K. Nemoto,
+Negative-temperature-state relaxation and reservoir-
+assisted quantum entanglement in double-spin-domain
+systems, Physical Review A 98, 052133 (2018).
+[22] Y. Hama, W. J. Munro, and K. Nemoto, Relaxation
+to Negative Temperatures in Double Domain Systems,
+Physical Review Letters 120, 060403 (2018).
+[23] H. Freedhoff and J. V. Kranendonk, Theory of coherent
+resonant absorption and emission at infrared and opti-
+cal frequencies, Canadian Journal of Physics 45, 1833
+(1967).
+[24] C. R. Stroud, J. H. Eberly, W. L. Lama, and L. Mandel,
+Superradiant effects in systems of two-level atoms, Phys.
+Rev. A 5, 1094 (1972).
+[25] J. Dias, C. W. W¨ achtler, K. Nemoto, and W. J.
+Munro, Entanglement generation between distant spins
+via quasilocal reservoir engineering, Phys. Rev. Res. 5,
+043295 (2023).
+[26] B. Mojaveri, R. Jafarzadeh Bahrbeig, and M. A. Fasihi,
+Extracting ergotropy from nonequilibrium steady states
+of an xxz spin-chain quantum battery, Phys. Rev. A109,
+042619 (2024).
+[27] Z.-L. Xiang, S. Ashhab, J. Q. You, and F. Nori, Hybrid
+quantum circuits: Superconducting circuits interacting
+with other quantum systems, Reviews of Modern Physics
+85, 623 (2013).
+[28] A. Angerer, T. Astner, D. Wirtitsch, H. Sumiya, S. On-
+oda, J. Isoya, S. Putz, and J. Majer, Collective strong
+coupling with homogeneous Rabi frequencies using a 3D
+lumped element microwave resonator, Applied Physics
+Letters 109, 033508 (2016).
+[29] A. Angerer, K. Streltsov, T. Astner, S. Putz, H. Sumiya,
+S. Onoda, J. Isoya, W. J. Munro, K. Nemoto, J. Schmied-
+mayer, and J. Majer, Superradiant emission from colour
+centres in diamond, Nature Physics 14, 1168 (2018).
+[30] T. Astner, S. Nevlacsil, N. Peterschofsky, A. Angerer,
+S. Rotter, S. Putz, J. Schmiedmayer, and J. Majer, Co-
+herent Coupling of Remote Spin Ensembles via a Cavity
+Bus, Physical Review Letters 118, 140502 (2017).
+[31] B. Merkel, A. Ulanowski, and A. Reiserer, Coherent
+and Purcell-enhanced emission from erbium dopants in
+a cryogenic high- q resonator, Phys. Rev. X 10, 041025
+(2020).
+[32] J. Dias, C. W. W¨ achtler, V. M. Bastidas, K. Nemoto,
+and W. J. Munro, Reservoir-assisted energy migration
+through multiple spin domains, Physical Review B 104,
+L140303 (2021).
+[33] W. J. Munro, J. Dias, and K. Nemoto, Collective effects
+in hybrid quantum systems, inHybrid Quantum Systems,
+edited by Y. Hirayama, K. Ishibashi, and K. Nemoto
+(Springer Nature Singapore, Singapore, 2021) pp. 43–60."
