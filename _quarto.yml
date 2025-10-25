@@ -1,0 +1,44 @@
+project:
+  type: website
+  # This tells Quarto to put the rendered website files into a 'docs' folder.
+  # This is required for the standard GitHub Pages setup.
+  output-dir: docs
+
+website:
+  # The title of your website, which appears in the browser tab and sidebar.
+  title: "Fundamentals of Regression"
+
+  sidebar:
+    title: "Large Language Models for Research"
+    style: "docked"
+    contents:
+      - text: "00_setup_guide"
+        href: 00_setup_guide.ipynb
+      - text: "01_introduction_llm"
+        href: 01_introduction_llm.ipynb
+      - text: "02_theory_and_concepts"
+        href: 02_theory_and_concepts.ipynb
+      - text: 03_literature_review
+        href: 03_literature_review.ipynb
+      - text: 04_review_with_rag
+        href: 04_review_with_rag.ipynb
+      - text: 05_code_and_data_prep
+        href: 05_code_and_data_prep.ipynb
+      - text: 06_ethics_and_wrapup
+        href: 06_ethics_and_wrapup.ipynb
+      - text: 📦 Download All Notebooks
+        href: notebooks.zip
+
+  repo-url: "https://github.com/Moji131/Fundamentals-of-Regression"   # <-- replace after creating repo
+  repo-actions: [source, issue]
+
+# This section controls the default appearance and formatting for the HTML output.
+format:
+  html:
+    # You can choose from many themes: https://quarto.org/docs/output-formats/html-themes.html
+    theme: cosmo
+    # Links to a custom CSS file for additional styling (optional).
+    css: styles.css
+    # Adds a table of contents to the right side of the page.
+    toc: true
+    toc-location: right
