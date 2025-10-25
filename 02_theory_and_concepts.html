@@ -159,9 +159,12 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
       </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Large Language Models for Research</a> 
+    </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
@@ -186,6 +189,30 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="./02_theory_and_concepts.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">02_theory_and_concepts</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_literature_review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">03_literature_review</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_review_with_rag.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">04_review_with_rag</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_code_and_data_prep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05_code_and_data_prep</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_ethics_and_wrapup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">06_ethics_and_wrapup</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -312,7 +339,7 @@ window.Quarto = {
 <li>Ask for <strong>structured output</strong> (e.g., JSON, tables).</li>
 </ul>
 <p>Let’s illustrate how different prompt structures might be interpreted.</p>
-<div id="4b45bc63" class="cell" data-execution_count="5">
+<div id="4b45bc63" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Demonstration: Prompt variety examples (no API calls)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This cell just prints examples and explanations of what makes prompts effective.</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -351,7 +378,7 @@ Comment: Excellent — adds role and context, leading to relevant focus.
 <p><strong>Hallucination</strong> is when the model produces false but plausible information.</p>
 <p><strong>Causes:</strong> 1. Models optimise for <em>fluency</em>, not <em>truth</em>. 2. They lack external knowledge verification. 3. They use patterns, not evidence.</p>
 <p><strong>Mitigations:</strong> - Use grounded prompts (e.g., with text context or retrieval). - Ask for <em>sources</em> and check them. - Rephrase prompts to encourage uncertainty awareness (e.g., “If unsure, say so.”)</p>
-<div id="8bc4dfe6" class="cell" data-execution_count="6">
+<div id="8bc4dfe6" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulating hallucination detection with a fabricated response</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This code checks whether a response contains uncertainty words.</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -459,7 +486,7 @@ Comment: Excellent — adds role and context, leading to relevant focus.
 </tbody>
 </table>
 <p>Below we estimate how much GPU memory is needed to run different models locally.</p>
-<div id="8f3bafeb" class="cell" data-execution_count="7">
+<div id="8f3bafeb" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate GPU VRAM requirement for hosting models locally</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Rule of thumb: 1 billion parameters ≈ 2 GB VRAM (16-bit precision)</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>

@@ -130,9 +130,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
       </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Large Language Models for Research</a> 
+    </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
@@ -157,6 +160,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./02_theory_and_concepts.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">02_theory_and_concepts</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_literature_review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">03_literature_review</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_review_with_rag.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">04_review_with_rag</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_code_and_data_prep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05_code_and_data_prep</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_ethics_and_wrapup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">06_ethics_and_wrapup</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -186,6 +213,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#launch-jupyterlab" id="toc-launch-jupyterlab" class="nav-link" data-scroll-target="#launch-jupyterlab">🧠 3. Launch JupyterLab</a></li>
   <li><a href="#running-on-hpc" id="toc-running-on-hpc" class="nav-link" data-scroll-target="#running-on-hpc">⚙️ 4. Running on HPC</a></li>
   <li><a href="#install-required-python-packages" id="toc-install-required-python-packages" class="nav-link" data-scroll-target="#install-required-python-packages">📦 5. Install Required Python Packages</a></li>
+  <li><a href="#get-a-groq-api-key-to-access-a-llm-online" id="toc-get-a-groq-api-key-to-access-a-llm-online" class="nav-link" data-scroll-target="#get-a-groq-api-key-to-access-a-llm-online">⚙️ 6: Get a Groq API key to access a llm online</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">✅ Summary</a></li>
   </ul></li>
   </ul>
@@ -256,7 +284,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Once Python is installed, you can install packages using <code>pip</code> (Python’s package manager).</p>
 <p>Run this command in your terminal or command prompt:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install jupyterlab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
+<ul>
+<li><h2 id="jupyterlab-is-used-for-running-notebooks-interactively." class="anchored"><code>jupyterlab</code> is used for running notebooks interactively.</h2></li>
+</ul>
 </section>
 <section id="launch-jupyterlab" class="level2">
 <h2 class="anchored" data-anchor-id="launch-jupyterlab">🧠 3. Launch JupyterLab</h2>
@@ -278,20 +308,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="install-required-python-packages" class="level2">
 <h2 class="anchored" data-anchor-id="install-required-python-packages">📦 5. Install Required Python Packages</h2>
 <p>Open a notebook and in a cell run the command below to install packages:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pandas matplotlib openai rank<span class="op">-</span>bm25 requests </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install numpy pandas matplotlib openai requests pypdf </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This will install:</p>
 <ul>
 <li><code>numpy</code> – for handling arrays.</li>
 <li><code>pandas</code> – for handling data.</li>
 <li><code>matplotlib</code> – for plotting.</li>
 <li><code>openai</code> – to connect to Groq or OpenAI-compatible APIs.</li>
-<li><code>rank-bm25</code> – for retrieval-based tasks.</li>
 <li><code>requests</code> – for fetching data from APIs.</li>
-<li><code>jupyterlab</code> – for running notebooks interactively.</li>
+<li><code>pypdf</code> – for reading PDFs.</li>
 </ul>
 <p>To verify installation:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> list <span class="kw">|</span> <span class="ex">findstr</span> <span class="st">"numpy pandas matplotlib openai rank-bm25 requests"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> list <span class="kw">|</span> <span class="ex">findstr</span> <span class="st">"numpy pandas matplotlib openai requests pypdf"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You should see all packages listed.</p>
+</section>
+<section id="get-a-groq-api-key-to-access-a-llm-online" class="level2">
+<h2 class="anchored" data-anchor-id="get-a-groq-api-key-to-access-a-llm-online">⚙️ 6: Get a Groq API key to access a llm online</h2>
+<ul>
+<li>Sign In to Your Groq Account. Go to <a href="https://console.groq.com/login">https://console.groq.com/login</a>.</li>
+<li>If you already have an account, <strong>sign in</strong>.<br>
+</li>
+<li>If not, <strong>create a new account</strong> and complete the verification process.</li>
+</ul>
+<p>Generate Your Groq API Key: 1. Navigate to the <strong>API Keys</strong> section from the left menu.<br>
+2. Click <strong>Create API Key</strong>. 3. In the pop-up window, enter a descriptive name for your key (e.g., <em>AI Content Labs</em>) in the <strong>Display name for the key</strong> field.<br>
+- This helps you easily identify the key later.<br>
+4. Click <strong>Submit</strong>.<br>
+5. <strong>Copy the displayed API key</strong> — it will only be shown once.<br>
+- Save it securely for future use.</p>
 <hr>
 </section>
 <section id="summary" class="level2">
@@ -301,6 +345,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Use <code>pip</code> to install required packages</li>
 <li>Run <code>jupyter lab</code></li>
 <li>Verify everything by opening the example notebooks</li>
+<li>Get a Groq API key</li>
 </ul>
 
 

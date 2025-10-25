@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>gadi_setup_guide – Fundamentals of Regression</title>
+<title>Responsible Use, Bias, and Academic Writing – Fundamentals of Regression</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -82,7 +82,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06_ethics_and_wrapup.html">06_ethics_and_wrapup</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -95,9 +95,12 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
       </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Large Language Models for Research</a> 
+    </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
@@ -126,6 +129,30 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./03_literature_review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">03_literature_review</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_review_with_rag.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">04_review_with_rag</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_code_and_data_prep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05_code_and_data_prep</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_ethics_and_wrapup.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">06_ethics_and_wrapup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./notebooks.zip" class="sidebar-item-text sidebar-link">
  <span class="menu-text">📦 Download All Notebooks</span></a>
   </div>
@@ -140,92 +167,314 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#nci-account-setup" id="toc-nci-account-setup" class="nav-link active" data-scroll-target="#nci-account-setup">NCI Account Setup</a></li>
-  <li><a href="#nci-australian-research-environment-are" id="toc-nci-australian-research-environment-are" class="nav-link" data-scroll-target="#nci-australian-research-environment-are">NCI Australian Research Environment (ARE)</a></li>
-  <li><a href="#transferring-workshop-notebooks" id="toc-transferring-workshop-notebooks" class="nav-link" data-scroll-target="#transferring-workshop-notebooks">Transferring workshop notebooks</a></li>
+  <li><a href="#why-ethics-matter-in-ai-research" id="toc-why-ethics-matter-in-ai-research" class="nav-link active" data-scroll-target="#why-ethics-matter-in-ai-research">🧭 Why Ethics Matter in AI Research</a></li>
+  <li><a href="#hallucination-and-fabrication" id="toc-hallucination-and-fabrication" class="nav-link" data-scroll-target="#hallucination-and-fabrication">💬 Hallucination and Fabrication</a>
+  <ul class="collapse">
+  <li><a href="#common-manifestations" id="toc-common-manifestations" class="nav-link" data-scroll-target="#common-manifestations">Common manifestations:</a></li>
+  <li><a href="#why-it-happens" id="toc-why-it-happens" class="nav-link" data-scroll-target="#why-it-happens">Why it happens:</a></li>
+  <li><a href="#mitigation-strategies" id="toc-mitigation-strategies" class="nav-link" data-scroll-target="#mitigation-strategies">Mitigation strategies:</a></li>
+  </ul></li>
+  <li><a href="#bias-in-language-models" id="toc-bias-in-language-models" class="nav-link" data-scroll-target="#bias-in-language-models">⚖️ Bias in Language Models</a>
+  <ul class="collapse">
+  <li><a href="#types-of-bias" id="toc-types-of-bias" class="nav-link" data-scroll-target="#types-of-bias">Types of bias</a></li>
+  <li><a href="#reflection-prompts" id="toc-reflection-prompts" class="nav-link" data-scroll-target="#reflection-prompts">Reflection prompts</a></li>
+  </ul></li>
+  <li><a href="#academic-writing-and-integrity" id="toc-academic-writing-and-integrity" class="nav-link" data-scroll-target="#academic-writing-and-integrity">✍️ Academic Writing and Integrity</a></li>
+  <li><a href="#reproducibility-and-documentation" id="toc-reproducibility-and-documentation" class="nav-link" data-scroll-target="#reproducibility-and-documentation">🧱 Reproducibility and Documentation</a>
+  <ul class="collapse">
+  <li><a href="#good-documentation-includes" id="toc-good-documentation-includes" class="nav-link" data-scroll-target="#good-documentation-includes">Good documentation includes:</a></li>
+  <li><a href="#example-documentation-block" id="toc-example-documentation-block" class="nav-link" data-scroll-target="#example-documentation-block">Example documentation block:</a></li>
+  </ul></li>
+  <li><a href="#ethical-checklist-for-llm-use" id="toc-ethical-checklist-for-llm-use" class="nav-link" data-scroll-target="#ethical-checklist-for-llm-use">📜 Ethical Checklist for LLM Use</a>
+  <ul class="collapse">
+  <li><a href="#institutional-guidelines" id="toc-institutional-guidelines" class="nav-link" data-scroll-target="#institutional-guidelines">Institutional Guidelines</a></li>
+  </ul></li>
+  <li><a href="#final-reflection" id="toc-final-reflection" class="nav-link" data-scroll-target="#final-reflection">🧩 Final Reflection</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">✅ Summary</a>
+  <ul class="collapse">
+  <li><a href="#end-of-workshop" id="toc-end-of-workshop" class="nav-link" data-scroll-target="#end-of-workshop">End of Workshop</a></li>
+  </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/Gadi_setup_guide.md" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/06_ethics_and_wrapup.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Responsible Use, Bias, and Academic Writing</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
 
-<section id="nci-account-setup" class="level2">
-<h2 class="anchored" data-anchor-id="nci-account-setup">NCI Account Setup</h2>
-<p>Sign up for an <a href="https://opus.nci.org.au/spaces/Help/pages/12583153/How+to+create+an+NCI+user+account">NCI account</a> if you don’t already have one.</p>
-<p>Select <strong>Projects and groups</strong> from the left hand side menu and then select the <strong>Find project or group</strong> tab. Search for <strong>cd82</strong>, the NCI-QCIF Training Partnership Project, and ask to join. <img src="imgs/0_my_nci_project_cd82.png" class="img-fluid"></p>
-</section>
-<section id="nci-australian-research-environment-are" class="level2">
-<h2 class="anchored" data-anchor-id="nci-australian-research-environment-are">NCI Australian Research Environment (ARE)</h2>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This final notebook is fully theoretical and serves as the reflective conclusion of the LLM in Research workshop.<br>
+By now, participants have experimented with literature summarisation, retrieval-augmented generation (RAG), and code generation.<br>
+Here, we step back and discuss <strong>how to use these capabilities responsibly</strong> in academic and research settings.</p>
 <hr>
-<p>Connect to <a href="https://are.nci.org.au/">NCI Australian Research Environment</a>.</p>
-<p>Be sure you use your NCI ID (eg, ab1234) for the username and not your email address.</p>
-<p>Under <strong>Featured Apps</strong>, find and click the <strong>JupterLab: Start a JupyterLab instance</strong> option. <img src="imgs/0_nci_are_mainpage.png" class="img-fluid"></p>
-<p>To Launch a JuptyerLab session, set these resource requirements:</p>
+<section id="why-ethics-matter-in-ai-research" class="level2">
+<h2 class="anchored" data-anchor-id="why-ethics-matter-in-ai-research">🧭 Why Ethics Matter in AI Research</h2>
+<p>Large Language Models (LLMs) are not merely tools — they shape how research is <strong>written, cited, and communicated</strong>.<br>
+Ethical use ensures that our work remains <em>reproducible</em>, <em>transparent</em>, and <em>trustworthy</em>.</p>
+<ul>
+<li><strong>Reproducibility:</strong> others should be able to verify what the model produced.</li>
+<li><strong>Transparency:</strong> readers must know when AI was used.</li>
+<li><strong>Accountability:</strong> responsibility stays with the human researcher, not the AI.</li>
+</ul>
+<p>Even small ethical lapses — unverified summaries, missing citations, or hidden AI contributions — can propagate misinformation through the scholarly record.</p>
+<hr>
+</section>
+<section id="hallucination-and-fabrication" class="level2">
+<h2 class="anchored" data-anchor-id="hallucination-and-fabrication">💬 Hallucination and Fabrication</h2>
+<p><strong>Hallucination</strong> means that an LLM produces text that <em>sounds plausible but is not factually true</em>.<br>
+It happens because the model predicts <em>likely words</em>, not <em>verified facts</em>.</p>
+<section id="common-manifestations" class="level3">
+<h3 class="anchored" data-anchor-id="common-manifestations">Common manifestations:</h3>
+<ul>
+<li>Invented citations (“Smith et al., 2017” that never existed)</li>
+<li>Confident but false claims (“This study showed quantum teleportation of viruses”)</li>
+<li>Misquoted statistics or data sources</li>
+</ul>
+</section>
+<section id="why-it-happens" class="level3">
+<h3 class="anchored" data-anchor-id="why-it-happens">Why it happens:</h3>
+<ul>
+<li>The model has no built-in access to real-time databases.</li>
+<li>It interpolates between known facts to fill gaps.</li>
+<li>Sampling randomness (temperature) can increase hallucination frequency.</li>
+</ul>
+</section>
+<section id="mitigation-strategies" class="level3">
+<h3 class="anchored" data-anchor-id="mitigation-strategies">Mitigation strategies:</h3>
+<ul>
+<li>Cross-check every factual claim.</li>
+<li>Ask for sources or DOIs explicitly.</li>
+<li>Use RAG workflows (as in Notebook 04) to ground responses in retrieved evidence.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="bias-in-language-models" class="level2">
+<h2 class="anchored" data-anchor-id="bias-in-language-models">⚖️ Bias in Language Models</h2>
+<p>LLMs learn from large-scale human text corpora and <strong>inherit human biases</strong> — social, geographic, institutional, and ideological.</p>
+<section id="types-of-bias" class="level3">
+<h3 class="anchored" data-anchor-id="types-of-bias">Types of bias</h3>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 61%">
-<col style="width: 38%">
+<col style="width: 15%">
+<col style="width: 26%">
+<col style="width: 57%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Resource</th>
-<th>Value</th>
+<th>Type</th>
+<th>Example</th>
+<th>Possible Consequence</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Walltime (hours)</td>
-<td>5</td>
+<td>Gender bias</td>
+<td>“The nurse… she”; “The engineer… he”</td>
+<td>Reinforces stereotypes</td>
 </tr>
 <tr class="even">
-<td>Queue</td>
-<td>normal</td>
+<td>Geographic bias</td>
+<td>U.S.-centric examples</td>
+<td>Marginalises local or Global South contexts</td>
 </tr>
 <tr class="odd">
-<td>Compute Size</td>
-<td>small</td>
+<td>Institutional bias</td>
+<td>Over-representation of elite universities</td>
+<td>Skews perception of authority</td>
 </tr>
 <tr class="even">
-<td>Project</td>
-<td>cd82</td>
-</tr>
-<tr class="odd">
-<td>Storage</td>
-<td>scratch/cd82</td>
-</tr>
-<tr class="even">
-<td>Advanced Options…</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Modules</td>
-<td>python3/3.9.2</td>
-</tr>
-<tr class="even">
-<td>Python or Conda virtual environment base</td>
-<td>/scratch/cd82/venv_workshop</td>
+<td>Topical bias</td>
+<td>Focus on trendy disciplines</td>
+<td>Neglects underrepresented fields</td>
 </tr>
 </tbody>
 </table>
-<p>Then click the Launch button.</p>
-<p>This will take you to your interactive session page you will see that that your JupyterLab session is Queued while ARE is searching for a compute node that will satisfy your requirements.</p>
-<p>Once found, the page will update with a button that you can click to Open JupyterLab.</p>
-<p>Here is a screenshot of a JupyterLab landing page that should be similar to the one that opens in your web browser after starting the JupyterLab server on either macOS or Windows.</p>
-<p><img src="imgs/0_jupyterlab_landing_page.png" class="img-fluid"></p>
 </section>
-<section id="transferring-workshop-notebooks" class="level2">
-<h2 class="anchored" data-anchor-id="transferring-workshop-notebooks">Transferring workshop notebooks</h2>
-<p>When you have a Jupyter server running use JupyterLab file navigator to go the folder that has the same name as your username. Then make a new Jupyter notebook by clicking on the “Python 3” icon under “Notebook” section and run the following code in a cell:</p>
-<pre><code>!rm -rf /scratch/cd82/$USER/notebooks
-!mkdir -p /scratch/cd82/$USER/notebooks
-!cp /scratch/cd82/regression_notebooks/* /scratch/cd82/$USER/notebooks/
-!ls /scratch/cd82/$USER/notebooks/</code></pre>
-<p>And then use the Jupyter file browser to navigate to the directory: /scratch/cd82/$USER/notebooks/ (where $USER is your NCI username)</p>
+<section id="reflection-prompts" class="level3">
+<h3 class="anchored" data-anchor-id="reflection-prompts">Reflection prompts</h3>
+<ul>
+<li>Does your prompt assume one kind of author, culture, or region?</li>
+<li>Are the model’s suggestions diverse and representative?</li>
+<li>How could biased phrasing influence downstream analyses?</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="academic-writing-and-integrity" class="level2">
+<h2 class="anchored" data-anchor-id="academic-writing-and-integrity">✍️ Academic Writing and Integrity</h2>
+<p>LLMs can help researchers: - Rephrase complex sentences - Improve grammar and flow - Suggest structure or headings</p>
+<p>However, there are <strong>boundaries of ethical use</strong>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 25%">
+<col style="width: 20%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Practice</th>
+<th>Example</th>
+<th>Safe?</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Paraphrasing your own draft for clarity</td>
+<td>“Rewrite this paragraph in academic tone.”</td>
+<td>✅</td>
+<td>Keep authorship transparent.</td>
+</tr>
+<tr class="even">
+<td>Summarising literature you provide</td>
+<td>“Summarise this abstract in 3 sentences.”</td>
+<td>✅</td>
+<td>Verify facts manually.</td>
+</tr>
+<tr class="odd">
+<td>Generating original citations</td>
+<td>“List 5 references on…”</td>
+<td>❌</td>
+<td>May produce hallucinated papers.</td>
+</tr>
+<tr class="even">
+<td>Copying large model outputs into a manuscript</td>
+<td>–</td>
+<td>⚠️</td>
+<td>Requires attribution (“As generated by an LLM…”).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rule of thumb:</strong><br>
+&gt; AI tools can assist writing but cannot author scholarship.</p>
+<p>Always acknowledge LLM assistance in the acknowledgements or methods section.</p>
+<hr>
+</section>
+<section id="reproducibility-and-documentation" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-and-documentation">🧱 Reproducibility and Documentation</h2>
+<p>A reproducible AI workflow records <strong>exact conditions</strong> under which results were produced.</p>
+<section id="good-documentation-includes" class="level3">
+<h3 class="anchored" data-anchor-id="good-documentation-includes">Good documentation includes:</h3>
+<ul>
+<li>Model name and version (e.g., <em>Llama-3.1-70B</em>, Groq API, May 2025)</li>
+<li>Prompt text and parameters (temperature, max tokens)</li>
+<li>Retrieval corpus and date of access</li>
+<li>API source or endpoint</li>
+<li>Any local preprocessing code or filters</li>
+</ul>
+</section>
+<section id="example-documentation-block" class="level3">
+<h3 class="anchored" data-anchor-id="example-documentation-block">Example documentation block:</h3>
+<blockquote class="blockquote">
+<p>“Summaries were generated using Groq’s Llama-3.1-70B model (API version 2025-05-02) with temperature=0.2.<br>
+Input abstracts were retrieved from ArXiv on 2025-05-10 using the query ‘quantum batteries’.”</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="ethical-checklist-for-llm-use" class="level2">
+<h2 class="anchored" data-anchor-id="ethical-checklist-for-llm-use">📜 Ethical Checklist for LLM Use</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Aspect</th>
+<th>Example</th>
+<th>Safe Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Citation</td>
+<td>“As summarised by LLM, based on ArXiv data”</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>Fabrication</td>
+<td>“This study found…” (invented)</td>
+<td>❌</td>
+</tr>
+<tr class="odd">
+<td>Sensitive data</td>
+<td>Upload of patient or private data</td>
+<td>❌</td>
+</tr>
+<tr class="even">
+<td>Attribution</td>
+<td>“Generated draft reviewed by author”</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>Confidentiality</td>
+<td>Submitting unpublished manuscripts</td>
+<td>⚠️</td>
+</tr>
+<tr class="even">
+<td>Transparency</td>
+<td>“Edited for clarity using an LLM tool”</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<section id="institutional-guidelines" class="level3">
+<h3 class="anchored" data-anchor-id="institutional-guidelines">Institutional Guidelines</h3>
+<ul>
+<li>Many universities now classify unacknowledged AI writing as <strong>academic misconduct</strong>.</li>
+<li>Check your organisation’s policies (often listed under <em>Research Integrity</em> or <em>Publication Ethics</em>).</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="final-reflection" class="level2">
+<h2 class="anchored" data-anchor-id="final-reflection">🧩 Final Reflection</h2>
+<ul>
+<li>What tasks will you responsibly delegate to an LLM?<br>
+</li>
+<li>How can you make your use of AI <strong>transparent and auditable</strong>?<br>
+</li>
+<li>Would your workflow remain valid if the model were updated or replaced?</li>
+</ul>
+<hr>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">✅ Summary</h2>
+<ol type="1">
+<li><strong>LLMs are probabilistic assistants, not authorities.</strong><br>
+</li>
+<li><strong>Bias and hallucination are systemic, not accidental.</strong><br>
+</li>
+<li><strong>Ethical use means attribution, verification, and documentation.</strong><br>
+</li>
+<li><strong>Transparency builds trust — in both research and AI.</strong></li>
+</ol>
+<blockquote class="blockquote">
+<p>“Science advances through transparency, not shortcuts.”</p>
+</blockquote>
+<hr>
+<section id="end-of-workshop" class="level3">
+<h3 class="anchored" data-anchor-id="end-of-workshop">End of Workshop</h3>
+<p>Congratulations on completing the <em>LLMs in Research</em> series!<br>
+You now understand not only how to use LLMs for research but also how to do so <strong>responsibly and reproducibly</strong>.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -634,4 +883,4 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/Gadi_setup_guide.md" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/06_ethics_and_wrapup.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
