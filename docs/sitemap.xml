@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://qcif-training.github.io/llm_workshop/06_ethics_and_wrapup.html</loc>
+    <lastmod>2025-10-25T21:45:08.104Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qcif-training.github.io/llm_workshop/04_review_with_rag.html</loc>
+    <lastmod>2025-10-25T22:13:45.666Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qcif-training.github.io/llm_workshop/02_theory_and_concepts.html</loc>
+    <lastmod>2025-10-25T22:10:54.164Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qcif-training.github.io/llm_workshop/00_setup_guide.html</loc>
+    <lastmod>2025-10-26T07:51:04.787Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qcif-training.github.io/llm_workshop/01_introduction_llm.html</loc>
+    <lastmod>2025-10-26T07:51:43.075Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qcif-training.github.io/llm_workshop/03_literature_review.html</loc>
+    <lastmod>2025-10-25T22:13:31.202Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qcif-training.github.io/llm_workshop/05_code_and_data_prep.html</loc>
+    <lastmod>2025-10-25T22:14:30.614Z</lastmod>
+  </url>
+</urlset>

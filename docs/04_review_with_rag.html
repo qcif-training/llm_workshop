@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>04 — Writing a Mini Literature Review with RAG – Fundamentals of Regression</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a35d343c8bdbcb87d3b82ed68e48a46c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04_review_with_rag.html">04_review_with_rag</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Large Language Models for Research</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00_setup_guide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00_setup_guide</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_introduction_llm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">01_introduction_llm</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_theory_and_concepts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">02_theory_and_concepts</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_literature_review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">03_literature_review</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_review_with_rag.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">04_review_with_rag</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_code_and_data_prep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05_code_and_data_prep</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_ethics_and_wrapup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">06_ethics_and_wrapup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./notebooks.zip" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">📦 Download All Notebooks</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#groq-api-settings-run-first" id="toc-groq-api-settings-run-first" class="nav-link active" data-scroll-target="#groq-api-settings-run-first">0) Groq API Settings (Run first)</a></li>
+  <li><a href="#create-the-client-and-the-chat-function" id="toc-create-the-client-and-the-chat-function" class="nav-link" data-scroll-target="#create-the-client-and-the-chat-function">1) Create the client and the <code>chat()</code> function</a></li>
+  <li><a href="#load-the-curated-corpus-topk" id="toc-load-the-curated-corpus-topk" class="nav-link" data-scroll-target="#load-the-curated-corpus-topk">2) Load the curated corpus (top‑K)</a></li>
+  <li><a href="#ask-a-research-question" id="toc-ask-a-research-question" class="nav-link" data-scroll-target="#ask-a-research-question">3) Ask a research question</a></li>
+  <li><a href="#keyword-search-quick-evaluation-exploration" id="toc-keyword-search-quick-evaluation-exploration" class="nav-link" data-scroll-target="#keyword-search-quick-evaluation-exploration">4) Keyword search (quick evaluation &amp; exploration)</a></li>
+  <li><a href="#write-a-twoparagraph-literature-review-with-real-links" id="toc-write-a-twoparagraph-literature-review-with-real-links" class="nav-link" data-scroll-target="#write-a-twoparagraph-literature-review-with-real-links">5) Write a two‑paragraph literature review (with real links)</a></li>
+  <li><a href="#save-the-generated-review-optional-but-recommended" id="toc-save-the-generated-review-optional-but-recommended" class="nav-link" data-scroll-target="#save-the-generated-review-optional-but-recommended">6) Save the generated review (optional but recommended)</a></li>
+  <li><a href="#beyond-this-notebook-methods-for-larger-corpora-theory-only" id="toc-beyond-this-notebook-methods-for-larger-corpora-theory-only" class="nav-link" data-scroll-target="#beyond-this-notebook-methods-for-larger-corpora-theory-only">7) Beyond this notebook — methods for larger corpora (theory only)</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/04_review_with_rag.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">04 — Writing a Mini Literature Review with RAG</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>What you’ll do in this notebook</strong></p>
+<p>In the previous notebook, you curated and saved a <em>top‑K</em> set of papers to a CSV file (<code>literature_corpus_top.csv</code>).<br>
+Here, you will:</p>
+<ol type="1">
+<li><strong>Load</strong> the curated corpus (already filtered to the top‑K papers).<br>
+</li>
+<li><strong>Ask a research question</strong> to focus your review.<br>
+</li>
+<li>Run a <strong>simple keyword search</strong> (for quick, transparent validation).<br>
+</li>
+<li>Ask an LLM to write a <strong>two‑paragraph literature review</strong>, with <strong>real citations</strong> that link to each paper’s <strong>PDF</strong>.<br>
+</li>
+<li>Read a short <strong>theoretical note</strong> on more sophisticated approaches for larger corpora.</li>
+</ol>
+<blockquote class="blockquote">
+<p>This notebook is designed for <strong>entry-level researchers</strong>. It favours clarity and minimal code over complexity.</p>
+</blockquote>
+<section id="groq-api-settings-run-first" class="level2">
+<h2 class="anchored" data-anchor-id="groq-api-settings-run-first">0) Groq API Settings (Run first)</h2>
+<p>Paste your Groq API key. This is <strong>not secure</strong> if you share the notebook—it’s fine for a workshop demo.</p>
+<div id="f0fcb237" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Groq API Settings ---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste your Groq API key below (between quotes).</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: This is not a secure way of entering API keys if you share the notebook.</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"GROQ_API_KEY"</span>] <span class="op">=</span> <span class="st">""</span>  <span class="co"># &lt;-- replace with your key (e.g., "gsk_...")</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="st">"llama-3.3-70b-versatile"</span>  <span class="co"># Pick a model. See https://console.groq.com/docs/models</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"BASE_URL"</span>] <span class="op">=</span> <span class="st">"https://api.groq.com/openai/v1"</span>  <span class="co"># OpenAI-compatible API</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Groq settings configured. Remember to paste your API key!"</span>)    </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Groq settings configured. Remember to paste your API key!</code></pre>
+</div>
+</div>
+</section>
+<section id="create-the-client-and-the-chat-function" class="level2">
+<h2 class="anchored" data-anchor-id="create-the-client-and-the-chat-function">1) Create the client and the <code>chat()</code> function</h2>
+<p>We use a single helper function <code>chat()</code> to talk to the model.<br>
+Two convenience helpers manage the conversation memory:</p>
+<ul>
+<li><code>set_system(text)</code>: sets the system prompt and resets the history.<br>
+</li>
+<li><code>clear_chat()</code>: clears history entirely.</li>
+</ul>
+<blockquote class="blockquote">
+<p>Tip: Resetting the chat between tasks keeps context clean and results reproducible.</p>
+</blockquote>
+<div id="340c0eda" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Create the OpenAI-compatible client + chat() helper ---</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai <span class="im">import</span> OpenAI</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>chat_history <span class="op">=</span> []  <span class="co"># running memory for the current conversation</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span>os.environ[<span class="st">"GROQ_API_KEY"</span>],</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span>os.environ[<span class="st">"BASE_URL"</span>],</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> set_system(prompt: <span class="bu">str</span>):</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Reset chat history to a single system message."""</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> chat_history</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    chat_history <span class="op">=</span> [{<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: prompt}]</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> chat_history</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clear_chat():</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Clear all chat history."""</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> chat_history</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    chat_history <span class="op">=</span> []</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> chat_history</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chat(user_input, temperature: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.2</span>, max_turns: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>):</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Send one user turn and get a reply, preserving context.</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">    - Keeps system prompt + last `max_turns` user/assistant messages.</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> chat_history</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: user_input})</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Keep only the most recent `max_turns` pairs to control context size</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    system <span class="op">=</span> chat_history[:<span class="dv">1</span>]</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    recent <span class="op">=</span> chat_history[<span class="op">-</span>(max_turns<span class="op">*</span><span class="dv">2</span>):] <span class="cf">if</span> <span class="bu">len</span>(chat_history) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> []</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> system <span class="op">+</span> recent</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    resp <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>model,</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>window,</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        temperature<span class="op">=</span>temperature,</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    reply <span class="op">=</span> resp.choices[<span class="dv">0</span>].message.content</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: reply})</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> reply</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Testing API ..."</span>)</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"User:"</span>)</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Hello LLM!"</span>)</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"LLM:"</span>)</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(<span class="st">"Hello LLM!"</span>))</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Client ready. Use chat('...'), set_system('...'), clear_chat()."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Testing API ...
+
+User:
+Hello LLM!
+LLM:
+Hello! It's nice to meet you. Is there something I can help you with or would you like to chat?
+
+Client ready. Use chat('...'), set_system('...'), clear_chat().</code></pre>
+</div>
+</div>
+</section>
+<section id="load-the-curated-corpus-topk" class="level2">
+<h2 class="anchored" data-anchor-id="load-the-curated-corpus-topk">2) Load the curated corpus (top‑K)</h2>
+<p>In Notebook <strong>03</strong>, you created <code>literature_corpus_top.csv</code>—a curated set of the most relevant papers.<br>
+We load it here and briefly inspect the columns. You can open the CSV later in Excel if you like.</p>
+<blockquote class="blockquote">
+<p><strong>Important:</strong> We will use <strong>every row</strong> in this CSV (no further filtering here), because this file already represents the <em>top‑K</em> selection.</p>
+</blockquote>
+<div id="ebe4a35e" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="op">=</span> Path(<span class="st">"literature_data"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>CORPUS_CSV <span class="op">=</span> DATA_DIR <span class="op">/</span> <span class="st">"literature_corpus_top.csv"</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> CORPUS_CSV.exists(), <span class="st">"Could not find literature_corpus_top.csv. Run Notebook 03 first."</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>corpus <span class="op">=</span> pd.read_csv(CORPUS_CSV)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Loaded corpus with </span><span class="sc">{</span><span class="bu">len</span>(corpus)<span class="sc">}</span><span class="ss"> rows."</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>corpus.head(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Loaded corpus with 3 rows.</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">summary</th>
+<th data-quarto-table-cell-role="th">published</th>
+<th data-quarto-table-cell-role="th">link</th>
+<th data-quarto-table-cell-role="th">pdf</th>
+<th data-quarto-table-cell-role="th">authors</th>
+<th data-quarto-table-cell-role="th">summary_llm</th>
+<th data-quarto-table-cell-role="th">structured</th>
+<th data-quarto-table-cell-role="th">pdf_file</th>
+<th data-quarto-table-cell-role="th">crude_text</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Local-projective-measurement-enhanced quantum ...</td>
+<td>Quantum batteries have significant potential a...</td>
+<td>2024-05-06</td>
+<td>NaN</td>
+<td>http://arxiv.org/pdf/2405.03093v1</td>
+<td>Tinggui Zhang, Hong Yang, Shao-Ming Fei</td>
+<td>This study explores methods to enhance the cap...</td>
+<td>{'methodology': 'Local projective measurements...</td>
+<td>2405.03093v1.pdf</td>
+<td>arXiv:2405.03093v1 [quant-ph] 6 May 2024\nLo...</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Optimizing quantum battery performance by redu...</td>
+<td>Quantum batteries have emerged as promising de...</td>
+<td>2025-05-12</td>
+<td>NaN</td>
+<td>http://arxiv.org/pdf/2505.08029v1</td>
+<td>Rohit Kumar Shukla, Rajiv Kumar, Ujjwal Sen, S...</td>
+<td>Researchers investigated the dynamics of quant...</td>
+<td>{'methodology': 'Investigating interplay betwe...</td>
+<td>2505.08029v1.pdf</td>
+<td>arXiv:2505.08029v1 [quant-ph] 12 May 2025\nO...</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Efficient charging of multiple open quantum ba...</td>
+<td>We explore a protocol that efficiently charges...</td>
+<td>2024-10-25</td>
+<td>NaN</td>
+<td>http://arxiv.org/pdf/2410.19303v1</td>
+<td>Josephine Dias, Hui Wang, Kae Nemoto, Franco N...</td>
+<td>This study aims to develop an efficient protoc...</td>
+<td>{'methodology': 'protocol using collective cou...</td>
+<td>2410.19303v1.pdf</td>
+<td>Efficient charging of multiple open quantum ba...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><em>What are these columns?</em><br>
+- <strong>title</strong>: paper title<br>
+- <strong>authors</strong>: authors (string)<br>
+- <strong>published</strong>: publication date (from arXiv)<br>
+- <strong>pdf</strong>: direct PDF link (we will cite this in the review)<br>
+- <strong>link</strong>: arXiv HTML page (fallback if PDF is missing)<br>
+- <strong>summary</strong> / <strong>summary_llm</strong>: abstract and/or LLM summary<br>
+- <strong>crude_text</strong>: optional partial text extracted from PDF in the previous notebook</p>
+<p>If some of these are missing, don’t worry—this notebook still works with what you have.</p>
+</section>
+<section id="ask-a-research-question" class="level2">
+<h2 class="anchored" data-anchor-id="ask-a-research-question">3) Ask a research question</h2>
+<p>A clear question focuses the search and helps the model write a coherent review.<br>
+You can (and should) edit this to your topic of interest.</p>
+<p>You can also pick keywords and only work on papers that contain at least one keywrod.</p>
+<div id="5a23c6b2" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 👉 Edit this question to match your topic.</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>research_question <span class="op">=</span> <span class="st">"How do local projective measurements influence the charging capacity of quantum batteries?"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>keywords <span class="op">=</span> [<span class="st">"quantum battery"</span>, <span class="st">"measurement"</span>, <span class="st">"projective"</span>, <span class="st">"capacity"</span>, <span class="st">"charging"</span>]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><em>Why this matters:</em> A good question anchors both your manual exploration (keyword checks) and the model’s synthesis.</p>
+</section>
+<section id="keyword-search-quick-evaluation-exploration" class="level2">
+<h2 class="anchored" data-anchor-id="keyword-search-quick-evaluation-exploration">4) Keyword search (quick evaluation &amp; exploration)</h2>
+<p>Before synthesising a review, it’s useful to quickly scan which papers mention key terms from the question.<br>
+This is <strong>not</strong> semantic search—it’s a simple, transparent way to build intuition.</p>
+<p><strong>What we’ll do:</strong> 1. Choose a small list of keywords (derived from the question).<br>
+2. Search each paper’s <code>summary</code> (or <code>summary_llm</code> / <code>crude_text</code> if <code>summary</code> is missing).<br>
+3. Display papers that mention at least one keyword.</p>
+<div id="a00e718e" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Choose simple keywords (edit freely)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Get all text from the crude_text column (empty string if missing)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>text_series <span class="op">=</span> corpus[<span class="st">"crude_text"</span>].fillna(<span class="st">""</span>).astype(<span class="bu">str</span>).<span class="bu">str</span>.lower()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check whether each text contains any of the keywords</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> text_series.<span class="bu">apply</span>(<span class="kw">lambda</span> txt: <span class="bu">any</span>(k <span class="kw">in</span> txt <span class="cf">for</span> k <span class="kw">in</span> keywords))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only rows that contain at least one keyword</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>keyword_hits <span class="op">=</span> corpus[mask].copy()</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>keyword_hits.head(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">summary</th>
+<th data-quarto-table-cell-role="th">published</th>
+<th data-quarto-table-cell-role="th">link</th>
+<th data-quarto-table-cell-role="th">pdf</th>
+<th data-quarto-table-cell-role="th">authors</th>
+<th data-quarto-table-cell-role="th">summary_llm</th>
+<th data-quarto-table-cell-role="th">structured</th>
+<th data-quarto-table-cell-role="th">pdf_file</th>
+<th data-quarto-table-cell-role="th">crude_text</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Local-projective-measurement-enhanced quantum ...</td>
+<td>Quantum batteries have significant potential a...</td>
+<td>2024-05-06</td>
+<td>NaN</td>
+<td>http://arxiv.org/pdf/2405.03093v1</td>
+<td>Tinggui Zhang, Hong Yang, Shao-Ming Fei</td>
+<td>This study explores methods to enhance the cap...</td>
+<td>{'methodology': 'Local projective measurements...</td>
+<td>2405.03093v1.pdf</td>
+<td>arXiv:2405.03093v1 [quant-ph] 6 May 2024\nLo...</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Optimizing quantum battery performance by redu...</td>
+<td>Quantum batteries have emerged as promising de...</td>
+<td>2025-05-12</td>
+<td>NaN</td>
+<td>http://arxiv.org/pdf/2505.08029v1</td>
+<td>Rohit Kumar Shukla, Rajiv Kumar, Ujjwal Sen, S...</td>
+<td>Researchers investigated the dynamics of quant...</td>
+<td>{'methodology': 'Investigating interplay betwe...</td>
+<td>2505.08029v1.pdf</td>
+<td>arXiv:2505.08029v1 [quant-ph] 12 May 2025\nO...</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Efficient charging of multiple open quantum ba...</td>
+<td>We explore a protocol that efficiently charges...</td>
+<td>2024-10-25</td>
+<td>NaN</td>
+<td>http://arxiv.org/pdf/2410.19303v1</td>
+<td>Josephine Dias, Hui Wang, Kae Nemoto, Franco N...</td>
+<td>This study aims to develop an efficient protoc...</td>
+<td>{'methodology': 'protocol using collective cou...</td>
+<td>2410.19303v1.pdf</td>
+<td>Efficient charging of multiple open quantum ba...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><em>Reading the results:</em> Hit counts provide a rough, explainable signal.<br>
+If you see very few hits, consider broadening your keywords or checking a different text column (e.g., <code>crude_text</code>).</p>
+</section>
+<section id="write-a-twoparagraph-literature-review-with-real-links" class="level2">
+<h2 class="anchored" data-anchor-id="write-a-twoparagraph-literature-review-with-real-links">5) Write a two‑paragraph literature review (with real links)</h2>
+<p>We now ask the LLM to write a <strong>two‑paragraph</strong> literature review that directly answers our research question.<br>
+To keep the output <strong>verifiable</strong>, we ask the model to cite papers by <strong>linking to their PDF</strong> (from the <code>pdf</code> column).</p>
+<p><strong>How we make it reliable:</strong> - We present the model with the <strong>full table</strong> of candidate papers (already curated top‑K).<br>
+- We give a <strong>clear instruction</strong> to base the review <em>only</em> on these papers.<br>
+- We explicitly ask for citations using the <code>pdf</code> links in parentheses.</p>
+<div id="f083118f" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We build a compact textual view of the corpus that the model can read.</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep the table short enough to fit into the prompt. If your corpus is long,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># consider slicing columns or truncating summaries.</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>subset_cols <span class="op">=</span> [c <span class="cf">for</span> c <span class="kw">in</span> [<span class="st">"title"</span>,<span class="st">"summary"</span>,<span class="st">"pdf"</span>] <span class="cf">if</span> c <span class="kw">in</span> corpus.columns]</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>table_for_prompt <span class="op">=</span> corpus[subset_cols].fillna(<span class="st">""</span>).copy()</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Truncate long summaries to keep the prompt smaller and cheaper</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>table_for_prompt[<span class="st">"summary"</span>] <span class="op">=</span> table_for_prompt[<span class="st">"summary"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> s: (s[:<span class="dv">700</span>] <span class="op">+</span> <span class="st">"…"</span>) <span class="cf">if</span> <span class="bu">isinstance</span>(s, <span class="bu">str</span>) <span class="kw">and</span> <span class="bu">len</span>(s) <span class="op">&gt;</span> <span class="dv">700</span> <span class="cf">else</span> s)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>table_for_prompt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">summary</th>
+<th data-quarto-table-cell-role="th">pdf</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Local-projective-measurement-enhanced quantum ...</td>
+<td>Quantum batteries have significant potential a...</td>
+<td>http://arxiv.org/pdf/2405.03093v1</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Optimizing quantum battery performance by redu...</td>
+<td>Quantum batteries have emerged as promising de...</td>
+<td>http://arxiv.org/pdf/2505.08029v1</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Efficient charging of multiple open quantum ba...</td>
+<td>We explore a protocol that efficiently charges...</td>
+<td>http://arxiv.org/pdf/2410.19303v1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="aa6dc86d" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="ss">f"""    Write a coherent **two-paragraph literature review** answering the question below.</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ss">Use **only** the papers provided. For each claim, cite at least one paper</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ss">by adding the paper's **PDF link** in parentheses, e.g., (https://arxiv.org/pdf/XXXX).</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ss">**Question:**</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>research_question<span class="sc">}</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ss">**Papers (title, summary, pdf):**</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>table_for_prompt<span class="sc">.</span>to_string(index<span class="op">=</span><span class="va">False</span>)<span class="sc">}</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="ss">Requirements:</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="ss">- Two paragraphs, formal academic tone</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="ss">- Factual, concise, and grounded in the provided papers</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- Each paragraph should contain at least one citation using the `pdf` link</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- Do not invent citations or links</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>prompt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>"    Write a coherent **two-paragraph literature review** answering the question below.\nUse **only** the papers provided. For each claim, cite at least one paper\nby adding the paper's **PDF link** in parentheses, e.g., (https://arxiv.org/pdf/XXXX).\n\n**Question:**\nHow do local projective measurements influence the charging capacity of quantum batteries?\n\n**Papers (title, summary, pdf):**\n                                                                                    title                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       summary                               pdf\n                           Local-projective-measurement-enhanced quantum battery capacity Quantum batteries have significant potential applications for future industry and daily life. The capacity is an important indicator for a battery. Methods to improve the capacity of quantum batteries are important. We consider quantum batteries given by bipartite quantum systems and study the enhancement of the battery capacity under local projective measurements on a subsystem of the quantum state. By using two-qubit Bell-diagonal states and X-type states as examples, we show that quantum battery capacity with respect to the whole system or a subsystem can be improved by local projective measurements. Our theoretical analysis will provide ideas for the experimental development of quantum b… http://arxiv.org/pdf/2405.03093v1\nOptimizing quantum battery performance by reducing battery influence in charging dynamics Quantum batteries have emerged as promising devices that work within the quantum regime and provide energy storage and power delivery. We investigate the interplay between the battery and charger Hamiltonians, with a particular focus on minimizing the battery s influence during the charging dynamics. To achieve this, we introduce a control parameter that allows us to suppress the battery s contribution during the charging dynamics. We explore various configurations, including a non-interacting many-body battery with an interacting many-body charger, an interacting battery with a non-interacting charger, and systems where both the battery and charger are interacting many-body systems. Our res… http://arxiv.org/pdf/2505.08029v1\n    Efficient charging of multiple open quantum batteries through dissipation and pumping                                                                   We explore a protocol that efficiently charges multiple open quantum batteries in parallel using a single charger. This protocol shows super-extensive charging through collective coupling of the charger and the battery to the same thermal reservoir. When applied to multiple quantum batteries, each coupled to different thermal reservoirs, the energy cannot be efficiently transferred from the charger to the battery via collective dissipation alone. We show that the counter-intuitive act of incorporating both dissipation and incoherent collective pumping on the charger enables efficient parallel charging of many quantum batteries. http://arxiv.org/pdf/2410.19303v1\n\nRequirements:\n- Two paragraphs, formal academic tone\n- Factual, concise, and grounded in the provided papers\n- Each paragraph should contain at least one citation using the `pdf` link\n- Do not invent citations or links\n"</code></pre>
+</div>
+</div>
+<div id="fee18ec1" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>clear_chat()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>set_system(<span class="st">"You are an academic assistant writing short literature reviews."</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>review_text <span class="op">=</span> chat(prompt, temperature<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(review_text)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The influence of local projective measurements on the charging capacity of quantum batteries has been a subject of interest in recent studies. Research has shown that local projective measurements can enhance the capacity of quantum batteries, particularly in bipartite quantum systems (http://arxiv.org/pdf/2405.03093v1). By applying local projective measurements on a subsystem of the quantum state, the battery capacity with respect to the whole system or a subsystem can be improved. This has been demonstrated using two-qubit Bell-diagonal states and X-type states as examples, highlighting the potential of local projective measurements in optimizing quantum battery performance (http://arxiv.org/pdf/2405.03093v1). Furthermore, the interplay between the battery and charger Hamiltonians has also been investigated, with a focus on minimizing the battery's influence during the charging dynamics (http://arxiv.org/pdf/2505.08029v1).
+
+The optimization of quantum battery performance is a complex task, involving the manipulation of various parameters to achieve efficient charging. In addition to local projective measurements, other strategies have been proposed to enhance charging capacity. For instance, a protocol that utilizes dissipation and pumping to charge multiple open quantum batteries in parallel has been explored (http://arxiv.org/pdf/2410.19303v1). This approach enables super-extensive charging through collective coupling of the charger and the battery to the same thermal reservoir. Moreover, the incorporation of both dissipation and incoherent collective pumping on the charger has been shown to facilitate efficient parallel charging of many quantum batteries (http://arxiv.org/pdf/2410.19303v1). These findings highlight the importance of considering multiple factors, including local projective measurements and charging dynamics, to optimize the performance of quantum batteries (http://arxiv.org/pdf/2505.08029v1).</code></pre>
+</div>
+</div>
+<p><em>Tip:</em> If you see missing or incorrect links, check your <code>pdf</code> column values.<br>
+You can also reduce the prompt size by limiting columns, or by shortening summaries more aggressively.</p>
+</section>
+<section id="save-the-generated-review-optional-but-recommended" class="level2">
+<h2 class="anchored" data-anchor-id="save-the-generated-review-optional-but-recommended">6) Save the generated review (optional but recommended)</h2>
+<p>Saving the output makes it easy to share or iterate later.</p>
+<div id="942f5a6c" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>out_txt <span class="op">=</span> Path(<span class="st">"literature_data"</span>) <span class="op">/</span> <span class="st">"mini_lit_review.txt"</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(out_txt, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    f.write(review_text)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Saved review to:"</span>, out_txt.resolve())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Saved review to: C:\code\llm_tutorial\literature_data\mini_lit_review.txt</code></pre>
+</div>
+</div>
+</section>
+<section id="beyond-this-notebook-methods-for-larger-corpora-theory-only" class="level2">
+<h2 class="anchored" data-anchor-id="beyond-this-notebook-methods-for-larger-corpora-theory-only">7) Beyond this notebook — methods for larger corpora (theory only)</h2>
+<p>When the number of papers becomes large, we need methods that scale while keeping quality high.</p>
+<p><strong>A. Embedding‑based retrieval and clustering</strong><br>
+- Convert each abstract/full text and your question into <strong>vector embeddings</strong>.<br>
+- Use cosine similarity to retrieve the most relevant papers.<br>
+- Cluster embeddings (e.g., with K‑Means or HDBSCAN) to reveal <strong>themes</strong> or <strong>subtopics</strong>, then summarise per cluster.</p>
+<p><strong>B. Hierarchical summarisation</strong><br>
+- Summarise small batches (or clusters) of papers first.<br>
+- Then summarise those summaries to produce a clean, high‑level narrative.<br>
+- This <em>divide‑and‑conquer</em> approach scales to hundreds of papers.</p>
+<p><strong>C. Hybrid RAG pipelines</strong><br>
+- Combine embeddings for retrieval (fast, consistent) with an LLM for synthesis (nuanced, fluent).<br>
+- Ground the LLM in retrieved passages to reduce hallucinations, and always <strong>cite</strong> source papers.</p>
+<p><strong>D. Multi‑criteria scoring</strong><br>
+- Define simple criteria (e.g., <em>method novelty</em>, <em>data similarity</em>, <em>domain fit</em>, <em>practicality</em>) and score each paper (1–5).<br>
+- Take a weighted average to rank papers. This improves transparency and repeatability in reviews.</p>
+<blockquote class="blockquote">
+<p>These ideas extend the simple approach in this notebook and are commonly used in systematic reviews and large‑scale literature surveys.</p>
+</blockquote>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/qcif-training\.github\.io\/llm_workshop\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/04_review_with_rag.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
