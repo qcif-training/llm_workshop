@@ -210,10 +210,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#macos-linux" id="toc-macos-linux" class="nav-link" data-scroll-target="#macos-linux"><strong>macOS / Linux</strong></a></li>
   </ul></li>
   <li><a href="#install-jupyterlab" id="toc-install-jupyterlab" class="nav-link" data-scroll-target="#install-jupyterlab">📦 2. Install jupyterlab</a></li>
-  <li><a href="#launch-jupyterlab" id="toc-launch-jupyterlab" class="nav-link" data-scroll-target="#launch-jupyterlab">🧠 3. Launch JupyterLab</a></li>
-  <li><a href="#running-on-hpc" id="toc-running-on-hpc" class="nav-link" data-scroll-target="#running-on-hpc">⚙️ 4. Running on HPC</a></li>
-  <li><a href="#install-required-python-packages" id="toc-install-required-python-packages" class="nav-link" data-scroll-target="#install-required-python-packages">📦 5. Install Required Python Packages</a></li>
-  <li><a href="#get-a-groq-api-key-to-access-a-llm-online" id="toc-get-a-groq-api-key-to-access-a-llm-online" class="nav-link" data-scroll-target="#get-a-groq-api-key-to-access-a-llm-online">⚙️ 6: Get a Groq API key to access a llm online</a></li>
+  <li><a href="#download-notebooks" id="toc-download-notebooks" class="nav-link" data-scroll-target="#download-notebooks">📦 3. Download notebooks</a></li>
+  <li><a href="#launch-jupyterlab" id="toc-launch-jupyterlab" class="nav-link" data-scroll-target="#launch-jupyterlab">🧠 4. Launch JupyterLab</a></li>
+  <li><a href="#running-on-hpc" id="toc-running-on-hpc" class="nav-link" data-scroll-target="#running-on-hpc">⚙️ 5. Running on HPC</a></li>
+  <li><a href="#install-required-python-packages" id="toc-install-required-python-packages" class="nav-link" data-scroll-target="#install-required-python-packages">📦 6. Install Required Python Packages</a></li>
+  <li><a href="#get-a-groq-api-key-to-access-a-llm-online" id="toc-get-a-groq-api-key-to-access-a-llm-online" class="nav-link" data-scroll-target="#get-a-groq-api-key-to-access-a-llm-online">⚙️ 7: Get a Groq API key to access a llm online</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">✅ Summary</a></li>
   </ul></li>
   </ul>
@@ -290,28 +291,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><h2 id="jupyterlab-is-used-for-running-notebooks-interactively." class="anchored"><code>jupyterlab</code> is used for running notebooks interactively.</h2></li>
 </ul>
 </section>
+<section id="download-notebooks" class="level2">
+<h2 class="anchored" data-anchor-id="download-notebooks">📦 3. Download notebooks</h2>
+<p>Download notebooks.zip from the left menu of workshop website and extract to your desired folder.</p>
+</section>
 <section id="launch-jupyterlab" class="level2">
-<h2 class="anchored" data-anchor-id="launch-jupyterlab">🧠 3. Launch JupyterLab</h2>
-<p>Open terminal or command prompt and navigate to the folder containing your workshop notebooks (or navigate then open), then run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> lab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<h2 class="anchored" data-anchor-id="launch-jupyterlab">🧠 4. Launch JupyterLab</h2>
+<p>Open terminal or command prompt and navigate to the folder containing your workshop notebooks (or navigate then open a terminal), then run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> jupyter lab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This will open a new tab in your default web browser with the JupyterLab interface.</p>
 <p>You can then click on any notebook to open it.</p>
 <hr>
 </section>
 <section id="running-on-hpc" class="level2">
-<h2 class="anchored" data-anchor-id="running-on-hpc">⚙️ 4. Running on HPC</h2>
+<h2 class="anchored" data-anchor-id="running-on-hpc">⚙️ 5. Running on HPC</h2>
 <p>If you’re using a hosted JupyterLab instance on HPC infrastructure, Python and most dependencies are already installed. You typically only need to:</p>
 <ol type="1">
 <li>Open the web-based JupyterLab interface.</li>
 <li>Load the correct Python environment (via module or dropdown).</li>
-<li>Start a notebook directly.</li>
+<li>download and extract notebooks.zip from the left menu of the website.</li>
+<li>Upload notebooks to the HPC’s jupyter lab.</li>
+<li>Run 00_setup_guide.ipynb (this notebook).</li>
 </ol>
 </section>
 <section id="install-required-python-packages" class="level2">
-<h2 class="anchored" data-anchor-id="install-required-python-packages">📦 5. Install Required Python Packages</h2>
-<p>Open this notebook and run the cell below to install packages:</p>
+<h2 class="anchored" data-anchor-id="install-required-python-packages">📦 6. Install Required Python Packages</h2>
+<p>If the packages below are not installed uncomment (remove #) and run the cell below to install packages:</p>
 <div id="159a7f2c" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install numpy pandas matplotlib openai requests pypdf </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># !pip install numpy pandas matplotlib openai requests pypdf </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Note if you are running this in a terminal you need to remove “!” from teh start of the command. This will install:</p>
 <ul>
@@ -322,8 +329,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>requests</code> – for fetching data from APIs.</li>
 <li><code>pypdf</code> – for reading PDFs.</li>
 </ul>
-<p>To verify installation, run this in a notebook cell:</p>
-<div id="ceb6963e" class="cell" data-execution_count="2">
+<p>To verify installation, run the code below:</p>
+<div id="ceb6963e" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> importlib.metadata</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>packages <span class="op">=</span> [<span class="st">"numpy"</span>, <span class="st">"pandas"</span>, <span class="st">"matplotlib"</span>, <span class="st">"openai"</span>, <span class="st">"requests"</span>, <span class="st">"pypdf"</span> ]</span>
@@ -343,7 +350,7 @@ pypdf: 6.1.3</code></pre>
 </div>
 </section>
 <section id="get-a-groq-api-key-to-access-a-llm-online" class="level2">
-<h2 class="anchored" data-anchor-id="get-a-groq-api-key-to-access-a-llm-online">⚙️ 6: Get a Groq API key to access a llm online</h2>
+<h2 class="anchored" data-anchor-id="get-a-groq-api-key-to-access-a-llm-online">⚙️ 7: Get a Groq API key to access a llm online</h2>
 <ul>
 <li>Sign In to Your Groq Account. Go to <a href="https://console.groq.com/login">https://console.groq.com/login</a>.</li>
 <li>If you already have an account, <strong>sign in</strong>.<br>
