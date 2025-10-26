@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Large Language Models for Research - QCIF – Fundamentals of Regression</title>
+<title>Large Language Models for Research - – Fundamentals of Regression</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -224,7 +224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Large Language Models for Research - QCIF</h1>
+<h1 class="title">Large Language Models for Research -</h1>
 </div>
 
 
@@ -241,6 +241,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>A workshop by QCIF</p>
+<p><a href="https://www.qcif.edu.au/">https://www.qcif.edu.au/</a></p>
 <p>Author: Moji Ghadimi</p>
 <p><a href="https://www.linkedin.com/in/moji-ghadimi/">https://www.linkedin.com/in/moji-ghadimi/</a></p>
 <p><br> <br> <br></p>
@@ -307,9 +309,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="install-required-python-packages" class="level2">
 <h2 class="anchored" data-anchor-id="install-required-python-packages">📦 5. Install Required Python Packages</h2>
-<p>Open a notebook and in a cell run the command below to install packages:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install numpy pandas matplotlib openai requests pypdf </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This will install:</p>
+<p>Open this notebook and run the cell below to install packages:</p>
+<div id="159a7f2c" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install numpy pandas matplotlib openai requests pypdf </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Note if you are running this in a terminal you need to remove “!” from teh start of the command. This will install:</p>
 <ul>
 <li><code>numpy</code> – for handling arrays.</li>
 <li><code>pandas</code> – for handling data.</li>
@@ -318,9 +322,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>requests</code> – for fetching data from APIs.</li>
 <li><code>pypdf</code> – for reading PDFs.</li>
 </ul>
-<p>To verify installation:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> list <span class="kw">|</span> <span class="ex">findstr</span> <span class="st">"numpy pandas matplotlib openai requests pypdf"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You should see all packages listed.</p>
+<p>To verify installation, run this in a notebook cell:</p>
+<div id="ceb6963e" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> importlib.metadata</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>packages <span class="op">=</span> [<span class="st">"numpy"</span>, <span class="st">"pandas"</span>, <span class="st">"matplotlib"</span>, <span class="st">"openai"</span>, <span class="st">"requests"</span>, <span class="st">"pypdf"</span> ]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> pkg <span class="kw">in</span> packages:</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>pkg<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>importlib<span class="sc">.</span>metadata<span class="sc">.</span>version(pkg)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> importlib.metadata.PackageNotFoundError:</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>pkg<span class="sc">}</span><span class="ss">: not installed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>numpy: 2.3.3
+pandas: 2.3.3
+matplotlib: 3.10.7
+openai: 2.6.0
+requests: 2.32.5
+pypdf: 6.1.3</code></pre>
+</div>
+</div>
 </section>
 <section id="get-a-groq-api-key-to-access-a-llm-online" class="level2">
 <h2 class="anchored" data-anchor-id="get-a-groq-api-key-to-access-a-llm-online">⚙️ 6: Get a Groq API key to access a llm online</h2>
