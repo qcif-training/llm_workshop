@@ -268,7 +268,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="create-the-client-and-helpers">1) Create the client and helpers</h2>
 <p>We use a small set of helpers: - <code>chat()</code> — send a message to the model. - <code>set_system()</code> — reset memory with a system instruction. - <code>clear_chat()</code> — clear memory entirely.</p>
 <p>Keeping memory tidy is important for <strong>reproducibility</strong>.</p>
-<div id="7b887bc3" class="cell" data-execution_count="2">
+<div id="7b887bc3" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai <span class="im">import</span> OpenAI</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>chat_history <span class="op">=</span> []</span>

@@ -285,7 +285,7 @@ Two convenience helpers manage the conversation memory:</p>
 <blockquote class="blockquote">
 <p>Tip: Resetting the chat between tasks keeps context clean and results reproducible.</p>
 </blockquote>
-<div id="340c0eda" class="cell" data-execution_count="2">
+<div id="340c0eda" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Create the OpenAI-compatible client + chat() helper ---</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai <span class="im">import</span> OpenAI</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -356,21 +356,24 @@ We load it here and briefly inspect the columns. You can open the CSV later in E
 <blockquote class="blockquote">
 <p><strong>Important:</strong> We will use <strong>every row</strong> in this CSV (no further filtering here), because this file already represents the <em>top‑K</em> selection.</p>
 </blockquote>
-<div id="ebe4a35e" class="cell" data-execution_count="3">
+<div id="ebe4a35e" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="op">=</span> Path(<span class="st">"literature_data"</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>CORPUS_CSV <span class="op">=</span> DATA_DIR <span class="op">/</span> <span class="st">"literature_corpus_top.csv"</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> CORPUS_CSV.exists(), <span class="st">"Could not find literature_corpus_top.csv. Run Notebook 03 first."</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pathlib</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>NOTEBOOK_DIR <span class="op">=</span> pathlib.Path().resolve()</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="op">=</span> NOTEBOOK_DIR <span class="op">/</span> <span class="st">"literature_data"</span></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>corpus <span class="op">=</span> pd.read_csv(CORPUS_CSV)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Loaded corpus with </span><span class="sc">{</span><span class="bu">len</span>(corpus)<span class="sc">}</span><span class="ss"> rows."</span>)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>corpus.head(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>CORPUS_CSV <span class="op">=</span> DATA_DIR <span class="op">/</span> <span class="st">"literature_corpus_top.csv"</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> CORPUS_CSV.exists(), <span class="st">"Could not find literature_corpus_top.csv. Run Notebook 03 first."</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>corpus <span class="op">=</span> pd.read_csv(CORPUS_CSV)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Loaded corpus with </span><span class="sc">{</span><span class="bu">len</span>(corpus)<span class="sc">}</span><span class="ss"> rows."</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>corpus.head(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Loaded corpus with 3 rows.</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="11">
 <div>
 
 
@@ -399,7 +402,7 @@ We load it here and briefly inspect the columns. You can open the CSV later in E
 <td>NaN</td>
 <td>http://arxiv.org/pdf/2405.03093v1</td>
 <td>Tinggui Zhang, Hong Yang, Shao-Ming Fei</td>
-<td>This study explores methods to enhance the cap...</td>
+<td>Researchers investigated methods to enhance th...</td>
 <td>{'methodology': 'Local projective measurements...</td>
 <td>2405.03093v1.pdf</td>
 <td>arXiv:2405.03093v1 [quant-ph] 6 May 2024\nLo...</td>
@@ -451,7 +454,7 @@ We load it here and briefly inspect the columns. You can open the CSV later in E
 <p>A clear question focuses the search and helps the model write a coherent review.<br>
 You can (and should) edit this to your topic of interest.</p>
 <p>You can also pick keywords and only work on papers that contain at least one keywrod.</p>
-<div id="5a23c6b2" class="cell" data-execution_count="4">
+<div id="5a23c6b2" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 👉 Edit this question to match your topic.</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>research_question <span class="op">=</span> <span class="st">"How do local projective measurements influence the charging capacity of quantum batteries?"</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>keywords <span class="op">=</span> [<span class="st">"quantum battery"</span>, <span class="st">"measurement"</span>, <span class="st">"projective"</span>, <span class="st">"capacity"</span>, <span class="st">"charging"</span>]</span>
@@ -466,7 +469,7 @@ This is <strong>not</strong> semantic search—it’s a simple, transparent way 
 <p><strong>What we’ll do:</strong> 1. Choose a small list of keywords (derived from the question).<br>
 2. Search each paper’s <code>summary</code> (or <code>summary_llm</code> / <code>crude_text</code> if <code>summary</code> is missing).<br>
 3. Display papers that mention at least one keyword.</p>
-<div id="a00e718e" class="cell" data-execution_count="5">
+<div id="a00e718e" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Choose simple keywords (edit freely)</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Get all text from the crude_text column (empty string if missing)</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>text_series <span class="op">=</span> corpus[<span class="st">"crude_text"</span>].fillna(<span class="st">""</span>).astype(<span class="bu">str</span>).<span class="bu">str</span>.lower()</span>
@@ -478,7 +481,7 @@ This is <strong>not</strong> semantic search—it’s a simple, transparent way 
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>keyword_hits <span class="op">=</span> corpus[mask].copy()</span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>keyword_hits.head(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="13">
 <div>
 
 
@@ -507,7 +510,7 @@ This is <strong>not</strong> semantic search—it’s a simple, transparent way 
 <td>NaN</td>
 <td>http://arxiv.org/pdf/2405.03093v1</td>
 <td>Tinggui Zhang, Hong Yang, Shao-Ming Fei</td>
-<td>This study explores methods to enhance the cap...</td>
+<td>Researchers investigated methods to enhance th...</td>
 <td>{'methodology': 'Local projective measurements...</td>
 <td>2405.03093v1.pdf</td>
 <td>arXiv:2405.03093v1 [quant-ph] 6 May 2024\nLo...</td>
@@ -554,7 +557,7 @@ To keep the output <strong>verifiable</strong>, we ask the model to cite papers 
 <p><strong>How we make it reliable:</strong> - We present the model with the <strong>full table</strong> of candidate papers (already curated top‑K).<br>
 - We give a <strong>clear instruction</strong> to base the review <em>only</em> on these papers.<br>
 - We explicitly ask for citations using the <code>pdf</code> links in parentheses.</p>
-<div id="f083118f" class="cell" data-execution_count="6">
+<div id="f083118f" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We build a compact textual view of the corpus that the model can read.</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep the table short enough to fit into the prompt. If your corpus is long,</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># consider slicing columns or truncating summaries.</span></span>
@@ -565,7 +568,7 @@ To keep the output <strong>verifiable</strong>, we ask the model to cite papers 
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Truncate long summaries to keep the prompt smaller and cheaper</span></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>table_for_prompt[<span class="st">"summary"</span>] <span class="op">=</span> table_for_prompt[<span class="st">"summary"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> s: (s[:<span class="dv">700</span>] <span class="op">+</span> <span class="st">"…"</span>) <span class="cf">if</span> <span class="bu">isinstance</span>(s, <span class="bu">str</span>) <span class="kw">and</span> <span class="bu">len</span>(s) <span class="op">&gt;</span> <span class="dv">700</span> <span class="cf">else</span> s)</span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>table_for_prompt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="14">
 <div>
 
 
@@ -603,7 +606,7 @@ To keep the output <strong>verifiable</strong>, we ask the model to cite papers 
 </div>
 </div>
 </div>
-<div id="aa6dc86d" class="cell" data-execution_count="7">
+<div id="aa6dc86d" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="ss">f"""    Write a coherent **two-paragraph literature review** answering the question below.</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ss">Use **only** the papers provided. For each claim, cite at least one paper</span></span>
@@ -623,11 +626,11 @@ To keep the output <strong>verifiable</strong>, we ask the model to cite papers 
 <span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
 <span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>prompt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="15">
 <pre><code>"    Write a coherent **two-paragraph literature review** answering the question below.\nUse **only** the papers provided. For each claim, cite at least one paper\nby adding the paper's **PDF link** in parentheses, e.g., (https://arxiv.org/pdf/XXXX).\n\n**Question:**\nHow do local projective measurements influence the charging capacity of quantum batteries?\n\n**Papers (title, summary, pdf):**\n                                                                                    title                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       summary                               pdf\n                           Local-projective-measurement-enhanced quantum battery capacity Quantum batteries have significant potential applications for future industry and daily life. The capacity is an important indicator for a battery. Methods to improve the capacity of quantum batteries are important. We consider quantum batteries given by bipartite quantum systems and study the enhancement of the battery capacity under local projective measurements on a subsystem of the quantum state. By using two-qubit Bell-diagonal states and X-type states as examples, we show that quantum battery capacity with respect to the whole system or a subsystem can be improved by local projective measurements. Our theoretical analysis will provide ideas for the experimental development of quantum b… http://arxiv.org/pdf/2405.03093v1\nOptimizing quantum battery performance by reducing battery influence in charging dynamics Quantum batteries have emerged as promising devices that work within the quantum regime and provide energy storage and power delivery. We investigate the interplay between the battery and charger Hamiltonians, with a particular focus on minimizing the battery s influence during the charging dynamics. To achieve this, we introduce a control parameter that allows us to suppress the battery s contribution during the charging dynamics. We explore various configurations, including a non-interacting many-body battery with an interacting many-body charger, an interacting battery with a non-interacting charger, and systems where both the battery and charger are interacting many-body systems. Our res… http://arxiv.org/pdf/2505.08029v1\n    Efficient charging of multiple open quantum batteries through dissipation and pumping                                                                   We explore a protocol that efficiently charges multiple open quantum batteries in parallel using a single charger. This protocol shows super-extensive charging through collective coupling of the charger and the battery to the same thermal reservoir. When applied to multiple quantum batteries, each coupled to different thermal reservoirs, the energy cannot be efficiently transferred from the charger to the battery via collective dissipation alone. We show that the counter-intuitive act of incorporating both dissipation and incoherent collective pumping on the charger enables efficient parallel charging of many quantum batteries. http://arxiv.org/pdf/2410.19303v1\n\nRequirements:\n- Two paragraphs, formal academic tone\n- Factual, concise, and grounded in the provided papers\n- Each paragraph should contain at least one citation using the `pdf` link\n- Do not invent citations or links\n"</code></pre>
 </div>
 </div>
-<div id="fee18ec1" class="cell" data-execution_count="8">
+<div id="fee18ec1" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>clear_chat()</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>set_system(<span class="st">"You are an academic assistant writing short literature reviews."</span>)</span>
@@ -635,9 +638,9 @@ To keep the output <strong>verifiable</strong>, we ask the model to cite papers 
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>review_text <span class="op">=</span> chat(prompt, temperature<span class="op">=</span><span class="fl">0.3</span>)</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(review_text)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>The influence of local projective measurements on the charging capacity of quantum batteries has been a subject of interest in recent studies. Research has shown that local projective measurements can enhance the capacity of quantum batteries, particularly in bipartite quantum systems (http://arxiv.org/pdf/2405.03093v1). By applying local projective measurements on a subsystem of the quantum state, the battery capacity with respect to the whole system or a subsystem can be improved. This has been demonstrated using two-qubit Bell-diagonal states and X-type states as examples, highlighting the potential of local projective measurements in optimizing quantum battery performance (http://arxiv.org/pdf/2405.03093v1). Furthermore, the interplay between the battery and charger Hamiltonians has also been investigated, with a focus on minimizing the battery's influence during the charging dynamics (http://arxiv.org/pdf/2505.08029v1).
+<pre><code>The influence of local projective measurements on the charging capacity of quantum batteries has been a subject of interest in recent studies. Research has shown that local projective measurements can enhance the capacity of quantum batteries, particularly when considering bipartite quantum systems (http://arxiv.org/pdf/2405.03093v1). By applying local projective measurements on a subsystem of the quantum state, the battery capacity with respect to the whole system or a subsystem can be improved. This has been demonstrated using two-qubit Bell-diagonal states and X-type states as examples, highlighting the potential for local projective measurements to optimize quantum battery performance (http://arxiv.org/pdf/2405.03093v1).
 
-The optimization of quantum battery performance is a complex task, involving the manipulation of various parameters to achieve efficient charging. In addition to local projective measurements, other strategies have been proposed to enhance charging capacity. For instance, a protocol that utilizes dissipation and pumping to charge multiple open quantum batteries in parallel has been explored (http://arxiv.org/pdf/2410.19303v1). This approach enables super-extensive charging through collective coupling of the charger and the battery to the same thermal reservoir. Moreover, the incorporation of both dissipation and incoherent collective pumping on the charger has been shown to facilitate efficient parallel charging of many quantum batteries (http://arxiv.org/pdf/2410.19303v1). These findings highlight the importance of considering multiple factors, including local projective measurements and charging dynamics, to optimize the performance of quantum batteries (http://arxiv.org/pdf/2505.08029v1).</code></pre>
+The optimization of quantum battery performance is a complex task that involves understanding the interplay between the battery and charger Hamiltonians. To minimize the battery's influence during charging dynamics, a control parameter can be introduced to suppress the battery's contribution (http://arxiv.org/pdf/2505.08029v1). Furthermore, efficient charging of multiple open quantum batteries can be achieved through dissipation and pumping, where collective coupling of the charger and the battery to the same thermal reservoir enables super-extensive charging (http://arxiv.org/pdf/2410.19303v1). The incorporation of both dissipation and incoherent collective pumping on the charger can also facilitate efficient parallel charging of many quantum batteries, even when each battery is coupled to a different thermal reservoir (http://arxiv.org/pdf/2410.19303v1). These findings highlight the importance of considering local projective measurements and charging dynamics in the optimization of quantum battery capacity.</code></pre>
 </div>
 </div>
 <p><em>Tip:</em> If you see missing or incorrect links, check your <code>pdf</code> column values.<br>
@@ -646,9 +649,9 @@ You can also reduce the prompt size by limiting columns, or by shortening summar
 <section id="save-the-generated-review-optional-but-recommended" class="level2">
 <h2 class="anchored" data-anchor-id="save-the-generated-review-optional-but-recommended">6) Save the generated review (optional but recommended)</h2>
 <p>Saving the output makes it easy to share or iterate later.</p>
-<div id="942f5a6c" class="cell" data-execution_count="9">
+<div id="942f5a6c" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>out_txt <span class="op">=</span> Path(<span class="st">"literature_data"</span>) <span class="op">/</span> <span class="st">"mini_lit_review.txt"</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>out_txt <span class="op">=</span> DATA_DIR <span class="op">/</span> <span class="st">"mini_lit_review.txt"</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(out_txt, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    f.write(review_text)</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Saved review to:"</span>, out_txt.resolve())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
