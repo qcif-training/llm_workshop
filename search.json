@@ -290,93 +290,93 @@
     ]
   },
   {
-    "objectID": "00_setup_guide.html",
-    "href": "00_setup_guide.html",
-    "title": "Large Language Models for Research -",
+    "objectID": "00_workshop_guide.html",
+    "href": "00_workshop_guide.html",
+    "title": "Large Language Models for Research",
     "section": "",
-    "text": "A workshop by QCIF\nhttps://www.qcif.edu.au/\nAuthor: Moji Ghadimi\nhttps://www.linkedin.com/in/moji-ghadimi/",
+    "text": "A workshop by: QCIF\nhttps://www.qcif.edu.au/\nAuthor: Moji Ghadimi\nhttps://www.linkedin.com/in/moji-ghadimi/",
     "crumbs": [
-      "00_setup_guide"
+      "00_workshop_guide"
     ]
   },
   {
-    "objectID": "00_setup_guide.html#install-python-recommended-version-3.10-or-newer",
-    "href": "00_setup_guide.html#install-python-recommended-version-3.10-or-newer",
-    "title": "Large Language Models for Research -",
+    "objectID": "00_workshop_guide.html#install-python-recommended-version-3.10-or-newer",
+    "href": "00_workshop_guide.html#install-python-recommended-version-3.10-or-newer",
+    "title": "Large Language Models for Research",
     "section": "🐍 1. Install Python (Recommended: Version 3.10 or newer)",
     "text": "🐍 1. Install Python (Recommended: Version 3.10 or newer)\n\nWindows\n\nGo to the official Python website: https://www.python.org/downloads/\nDownload the latest Python 3.x installer.\nRun the installer and check the box that says:\n\n✅ Add Python to PATH\n\nChoose Install Now and follow the prompts.\n\nTo verify installation, open Command Prompt (cmd) and type:\npython --version\nYou should see something like:\nPython 3.11.6\n\n\n\nmacOS / Linux\nMost systems come with Python preinstalled. You can check your version:\npython3 --version\nIf Python is not installed, install it using your system package manager:\nmacOS (Homebrew):\nbrew install python\nUbuntu / Debian:\nsudo apt update && sudo apt install python3 python3-pip -y",
     "crumbs": [
-      "00_setup_guide"
+      "00_workshop_guide"
     ]
   },
   {
-    "objectID": "00_setup_guide.html#install-jupyterlab",
-    "href": "00_setup_guide.html#install-jupyterlab",
-    "title": "Large Language Models for Research -",
+    "objectID": "00_workshop_guide.html#install-jupyterlab",
+    "href": "00_workshop_guide.html#install-jupyterlab",
+    "title": "Large Language Models for Research",
     "section": "📦 2. Install jupyterlab",
     "text": "📦 2. Install jupyterlab\nOnce Python is installed, you can install packages using pip (Python’s package manager).\nRun this command in your terminal or command prompt:\npip install jupyterlab\n\njupyterlab is used for running notebooks interactively.",
     "crumbs": [
-      "00_setup_guide"
+      "00_workshop_guide"
     ]
   },
   {
-    "objectID": "00_setup_guide.html#download-notebooks",
-    "href": "00_setup_guide.html#download-notebooks",
-    "title": "Large Language Models for Research -",
+    "objectID": "00_workshop_guide.html#download-notebooks",
+    "href": "00_workshop_guide.html#download-notebooks",
+    "title": "Large Language Models for Research",
     "section": "📦 3. Download notebooks",
     "text": "📦 3. Download notebooks\nDownload notebooks.zip from the left menu of workshop website and extract to your desired folder.",
     "crumbs": [
-      "00_setup_guide"
+      "00_workshop_guide"
     ]
   },
   {
-    "objectID": "00_setup_guide.html#launch-jupyterlab",
-    "href": "00_setup_guide.html#launch-jupyterlab",
-    "title": "Large Language Models for Research -",
+    "objectID": "00_workshop_guide.html#launch-jupyterlab",
+    "href": "00_workshop_guide.html#launch-jupyterlab",
+    "title": "Large Language Models for Research",
     "section": "🧠 4. Launch JupyterLab",
     "text": "🧠 4. Launch JupyterLab\nOpen terminal or command prompt and navigate to the folder containing your workshop notebooks (or navigate then open a terminal), then run:\npython -m jupyter lab\nThis will open a new tab in your default web browser with the JupyterLab interface.\nYou can then click on any notebook to open it.",
     "crumbs": [
-      "00_setup_guide"
+      "00_workshop_guide"
     ]
   },
   {
-    "objectID": "00_setup_guide.html#running-on-hpc",
-    "href": "00_setup_guide.html#running-on-hpc",
-    "title": "Large Language Models for Research -",
+    "objectID": "00_workshop_guide.html#running-on-hpc",
+    "href": "00_workshop_guide.html#running-on-hpc",
+    "title": "Large Language Models for Research",
     "section": "⚙️ 5. Running on HPC",
     "text": "⚙️ 5. Running on HPC\nIf you’re using a hosted JupyterLab instance on HPC infrastructure, Python and most dependencies are already installed. You typically only need to:\n\nOpen the web-based JupyterLab interface.\nLoad the correct Python environment (via module or dropdown).\ndownload and extract notebooks.zip from the left menu of the website.\nUpload notebooks to the HPC’s jupyter lab.\nRun 00_setup_guide.ipynb (this notebook).",
     "crumbs": [
-      "00_setup_guide"
+      "00_workshop_guide"
     ]
   },
   {
-    "objectID": "00_setup_guide.html#install-required-python-packages",
-    "href": "00_setup_guide.html#install-required-python-packages",
-    "title": "Large Language Models for Research -",
+    "objectID": "00_workshop_guide.html#install-required-python-packages",
+    "href": "00_workshop_guide.html#install-required-python-packages",
+    "title": "Large Language Models for Research",
     "section": "📦 6. Install Required Python Packages",
     "text": "📦 6. Install Required Python Packages\nIf the packages below are not installed uncomment (remove #) and run the cell below to install packages:\n\n# !pip install numpy pandas matplotlib openai requests pypdf \n\nNote if you are running this in a terminal you need to remove “!” from teh start of the command. This will install:\n\nnumpy – for handling arrays.\npandas – for handling data.\nmatplotlib – for plotting.\nopenai – to connect to Groq or OpenAI-compatible APIs.\nrequests – for fetching data from APIs.\npypdf – for reading PDFs.\n\nTo verify installation, run the code below:\n\nimport importlib.metadata\n\npackages = [\"numpy\", \"pandas\", \"matplotlib\", \"openai\", \"requests\", \"pypdf\" ]\nfor pkg in packages:\n    try:\n        print(f\"{pkg}: {importlib.metadata.version(pkg)}\")\n    except importlib.metadata.PackageNotFoundError:\n        print(f\"{pkg}: not installed\")\n\nnumpy: 2.3.3\npandas: 2.3.3\nmatplotlib: 3.10.7\nopenai: 2.6.0\nrequests: 2.32.5\npypdf: 6.1.3",
     "crumbs": [
-      "00_setup_guide"
+      "00_workshop_guide"
     ]
   },
   {
-    "objectID": "00_setup_guide.html#get-a-groq-api-key-to-access-a-llm-online",
-    "href": "00_setup_guide.html#get-a-groq-api-key-to-access-a-llm-online",
-    "title": "Large Language Models for Research -",
+    "objectID": "00_workshop_guide.html#get-a-groq-api-key-to-access-a-llm-online",
+    "href": "00_workshop_guide.html#get-a-groq-api-key-to-access-a-llm-online",
+    "title": "Large Language Models for Research",
     "section": "⚙️ 7: Get a Groq API key to access a llm online",
     "text": "⚙️ 7: Get a Groq API key to access a llm online\n\nSign In to Your Groq Account. Go to https://console.groq.com/login.\nIf you already have an account, sign in.\n\nIf not, create a new account and complete the verification process.\n\nGenerate Your Groq API Key: 1. Navigate to the API Keys section from the left menu.\n2. Click Create API Key. 3. In the pop-up window, enter a descriptive name for your key (e.g., AI Content Labs) in the Display name for the key field.\n- This helps you easily identify the key later.\n4. Click Submit.\n5. Copy the displayed API key — it will only be shown once.\n- Save it securely for future use.",
     "crumbs": [
-      "00_setup_guide"
+      "00_workshop_guide"
     ]
   },
   {
-    "objectID": "00_setup_guide.html#summary",
-    "href": "00_setup_guide.html#summary",
-    "title": "Large Language Models for Research -",
+    "objectID": "00_workshop_guide.html#summary",
+    "href": "00_workshop_guide.html#summary",
+    "title": "Large Language Models for Research",
     "section": "✅ Summary",
     "text": "✅ Summary\n\nInstall Python ≥ 3.10\nUse pip to install required packages\nRun jupyter lab\nVerify everything by opening the example notebooks\nGet a Groq API key",
     "crumbs": [
-      "00_setup_guide"
+      "00_workshop_guide"
     ]
   },
   {
