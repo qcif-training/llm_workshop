@@ -12,8 +12,8 @@ website:
     title: "Large Language Models for Research"
     style: "docked"
     contents:
-      - text: "00_setup_guide"
-        href: 00_setup_guide.ipynb
+      - text: "00_workshop_guide"
+        href: 00_workshop_guide.ipynb
       - text: "01_introduction_llm"
         href: 01_introduction_llm.ipynb
       - text: "02_theory_and_concepts"

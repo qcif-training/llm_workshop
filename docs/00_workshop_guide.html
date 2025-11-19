@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Responsible Use, Bias, and Academic Writing – Fundamentals of Regression</title>
+<title>Large Language Models for Research – Fundamentals of Regression</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -82,7 +117,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06_ethics_and_wrapup.html">06_ethics_and_wrapup</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./00_workshop_guide.html">00_workshop_guide</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -111,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00_workshop_guide.html" class="sidebar-item-text sidebar-link">
+  <a href="./00_workshop_guide.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">00_workshop_guide</span></a>
   </div>
 </li>
@@ -147,7 +182,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06_ethics_and_wrapup.html" class="sidebar-item-text sidebar-link active">
+  <a href="./06_ethics_and_wrapup.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">06_ethics_and_wrapup</span></a>
   </div>
 </li>
@@ -167,42 +202,35 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#why-ethics-matter-in-ai-research" id="toc-why-ethics-matter-in-ai-research" class="nav-link active" data-scroll-target="#why-ethics-matter-in-ai-research">🧭 Why Ethics Matter in AI Research</a></li>
-  <li><a href="#hallucination-and-fabrication" id="toc-hallucination-and-fabrication" class="nav-link" data-scroll-target="#hallucination-and-fabrication">💬 Hallucination and Fabrication</a>
+  <li><a href="#workshop-description" id="toc-workshop-description" class="nav-link active" data-scroll-target="#workshop-description">🧠 Workshop Description:</a>
   <ul class="collapse">
-  <li><a href="#common-manifestations" id="toc-common-manifestations" class="nav-link" data-scroll-target="#common-manifestations">Common manifestations:</a></li>
-  <li><a href="#why-it-happens" id="toc-why-it-happens" class="nav-link" data-scroll-target="#why-it-happens">Why it happens:</a></li>
-  <li><a href="#mitigation-strategies" id="toc-mitigation-strategies" class="nav-link" data-scroll-target="#mitigation-strategies">Mitigation strategies:</a></li>
+  <li><a href="#what-this-workshop-covers" id="toc-what-this-workshop-covers" class="nav-link" data-scroll-target="#what-this-workshop-covers">What this workshop covers</a></li>
+  <li><a href="#who-this-is-for" id="toc-who-this-is-for" class="nav-link" data-scroll-target="#who-this-is-for">Who this is for</a></li>
   </ul></li>
-  <li><a href="#bias-in-language-models" id="toc-bias-in-language-models" class="nav-link" data-scroll-target="#bias-in-language-models">⚖️ Bias in Language Models</a>
+  <li><a href="#setup-guide-for-python-and-jupyterlab" id="toc-setup-guide-for-python-and-jupyterlab" class="nav-link" data-scroll-target="#setup-guide-for-python-and-jupyterlab">Setup Guide for Python and JupyterLab</a>
   <ul class="collapse">
-  <li><a href="#types-of-bias" id="toc-types-of-bias" class="nav-link" data-scroll-target="#types-of-bias">Types of bias</a></li>
-  <li><a href="#reflection-prompts" id="toc-reflection-prompts" class="nav-link" data-scroll-target="#reflection-prompts">Reflection prompts</a></li>
+  <li><a href="#install-python-recommended-version-3.10-or-newer" id="toc-install-python-recommended-version-3.10-or-newer" class="nav-link" data-scroll-target="#install-python-recommended-version-3.10-or-newer">🐍 1. Install Python (Recommended: Version 3.10 or newer)</a>
+  <ul class="collapse">
+  <li><a href="#windows" id="toc-windows" class="nav-link" data-scroll-target="#windows"><strong>Windows</strong></a></li>
+  <li><a href="#macos-linux" id="toc-macos-linux" class="nav-link" data-scroll-target="#macos-linux"><strong>macOS / Linux</strong></a></li>
   </ul></li>
-  <li><a href="#academic-writing-and-integrity" id="toc-academic-writing-and-integrity" class="nav-link" data-scroll-target="#academic-writing-and-integrity">✍️ Academic Writing and Integrity</a></li>
-  <li><a href="#reproducibility-and-documentation" id="toc-reproducibility-and-documentation" class="nav-link" data-scroll-target="#reproducibility-and-documentation">🧱 Reproducibility and Documentation</a>
-  <ul class="collapse">
-  <li><a href="#good-documentation-includes" id="toc-good-documentation-includes" class="nav-link" data-scroll-target="#good-documentation-includes">Good documentation includes:</a></li>
-  <li><a href="#example-documentation-block" id="toc-example-documentation-block" class="nav-link" data-scroll-target="#example-documentation-block">Example documentation block:</a></li>
-  </ul></li>
-  <li><a href="#ethical-checklist-for-llm-use" id="toc-ethical-checklist-for-llm-use" class="nav-link" data-scroll-target="#ethical-checklist-for-llm-use">📜 Ethical Checklist for LLM Use</a>
-  <ul class="collapse">
-  <li><a href="#institutional-guidelines" id="toc-institutional-guidelines" class="nav-link" data-scroll-target="#institutional-guidelines">Institutional Guidelines</a></li>
-  </ul></li>
-  <li><a href="#final-reflection" id="toc-final-reflection" class="nav-link" data-scroll-target="#final-reflection">🧩 Final Reflection</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">✅ Summary</a>
-  <ul class="collapse">
-  <li><a href="#end-of-workshop" id="toc-end-of-workshop" class="nav-link" data-scroll-target="#end-of-workshop">End of Workshop</a></li>
+  <li><a href="#install-jupyterlab" id="toc-install-jupyterlab" class="nav-link" data-scroll-target="#install-jupyterlab">📦 2. Install jupyterlab</a></li>
+  <li><a href="#download-notebooks" id="toc-download-notebooks" class="nav-link" data-scroll-target="#download-notebooks">📦 3. Download notebooks</a></li>
+  <li><a href="#launch-jupyterlab" id="toc-launch-jupyterlab" class="nav-link" data-scroll-target="#launch-jupyterlab">🧠 4. Launch JupyterLab</a></li>
+  <li><a href="#running-on-hpc" id="toc-running-on-hpc" class="nav-link" data-scroll-target="#running-on-hpc">⚙️ 5. Running on HPC</a></li>
+  <li><a href="#install-required-python-packages" id="toc-install-required-python-packages" class="nav-link" data-scroll-target="#install-required-python-packages">📦 6. Install Required Python Packages</a></li>
+  <li><a href="#get-a-groq-api-key-to-access-a-llm-online" id="toc-get-a-groq-api-key-to-access-a-llm-online" class="nav-link" data-scroll-target="#get-a-groq-api-key-to-access-a-llm-online">⚙️ 7: Get a Groq API key to access a llm online</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">✅ Summary</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/06_ethics_and_wrapup.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/00_workshop_guide.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Responsible Use, Bias, and Academic Writing</h1>
+<h1 class="title">Large Language Models for Research</h1>
 </div>
 
 
@@ -219,259 +247,176 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This final notebook is fully theoretical and serves as the reflective conclusion of the LLM in Research workshop.<br>
-By now, participants have experimented with literature summarisation, retrieval-augmented generation (RAG), and code generation.<br>
-Here, we step back and discuss <strong>how to use these capabilities responsibly</strong> in academic and research settings.</p>
-<hr>
-<section id="why-ethics-matter-in-ai-research" class="level2">
-<h2 class="anchored" data-anchor-id="why-ethics-matter-in-ai-research">🧭 Why Ethics Matter in AI Research</h2>
-<p>Large Language Models (LLMs) are not merely tools — they shape how research is <strong>written, cited, and communicated</strong>.<br>
-Ethical use ensures that our work remains <em>reproducible</em>, <em>transparent</em>, and <em>trustworthy</em>.</p>
+<p>A workshop by: <strong>QCIF</strong></p>
+<p><a href="https://www.qcif.edu.au/">https://www.qcif.edu.au/</a></p>
+<p>Author: <strong>Moji Ghadimi</strong></p>
+<p><a href="https://www.linkedin.com/in/moji-ghadimi/">https://www.linkedin.com/in/moji-ghadimi/</a></p>
+<p><br> <br> <br></p>
+<section id="workshop-description" class="level1">
+<h1>🧠 Workshop Description:</h1>
+<p><strong>Focus of this workshop</strong></p>
+<p>This workshop provides a practical, researcher-focused introduction to Large Language Models (LLMs), with a primary focus on:</p>
 <ul>
-<li><strong>Reproducibility:</strong> others should be able to verify what the model produced.</li>
-<li><strong>Transparency:</strong> readers must know when AI was used.</li>
-<li><strong>Accountability:</strong> responsibility stays with the human researcher, not the AI.</li>
-</ul>
-<p>Even small ethical lapses — unverified summaries, missing citations, or hidden AI contributions — can propagate misinformation through the scholarly record.</p>
-<hr>
-</section>
-<section id="hallucination-and-fabrication" class="level2">
-<h2 class="anchored" data-anchor-id="hallucination-and-fabrication">💬 Hallucination and Fabrication</h2>
-<p><strong>Hallucination</strong> means that an LLM produces text that <em>sounds plausible but is not factually true</em>.<br>
-It happens because the model predicts <em>likely words</em>, not <em>verified facts</em>.</p>
-<section id="common-manifestations" class="level3">
-<h3 class="anchored" data-anchor-id="common-manifestations">Common manifestations:</h3>
-<ul>
-<li>Invented citations (“Smith et al., 2017” that never existed)</li>
-<li>Confident but false claims (“This study showed quantum teleportation of viruses”)</li>
-<li>Misquoted statistics or data sources</li>
-</ul>
-</section>
-<section id="why-it-happens" class="level3">
-<h3 class="anchored" data-anchor-id="why-it-happens">Why it happens:</h3>
-<ul>
-<li>The model has no built-in access to real-time databases.</li>
-<li>It interpolates between known facts to fill gaps.</li>
-<li>Sampling randomness (temperature) can increase hallucination frequency.</li>
-</ul>
-</section>
-<section id="mitigation-strategies" class="level3">
-<h3 class="anchored" data-anchor-id="mitigation-strategies">Mitigation strategies:</h3>
-<ul>
-<li>Cross-check every factual claim.</li>
-<li>Ask for sources or DOIs explicitly.</li>
-<li>Use RAG workflows (as in Notebook 04) to ground responses in retrieved evidence.</li>
-</ul>
-<hr>
-</section>
-</section>
-<section id="bias-in-language-models" class="level2">
-<h2 class="anchored" data-anchor-id="bias-in-language-models">⚖️ Bias in Language Models</h2>
-<p>LLMs learn from large-scale human text corpora and <strong>inherit human biases</strong> — social, geographic, institutional, and ideological.</p>
-<section id="types-of-bias" class="level3">
-<h3 class="anchored" data-anchor-id="types-of-bias">Types of bias</h3>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 15%">
-<col style="width: 26%">
-<col style="width: 57%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Example</th>
-<th>Possible Consequence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Gender bias</td>
-<td>“The nurse… she”; “The engineer… he”</td>
-<td>Reinforces stereotypes</td>
-</tr>
-<tr class="even">
-<td>Geographic bias</td>
-<td>U.S.-centric examples</td>
-<td>Marginalises local or Global South contexts</td>
-</tr>
-<tr class="odd">
-<td>Institutional bias</td>
-<td>Over-representation of elite universities</td>
-<td>Skews perception of authority</td>
-</tr>
-<tr class="even">
-<td>Topical bias</td>
-<td>Focus on trendy disciplines</td>
-<td>Neglects underrepresented fields</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="reflection-prompts" class="level3">
-<h3 class="anchored" data-anchor-id="reflection-prompts">Reflection prompts</h3>
-<ul>
-<li>Does your prompt assume one kind of author, culture, or region?</li>
-<li>Are the model’s suggestions diverse and representative?</li>
-<li>How could biased phrasing influence downstream analyses?</li>
-</ul>
-<hr>
-</section>
-</section>
-<section id="academic-writing-and-integrity" class="level2">
-<h2 class="anchored" data-anchor-id="academic-writing-and-integrity">✍️ Academic Writing and Integrity</h2>
-<p>LLMs can help researchers: - Rephrase complex sentences - Improve grammar and flow - Suggest structure or headings</p>
-<p>However, there are <strong>boundaries of ethical use</strong>.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 28%">
-<col style="width: 25%">
-<col style="width: 20%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Practice</th>
-<th>Example</th>
-<th>Safe?</th>
-<th>Comment</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Paraphrasing your own draft for clarity</td>
-<td>“Rewrite this paragraph in academic tone.”</td>
-<td>✅</td>
-<td>Keep authorship transparent.</td>
-</tr>
-<tr class="even">
-<td>Summarising literature you provide</td>
-<td>“Summarise this abstract in 3 sentences.”</td>
-<td>✅</td>
-<td>Verify facts manually.</td>
-</tr>
-<tr class="odd">
-<td>Generating original citations</td>
-<td>“List 5 references on…”</td>
-<td>❌</td>
-<td>May produce hallucinated papers.</td>
-</tr>
-<tr class="even">
-<td>Copying large model outputs into a manuscript</td>
-<td>–</td>
-<td>⚠️</td>
-<td>Requires attribution (“As generated by an LLM…”).</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Rule of thumb:</strong><br>
-&gt; AI tools can assist writing but cannot author scholarship.</p>
-<p>Always acknowledge LLM assistance in the acknowledgements or methods section.</p>
-<hr>
-</section>
-<section id="reproducibility-and-documentation" class="level2">
-<h2 class="anchored" data-anchor-id="reproducibility-and-documentation">🧱 Reproducibility and Documentation</h2>
-<p>A reproducible AI workflow records <strong>exact conditions</strong> under which results were produced.</p>
-<section id="good-documentation-includes" class="level3">
-<h3 class="anchored" data-anchor-id="good-documentation-includes">Good documentation includes:</h3>
-<ul>
-<li>Model name and version (e.g., <em>Llama-3.1-70B</em>, Groq API, May 2025)</li>
-<li>Prompt text and parameters (temperature, max tokens)</li>
-<li>Retrieval corpus and date of access</li>
-<li>API source or endpoint</li>
-<li>Any local preprocessing code or filters</li>
-</ul>
-</section>
-<section id="example-documentation-block" class="level3">
-<h3 class="anchored" data-anchor-id="example-documentation-block">Example documentation block:</h3>
-<blockquote class="blockquote">
-<p>“Summaries were generated using Groq’s Llama-3.1-70B model (API version 2025-05-02) with temperature=0.2.<br>
-Input abstracts were retrieved from ArXiv on 2025-05-10 using the query ‘quantum batteries’.”</p>
-</blockquote>
-<hr>
-</section>
-</section>
-<section id="ethical-checklist-for-llm-use" class="level2">
-<h2 class="anchored" data-anchor-id="ethical-checklist-for-llm-use">📜 Ethical Checklist for LLM Use</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Aspect</th>
-<th>Example</th>
-<th>Safe Usage</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Citation</td>
-<td>“As summarised by LLM, based on ArXiv data”</td>
-<td>✅</td>
-</tr>
-<tr class="even">
-<td>Fabrication</td>
-<td>“This study found…” (invented)</td>
-<td>❌</td>
-</tr>
-<tr class="odd">
-<td>Sensitive data</td>
-<td>Upload of patient or private data</td>
-<td>❌</td>
-</tr>
-<tr class="even">
-<td>Attribution</td>
-<td>“Generated draft reviewed by author”</td>
-<td>✅</td>
-</tr>
-<tr class="odd">
-<td>Confidentiality</td>
-<td>Submitting unpublished manuscripts</td>
-<td>⚠️</td>
-</tr>
-<tr class="even">
-<td>Transparency</td>
-<td>“Edited for clarity using an LLM tool”</td>
-<td>✅</td>
-</tr>
-</tbody>
-</table>
-<section id="institutional-guidelines" class="level3">
-<h3 class="anchored" data-anchor-id="institutional-guidelines">Institutional Guidelines</h3>
-<ul>
-<li>Many universities now classify unacknowledged AI writing as <strong>academic misconduct</strong>.</li>
-<li>Check your organisation’s policies (often listed under <em>Research Integrity</em> or <em>Publication Ethics</em>).</li>
-</ul>
-<hr>
-</section>
-</section>
-<section id="final-reflection" class="level2">
-<h2 class="anchored" data-anchor-id="final-reflection">🧩 Final Reflection</h2>
-<ul>
-<li>What tasks will you responsibly delegate to an LLM?<br>
+<li><strong>Structured content summarisation</strong><br>
 </li>
-<li>How can you make your use of AI <strong>transparent and auditable</strong>?<br>
-</li>
-<li>Would your workflow remain valid if the model were updated or replaced?</li>
+<li><strong>Code generation</strong></li>
 </ul>
+<p><strong>Sectors this applies to</strong></p>
+<p>While the workshop is designed for academic users, the same techniques and code snippets can be easily repurposed across sectors:</p>
+<ul>
+<li><strong>Academia:</strong> creating structured literature reviews and research summaries<br>
+</li>
+<li><strong>Industry:</strong> summarising technical or standards documents for engineering teams<br>
+</li>
+<li><strong>Government:</strong> preparing policy summaries, briefs, and evidence-based guidance for decision-makers</li>
+</ul>
+<section id="what-this-workshop-covers" class="level3">
+<h3 class="anchored" data-anchor-id="what-this-workshop-covers">What this workshop covers</h3>
+<ul>
+<li>How to use LLMs for <strong>summarisation</strong>, <strong>code generation</strong>, <strong>literature analysis</strong>, and <strong>knowledge synthesis</strong><br>
+</li>
+<li>Foundations of <strong>prompt structure</strong>, <strong>retrieval grounding</strong>, <strong>avoiding hallucinations</strong>, and <strong>safe data handling</strong></li>
+<li>How to build <strong>transparent, auditable workflows</strong> suitable for academic, clinical, and technical domains<br>
+</li>
+<li>Understanding when LLMs help—and when they shouldn’t be used</li>
+</ul>
+</section>
+<section id="who-this-is-for" class="level3">
+<h3 class="anchored" data-anchor-id="who-this-is-for">Who this is for</h3>
+<ul>
+<li>Researchers interested in literature reviews or code generation<br>
+</li>
+<li>Anyone wanting structured, defensible LLM workflows</li>
+</ul>
+</section>
+</section>
+<section id="setup-guide-for-python-and-jupyterlab" class="level1">
+<h1>Setup Guide for Python and JupyterLab</h1>
+<p>This guide explains how to install <strong>Python</strong>, <strong>essential packages</strong>, and <strong>JupyterLab</strong> for running the LLM workshop notebooks on your computer or HPC environment.</p>
+<hr>
+<section id="install-python-recommended-version-3.10-or-newer" class="level2">
+<h2 class="anchored" data-anchor-id="install-python-recommended-version-3.10-or-newer">🐍 1. Install Python (Recommended: Version 3.10 or newer)</h2>
+<section id="windows" class="level3">
+<h3 class="anchored" data-anchor-id="windows"><strong>Windows</strong></h3>
+<ol type="1">
+<li><p>Go to the official Python website: <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p></li>
+<li><p>Download the latest <strong>Python 3.x installer</strong>.</p></li>
+<li><p>Run the installer and <strong>check the box</strong> that says:</p>
+<ul>
+<li>✅ <em>Add Python to PATH</em></li>
+</ul></li>
+<li><p>Choose <em>Install Now</em> and follow the prompts.</p></li>
+</ol>
+<p>To verify installation, open <strong>Command Prompt (cmd)</strong> and type:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You should see something like:</p>
+<pre><code>Python 3.11.6</code></pre>
+<hr>
+</section>
+<section id="macos-linux" class="level3">
+<h3 class="anchored" data-anchor-id="macos-linux"><strong>macOS / Linux</strong></h3>
+<p>Most systems come with Python preinstalled. You can check your version:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If Python is not installed, install it using your system package manager:</p>
+<p><strong>macOS (Homebrew):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install python</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Ubuntu / Debian:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt install python3 python3-pip <span class="at">-y</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="install-jupyterlab" class="level2">
+<h2 class="anchored" data-anchor-id="install-jupyterlab">📦 2. Install jupyterlab</h2>
+<p>Once Python is installed, you can install packages using <code>pip</code> (Python’s package manager).</p>
+<p>Run this command in your terminal or command prompt:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install jupyterlab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><h2 id="jupyterlab-is-used-for-running-notebooks-interactively." class="anchored"><code>jupyterlab</code> is used for running notebooks interactively.</h2></li>
+</ul>
+</section>
+<section id="download-notebooks" class="level2">
+<h2 class="anchored" data-anchor-id="download-notebooks">📦 3. Download notebooks</h2>
+<p>Download notebooks.zip from the left menu of workshop website and extract to your desired folder.</p>
+</section>
+<section id="launch-jupyterlab" class="level2">
+<h2 class="anchored" data-anchor-id="launch-jupyterlab">🧠 4. Launch JupyterLab</h2>
+<p>Open terminal or command prompt and navigate to the folder containing your workshop notebooks (or navigate then open a terminal), then run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> jupyter lab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This will open a new tab in your default web browser with the JupyterLab interface.</p>
+<p>You can then click on any notebook to open it.</p>
+<hr>
+</section>
+<section id="running-on-hpc" class="level2">
+<h2 class="anchored" data-anchor-id="running-on-hpc">⚙️ 5. Running on HPC</h2>
+<p>If you’re using a hosted JupyterLab instance on HPC infrastructure, Python and most dependencies are already installed. You typically only need to:</p>
+<ol type="1">
+<li>Open the web-based JupyterLab interface.</li>
+<li>Load the correct Python environment (via module or dropdown).</li>
+<li>download and extract notebooks.zip from the left menu of the website.</li>
+<li>Upload notebooks to the HPC’s jupyter lab.</li>
+<li>Run 00_setup_guide.ipynb (this notebook).</li>
+</ol>
+</section>
+<section id="install-required-python-packages" class="level2">
+<h2 class="anchored" data-anchor-id="install-required-python-packages">📦 6. Install Required Python Packages</h2>
+<p>If the packages below are not installed uncomment (remove #) and run the cell below to install packages:</p>
+<div id="159a7f2c" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># !pip install numpy pandas matplotlib openai requests pypdf </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Note if you are running this in a terminal you need to remove “!” from teh start of the command. This will install:</p>
+<ul>
+<li><code>numpy</code> – for handling arrays.</li>
+<li><code>pandas</code> – for handling data.</li>
+<li><code>matplotlib</code> – for plotting.</li>
+<li><code>openai</code> – to connect to Groq or OpenAI-compatible APIs.</li>
+<li><code>requests</code> – for fetching data from APIs.</li>
+<li><code>pypdf</code> – for reading PDFs.</li>
+</ul>
+<p>To verify installation, run the code below:</p>
+<div id="ceb6963e" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> importlib.metadata</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>packages <span class="op">=</span> [<span class="st">"numpy"</span>, <span class="st">"pandas"</span>, <span class="st">"matplotlib"</span>, <span class="st">"openai"</span>, <span class="st">"requests"</span>, <span class="st">"pypdf"</span> ]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> pkg <span class="kw">in</span> packages:</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>pkg<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>importlib<span class="sc">.</span>metadata<span class="sc">.</span>version(pkg)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> importlib.metadata.PackageNotFoundError:</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>pkg<span class="sc">}</span><span class="ss">: not installed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>numpy: 2.3.3
+pandas: 2.3.3
+matplotlib: 3.10.7
+openai: 2.6.0
+requests: 2.32.5
+pypdf: 6.1.3</code></pre>
+</div>
+</div>
+</section>
+<section id="get-a-groq-api-key-to-access-a-llm-online" class="level2">
+<h2 class="anchored" data-anchor-id="get-a-groq-api-key-to-access-a-llm-online">⚙️ 7: Get a Groq API key to access a llm online</h2>
+<ul>
+<li>Sign In to Your Groq Account. Go to <a href="https://console.groq.com/login">https://console.groq.com/login</a>.</li>
+<li>If you already have an account, <strong>sign in</strong>.<br>
+</li>
+<li>If not, <strong>create a new account</strong> and complete the verification process.</li>
+</ul>
+<p>Generate Your Groq API Key: 1. Navigate to the <strong>API Keys</strong> section from the left menu.<br>
+2. Click <strong>Create API Key</strong>. 3. In the pop-up window, enter a descriptive name for your key (e.g., <em>AI Content Labs</em>) in the <strong>Display name for the key</strong> field.<br>
+- This helps you easily identify the key later.<br>
+4. Click <strong>Submit</strong>.<br>
+5. <strong>Copy the displayed API key</strong> — it will only be shown once.<br>
+- Save it securely for future use.</p>
 <hr>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">✅ Summary</h2>
-<ol type="1">
-<li><strong>LLMs are probabilistic assistants, not authorities.</strong><br>
-</li>
-<li><strong>Bias and hallucination are systemic, not accidental.</strong><br>
-</li>
-<li><strong>Ethical use means attribution, verification, and documentation.</strong><br>
-</li>
-<li><strong>Transparency builds trust — in both research and AI.</strong></li>
-</ol>
-<blockquote class="blockquote">
-<p>“Science advances through transparency, not shortcuts.”</p>
-</blockquote>
-<hr>
-<section id="end-of-workshop" class="level3">
-<h3 class="anchored" data-anchor-id="end-of-workshop">End of Workshop</h3>
-<p>Congratulations on completing the <em>LLMs in Research</em> series!<br>
-You now understand not only how to use LLMs for research but also how to do so <strong>responsibly and reproducibly</strong>.</p>
+<ul>
+<li>Install Python ≥ 3.10</li>
+<li>Use <code>pip</code> to install required packages</li>
+<li>Run <code>jupyter lab</code></li>
+<li>Verify everything by opening the example notebooks</li>
+<li>Get a Groq API key</li>
+</ul>
 
 
 </section>
@@ -883,4 +828,4 @@ You now understand not only how to use LLMs for research but also how to do so <
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/06_ethics_and_wrapup.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/00_workshop_guide.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
