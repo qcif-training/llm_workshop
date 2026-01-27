@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction to Large Language Models (LLMs) for Research – Fundamentals of Regression</title>
+<title>01 — Introduction to LLMs for Research (Hands‑on) – Fundamentals of Regression</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,35 +104,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -193,26 +164,20 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_literature_review.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">03_literature_review</span></a>
+  <a href="./03_literature_workflow_with_llms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">03_literature_workflow_with_llms</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_review_with_rag.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">04_review_with_rag</span></a>
+  <a href="./04_llms_for_code_and_data_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">04_llms_for_code_and_data_analysis</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_code_and_data_prep.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">05_code_and_data_prep</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./06_ethics_and_wrapup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">06_ethics_and_wrapup</span></a>
+  <a href="./05_ethics_and_wrapup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05_ethics_and_wrapup</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -231,17 +196,19 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#background-very-briefly" id="toc-background-very-briefly" class="nav-link active" data-scroll-target="#background-very-briefly">Background (very briefly)</a></li>
-  <li><a href="#environment-setup" id="toc-environment-setup" class="nav-link" data-scroll-target="#environment-setup">1) Environment Setup</a></li>
-  <li><a href="#configure-api-connection-groq" id="toc-configure-api-connection-groq" class="nav-link" data-scroll-target="#configure-api-connection-groq">2) Configure API Connection (Groq)</a></li>
-  <li><a href="#first-llm-call-hello-llm-llama-3-70b" id="toc-first-llm-call-hello-llm-llama-3-70b" class="nav-link" data-scroll-target="#first-llm-call-hello-llm-llama-3-70b">3) First LLM Call — “Hello LLM” (Llama-3 70B)</a>
+  <li><a href="#imports" id="toc-imports" class="nav-link active" data-scroll-target="#imports">1) Imports</a></li>
+  <li><a href="#configuration-api-key-model" id="toc-configuration-api-key-model" class="nav-link" data-scroll-target="#configuration-api-key-model">2) Configuration (API key + model)</a></li>
+  <li><a href="#create-a-client" id="toc-create-a-client" class="nav-link" data-scroll-target="#create-a-client">3) Create a client</a></li>
+  <li><a href="#your-first-chat-call" id="toc-your-first-chat-call" class="nav-link" data-scroll-target="#your-first-chat-call">4) Your first chat call</a></li>
+  <li><a href="#optional-inspect-the-response-object" id="toc-optional-inspect-the-response-object" class="nav-link" data-scroll-target="#optional-inspect-the-response-object">5) (Optional) Inspect the response object</a></li>
+  <li><a href="#helper-functions-the-workshop-style" id="toc-helper-functions-the-workshop-style" class="nav-link" data-scroll-target="#helper-functions-the-workshop-style">6) Helper functions (the workshop style)</a></li>
+  <li><a href="#quick-exercises" id="toc-quick-exercises" class="nav-link" data-scroll-target="#quick-exercises">8) Quick exercises</a>
   <ul class="collapse">
-  <li><a href="#examining-the-response-object" id="toc-examining-the-response-object" class="nav-link" data-scroll-target="#examining-the-response-object">Examining the response object</a></li>
+  <li><a href="#exercise-a-rewrite-for-clarity" id="toc-exercise-a-rewrite-for-clarity" class="nav-link" data-scroll-target="#exercise-a-rewrite-for-clarity">Exercise A — rewrite for clarity</a></li>
+  <li><a href="#exercise-b-extract-structured-fields" id="toc-exercise-b-extract-structured-fields" class="nav-link" data-scroll-target="#exercise-b-extract-structured-fields">Exercise B — extract structured fields</a></li>
+  <li><a href="#exercise-c-propose-search-keywords" id="toc-exercise-c-propose-search-keywords" class="nav-link" data-scroll-target="#exercise-c-propose-search-keywords">Exercise C — propose search keywords</a></li>
   </ul></li>
-  <li><a href="#understanding-temperature" id="toc-understanding-temperature" class="nav-link" data-scroll-target="#understanding-temperature">4) Understanding <code>temperature</code></a></li>
-  <li><a href="#continuous-conversation-keeping-history" id="toc-continuous-conversation-keeping-history" class="nav-link" data-scroll-target="#continuous-conversation-keeping-history">5) Continuous Conversation (Keeping History)</a></li>
-  <li><a href="#exercise-your-first-prompt" id="toc-exercise-your-first-prompt" class="nav-link" data-scroll-target="#exercise-your-first-prompt">8) Exercise — Your First Prompt</a></li>
-  <li><a href="#wrap-up-next-steps" id="toc-wrap-up-next-steps" class="nav-link" data-scroll-target="#wrap-up-next-steps">9) Wrap-Up &amp; Next Steps</a></li>
+  <li><a href="#wrap-up" id="toc-wrap-up" class="nav-link" data-scroll-target="#wrap-up">9) Wrap-up</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/01_introduction_llm.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -250,7 +217,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Introduction to Large Language Models (LLMs) for Research</h1>
+<h1 class="title">01 — Introduction to LLMs for Research (Hands‑on)</h1>
 </div>
 
 
@@ -267,267 +234,299 @@ window.Quarto = {
 </header>
 
 
-<p>This notebook is the first module of a workshop on using Large Language Models (LLMs) in research workflows. It focuses on:</p>
+<p>In this notebook you will:</p>
 <ul>
-<li>Setting up access to an LLM via the <strong>Groq</strong> API using the <strong>OpenAI-compatible</strong> Python client.</li>
-<li>Running your <strong>first query</strong> and understanding the request/response structure.</li>
-<li>Exploring the notion of <strong>temperature</strong> (randomness) in generation.</li>
-<li>Creating a <strong>continuous conversation</strong> by keeping your own chat history.</li>
+<li>Make your first <strong>LLM chat call</strong> (using Groq’s OpenAI‑compatible API).</li>
+<li>Learn the <strong>message format</strong> (<code>system</code>, <code>user</code>, <code>assistant</code>) used throughout the workshop.</li>
+<li>Use <strong>two helper functions</strong> (<code>chat()</code> and <code>chat_reset()</code>) so later notebooks stay clean and function‑based.</li>
 </ul>
-<p>We adopt a <strong>text-only</strong> approach (no image/graph understanding) to ensure minimal setup and maximum reproducibility.</p>
-<p>By the end of this notebook, you will be able to: 1. Configure a connection to the Groq API. 2. Send chat messages with the OpenAI-compatible client. 3. Control generation behaviour via <code>temperature</code>. 4. Maintain and reuse chat history for a continuing conversation.</p>
-<section id="background-very-briefly" class="level2">
-<h2 class="anchored" data-anchor-id="background-very-briefly">Background (very briefly)</h2>
-<p>An LLM is a probabilistic model over text. Given a sequence of tokens <span class="math inline">\(x_{1:t}\)</span>, it assigns probabilities to the next token <span class="math inline">\(x_{t+1}\)</span>. At inference, models sample from a distribution such as <span class="math display">\[p(x_{t+1}=i\mid x_{1:t}) = \mathrm{softmax}\!\left(\frac{z_i}{T}\right),\]</span> where <span class="math inline">\(z_i\)</span> is the logit for token <span class="math inline">\(i\)</span> and <span class="math inline">\(T&gt;0\)</span> is the <strong>temperature</strong>. Lower <span class="math inline">\(T\)</span> concentrates probability mass on high-logit tokens (more deterministic), while higher <span class="math inline">\(T\)</span> spreads it out (more diverse). We will <strong>demonstrate</strong> this behaviour below.</p>
-</section>
-<section id="environment-setup" class="level2">
-<h2 class="anchored" data-anchor-id="environment-setup">1) Environment Setup</h2>
-<p>This section prepares the Python environment. If you encounter an <code>ImportError</code>, go back to 00_setup_guid notebook to install the package.</p>
-<p><strong>What this cell does:</strong> - Imports the OpenAI modules. - Does <strong>not</strong> make any external calls yet.</p>
-<div id="22dcf842" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># If running outside the provided environment, uncomment the next line:</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># %pip install openai</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai <span class="im">import</span> OpenAI</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p><strong>Workshop rule:</strong> We’ll call the model through helper functions.<br>
+You <em>can</em> look at the underlying API call, but you don’t need to.</p>
+</blockquote>
+<section id="imports" class="level2">
+<h2 class="anchored" data-anchor-id="imports">1) Imports</h2>
+<p>We keep imports minimal and explicit so it’s clear what each library is used for.</p>
+<div id="72a2e0be" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove # from the line below and run if packages are not installed </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># !pip install numpy pandas matplotlib openai requests</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="99e9c1ee" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard library: access environment variables safely</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os  <span class="co"># used for storing API keys and configuration</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># OpenAI Python client (works with Groq because Groq exposes an OpenAI-compatible endpoint)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai <span class="im">import</span> OpenAI  <span class="co"># used to create a client and call chat completions</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="configure-api-connection-groq" class="level2">
-<h2 class="anchored" data-anchor-id="configure-api-connection-groq">2) Configure API Connection (Groq)</h2>
-<p>LLM APIs are <strong>stateless</strong> web services. We’ll configure a client that speaks the OpenAI-compatible protocol, pointing it to Groq’s base URL.</p>
-<p><strong>What you’ll do in this cell:</strong> 1. Paste your Groq API key (to create an API key see 00_setup_guide notebook). 2. Set the base URL for Groq’s OpenAI-compatible endpoint. 3. Instantiate the client.</p>
-<p><strong>Notes:</strong> - Keep your API key private. In shared workshops, you can paste it, run this cell, and then clear the visible key. - You can also store keys in environment variables or use a <code>.env</code> file if preferred.</p>
-<div id="351a8f5e" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste your Groq API key below (between quotes). </span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note this is not a secure way of entering API key because it is visible to everyone that sees your notebook.  </span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"GROQ_API_KEY"</span>] <span class="op">=</span> <span class="st">""</span>  <span class="co"># &lt;-- replace with your key.</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="st">"llama-3.3-70b-versatile"</span> <span class="co"># Select your model https://console.groq.com/docs/models</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"BASE_URL"</span>] <span class="op">=</span> <span class="st">"https://api.groq.com/openai/v1"</span> <span class="co"># Groq uses an OpenAI-compatible API surface; we just change the base URL.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="configuration-api-key-model" class="level2">
+<h2 class="anchored" data-anchor-id="configuration-api-key-model">2) Configuration (API key + model)</h2>
+<p>⚠️ <strong>Keep your API key private.</strong><br>
+In a real project, it’s better to set keys as environment variables (not in a notebook).</p>
+<p>For this workshop, we keep the pattern simple and consistent with the existing course.</p>
+<div id="a75141cd" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste your Groq API key below (between quotes).</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: This is not a secure way of entering an API key because it becomes visible in the notebook.</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># For safer setups, prefer environment variables or secret managers (especially if sharing notebooks).</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"GROQ_API_KEY"</span>] <span class="op">=</span> <span class="st">""</span>  <span class="co"># &lt;-- replace with your key.</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="st">"llama-3.3-70b-versatile"</span>  <span class="co"># Select a model: https://console.groq.com/docs/models</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"BASE_URL"</span>] <span class="op">=</span> <span class="st">"https://api.groq.com/openai/v1"</span>  <span class="co"># Groq uses an OpenAI-compatible API base URL.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="98b3a825" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the client</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span>os.environ[<span class="st">"GROQ_API_KEY"</span>],</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span>os.environ[<span class="st">"BASE_URL"</span>],</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Groq client initialized!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="create-a-client" class="level2">
+<h2 class="anchored" data-anchor-id="create-a-client">3) Create a client</h2>
+<p>The <code>OpenAI</code> client can point to different providers as long as they implement the OpenAI API. Here we point it to Groq’s base URL and authenticate using your key.</p>
+<div id="7749485c" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read configuration from the environment (so it’s in one place).</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If the key is missing, calls will fail with an authentication error.</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>api_key <span class="op">=</span> os.environ[<span class="st">"GROQ_API_KEY"</span>]  <span class="co"># your Groq API key (string)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>base_url <span class="op">=</span> os.environ[<span class="st">"BASE_URL"</span>]     <span class="co"># Groq's OpenAI-compatible endpoint base URL</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a client instance.</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># This object will be reused for the rest of the workshop.</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI(</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span>api_key,   <span class="co"># authentication</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span>base_url  <span class="co"># provider endpoint</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick sanity check: print a short confirmation message.</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"✅ Client initialized"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Groq client initialized!</code></pre>
+<pre><code>✅ Client initialized</code></pre>
 </div>
 </div>
 </section>
-<section id="first-llm-call-hello-llm-llama-3-70b" class="level2">
-<h2 class="anchored" data-anchor-id="first-llm-call-hello-llm-llama-3-70b">3) First LLM Call — “Hello LLM” (Llama-3 70B)</h2>
-<p>Here we send a <strong>single-turn</strong> prompt with minimal scaffolding. The API expects a list of <code>messages</code>, where each message has a <code>role</code> and <code>content</code>.</p>
-<p><strong>Roles:</strong> - <code>system</code>: high-level instructions (tone, persona, formatting). - <code>user</code>: your question or instruction. - <code>assistant</code>: the model’s reply (the API returns this).</p>
-<p><strong>What this cell does:</strong> - Creates a tiny conversation with <code>system</code> and <code>user</code> messages. - Calls the model <code>llama3 70b</code> for higher-quality outputs compared to 8B. - Prints the model’s reply.</p>
-<p>You can modify the user content and re-run to see different responses.</p>
-<div id="e46e8bde" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>messages <span class="op">=</span> [</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: <span class="st">"You are a helpful research assistant. Be concise."</span>},</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"Explain what a Large Language Model is in two sentences."</span>}</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.chat.completions.create(</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span>model,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>messages,</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    temperature<span class="op">=</span><span class="dv">0</span> <span class="co"># lower temperature -&gt; more deterministic</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.choices[<span class="dv">0</span>].message.content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate human-like text, answer questions, and even engage in conversation, making them a powerful tool for various applications such as language translation, text summarization, and chatbots.</code></pre>
-</div>
-</div>
-<section id="examining-the-response-object" class="level3">
-<h3 class="anchored" data-anchor-id="examining-the-response-object">Examining the response object</h3>
-<div id="f44e07e3" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="bu">str</span> <span class="kw">in</span> response:</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="bu">str</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>('id', 'chatcmpl-a772b541-683b-43d6-8d91-ab34bc331aa3')
-('choices', [Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate human-like text, answer questions, and even engage in conversation, making them a powerful tool for various applications such as language translation, text summarization, and chatbots.', refusal=None, role='assistant', annotations=None, audio=None, function_call=None, tool_calls=None))])
-('created', 1761507006)
-('model', 'llama-3.3-70b-versatile')
-('object', 'chat.completion')
-('service_tier', 'on_demand')
-('system_fingerprint', 'fp_55062f05af')
-('usage', CompletionUsage(completion_tokens=86, prompt_tokens=57, total_tokens=143, completion_tokens_details=None, prompt_tokens_details=None, queue_time=0.204136406, prompt_time=0.003836992, completion_time=0.204419149, total_time=0.208256141))
-('usage_breakdown', None)
-('x_groq', {'id': 'req_01k8gzznrae478nzw5x9z6rpvb'})</code></pre>
-</div>
-</div>
-<div id="431ae070" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>response.choices[<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate human-like text, answer questions, and even engage in conversation, making them a powerful tool for various applications such as language translation, text summarization, and chatbots.', refusal=None, role='assistant', annotations=None, audio=None, function_call=None, tool_calls=None))</code></pre>
-</div>
-</div>
-</section>
-</section>
-<section id="understanding-temperature" class="level2">
-<h2 class="anchored" data-anchor-id="understanding-temperature">4) Understanding <code>temperature</code></h2>
-<p>The <strong>temperature</strong> parameter adjusts the <strong>randomness</strong> of token sampling. Intuitively, the model produces a probability distribution over possible next tokens from its logits <span class="math inline">\(z\)</span>. The temperature rescales those logits:</p>
-<p><span class="math display">\[p_i = \mathrm{softmax}\!\left(\frac{z_i}{T}\right) = \frac{\exp(z_i/T)}{\sum_j \exp(z_j/T)}.\]</span></p>
+<section id="your-first-chat-call" class="level2">
+<h2 class="anchored" data-anchor-id="your-first-chat-call">4) Your first chat call</h2>
+<p>A chat call is a list of <strong>messages</strong>. Each message is a dictionary with:</p>
 <ul>
-<li>Lower <span class="math inline">\(T\)</span> (e.g.&nbsp;<span class="math inline">\(T=0.2\)</span>): the distribution is <em>sharper</em> around high-probability tokens, yielding more <strong>stable</strong> outputs.</li>
-<li>Higher <span class="math inline">\(T\)</span> (e.g.&nbsp;<span class="math inline">\(T=0.8\)</span>): the distribution is <em>flatter</em>, encouraging <strong>diversity</strong> and sometimes creativity.</li>
+<li><code>role</code>: <code>"system"</code>, <code>"user"</code>, or <code>"assistant"</code></li>
+<li><code>content</code>: the text for that message</li>
 </ul>
-<p><strong>What this cell does:</strong> - Sends the <em>same</em> prompt twice, once with <code>temperature=0.01</code> and once with <code>temperature=0.9</code>. - Prints both answers so you can compare tone and variability.</p>
-<div id="a871a61b" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="st">"Describe the role of LLMs in academic research in one sentence."</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> temp <span class="kw">in</span> [<span class="fl">0.01</span>, <span class="fl">0.9</span>]:</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>()</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Temperature:"</span>, temp)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> client.chat.completions.create(</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>            model<span class="op">=</span>model,</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>            messages<span class="op">=</span>prompt,</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            temperature<span class="op">=</span>temp <span class="co"># lower temperature -&gt; more deterministic</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(response.choices[<span class="dv">0</span>].message.content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The model reads the messages and returns the assistant’s next reply.</p>
+<div id="9a08e730" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a minimal message list.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># - The system message sets the style/rules.</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># - The user message is your question/instruction.</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>messages <span class="op">=</span> [</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: <span class="st">"You are a helpful research assistant. Be concise."</span>},  <span class="co"># behavior</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"Explain what a large language model (LLM) is in two sentences."</span>},  <span class="co"># task</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Call the chat completion endpoint.</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span>model,        <span class="co"># which model to use</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>messages,  <span class="co"># conversation so far</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    temperature<span class="op">=</span><span class="fl">0.2</span>,    <span class="co"># low randomness for factual, stable answers</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the assistant text safely (this is the part you usually want).</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>reply_text <span class="op">=</span> response.choices[<span class="dv">0</span>].message.content  <span class="co"># the generated assistant reply</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(reply_text)  <span class="co"># display the result</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Temperature: 0.01
-A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, generating human-like text based on the input it receives. LLMs are trained on vast amounts of text data, allowing them to learn patterns and relationships in language, and can be used for tasks such as language translation, text summarization, and conversation generation.
-A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms and vast amounts of data to generate text, answer questions, and complete tasks. LLMs are trained on massive datasets of text from various sources, enabling them to learn patterns, relationships, and nuances of language, and generate human-like responses to a wide range of inputs and prompts.
-A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within large datasets of text. By training on vast amounts of data, LLMs can generate human-like text, answer questions, and even engage in conversation, making them a powerful tool for applications such as language translation, text summarization, and chatbots.
-A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate coherent and contextually relevant text, answer questions, and even engage in conversation, mimicking human-like language abilities.
-A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms to learn patterns and relationships within vast amounts of text data. By training on massive datasets, LLMs can generate human-like text, answer questions, and even engage in conversation, making them a powerful tool for various applications such as language translation, text summarization, and chatbots.
-
-Temperature: 0.9
-A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, using complex algorithms and massive datasets to generate text, answer questions, and even converse with humans. LLMs are trained on vast amounts of text data, allowing them to learn patterns, relationships, and nuances of language, and generate coherent and contextually relevant responses to a wide range of queries and prompts.
-A Large Language Model (LLM) is a type of artificial intelligence designed to process and understand human language, using complex algorithms to analyze and generate text based on vast amounts of training data. LLMs, like myself, can perform tasks such as answering questions, translating languages, and generating text, by recognizing patterns and relationships in language to provide helpful and informative responses.
-A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, generating human-like text and responses based on the patterns and relationships it learns from vast amounts of data. LLMs use complex algorithms and massive datasets to learn the structures and nuances of language, enabling them to perform tasks such as language translation, text summarization, and conversation simulation.
-A Large Language Model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, typically trained on vast amounts of text data to generate human-like responses. LLMs use complex algorithms and neural networks to learn patterns and relationships in language, allowing them to perform tasks such as language translation, text summarization, and conversation generation.
-A Large Language Model (LLM) is a type of artificial intelligence designed to process and understand human language, trained on vast amounts of text data to generate human-like responses and answer questions. LLMs use complex algorithms and neural networks to learn patterns and relationships in language, enabling them to perform tasks such as language translation, text summarization, and conversation generation.</code></pre>
+<pre><code>A large language model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, typically trained on vast amounts of text data to generate human-like responses. LLMs use complex algorithms and neural networks to learn patterns and relationships in language, enabling them to perform tasks such as language translation, text summarization, and conversation generation.</code></pre>
 </div>
 </div>
 </section>
-<section id="continuous-conversation-keeping-history" class="level2">
-<h2 class="anchored" data-anchor-id="continuous-conversation-keeping-history">5) Continuous Conversation (Keeping History)</h2>
-<p>LLM APIs do <strong>not</strong> keep state between calls. To build a conversation, you keep a list of messages and send the <em>entire</em> recent history each time. We’ll implement a small helper that:</p>
+<section id="optional-inspect-the-response-object" class="level2">
+<h2 class="anchored" data-anchor-id="optional-inspect-the-response-object">5) (Optional) Inspect the response object</h2>
+<p>Sometimes you want to debug: - which model was used - token usage / metadata (if provided) - full structured payload</p>
+<div id="511424fc" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Many modern OpenAI-style clients support `model_dump()` (Pydantic-style).</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If it's not available, we fall back to casting to a plain dict (best-effort).</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> response.model_dump() <span class="cf">if</span> <span class="bu">hasattr</span>(response, <span class="st">"model_dump"</span>) <span class="cf">else</span> <span class="bu">dict</span>(response)  <span class="co"># safe conversion</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Print top-level keys so you know what's inside without dumping everything.</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Top-level keys:"</span>, <span class="bu">list</span>(payload.keys()))  <span class="co"># quick peek</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the reported model name if available.</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Model used:"</span>, payload.get(<span class="st">"model"</span>, <span class="st">"unknown"</span>))  <span class="co"># model identifier (string)</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Print token usage if the provider returns it (not all providers do).</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>usage <span class="op">=</span> payload.get(<span class="st">"usage"</span>, <span class="va">None</span>)  <span class="co"># usage metadata (may be missing)</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Usage:"</span>, usage)  <span class="co"># token counts, etc. (or None)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Top-level keys: ['id', 'choices', 'created', 'model', 'object', 'service_tier', 'system_fingerprint', 'usage', 'usage_breakdown', 'x_groq']
+Model used: llama-3.3-70b-versatile
+Usage: {'completion_tokens': 75, 'prompt_tokens': 61, 'total_tokens': 136, 'completion_tokens_details': None, 'prompt_tokens_details': None, 'queue_time': 0.010413828, 'prompt_time': 0.002431792, 'completion_time': 0.151746588, 'total_time': 0.15417838}</code></pre>
+</div>
+</div>
+</section>
+<section id="helper-functions-the-workshop-style" class="level2">
+<h2 class="anchored" data-anchor-id="helper-functions-the-workshop-style">6) Helper functions (the workshop style)</h2>
+<p>From now on we’ll use helper functions so:</p>
 <ul>
-<li>Appends the user’s message to a global <code>chat_history</code> list.</li>
-<li>Calls the model with that history.</li>
-<li>Appends the assistant’s reply back into the history.</li>
-<li>Returns the latest reply for display.</li>
+<li>notebooks stay clean</li>
+<li>you focus on <em>research tasks</em>, not API details</li>
+<li>later notebooks can reuse the same interface</li>
 </ul>
-<p>We also keep the temperature low for focused answers. For longer chats, you can cap history to the last <em>k</em> turns to control token usage.</p>
-<div id="bfd8bf51" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>chat_history <span class="op">=</span> []</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chat(user_input, temperature<span class="op">=</span><span class="fl">0.2</span>, max_turns<span class="op">=</span><span class="dv">8</span>):</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Send one user turn and get a reply, preserving context.</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">    - Keeps system prompt + last `max_turns` user/assistant messages.</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: user_input})</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Keep only the most recent `max_turns` pairs to control context size</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    system <span class="op">=</span> chat_history[:<span class="dv">1</span>]</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    recent <span class="op">=</span> chat_history[<span class="op">-</span>(max_turns<span class="op">*</span><span class="dv">2</span>):] <span class="cf">if</span> <span class="bu">len</span>(chat_history) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> []</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> system <span class="op">+</span> recent</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    resp <span class="op">=</span> client.chat.completions.create(</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>model,</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>window,</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>        temperature<span class="op">=</span>temperature,</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    reply <span class="op">=</span> resp.choices[<span class="dv">0</span>].message.content</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: reply})</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> reply</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="1c533697" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>chat_history <span class="op">=</span> [</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: <span class="st">"Tailor your answers for a bioinformatician."</span>}</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>chat(<span class="st">"What is logistic regression?"</span>)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>chat(<span class="st">"How does it differ from linear regression?"</span>)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ch <span class="kw">in</span> chat_history:</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>()</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(ch)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-{'role': 'system', 'content': 'Tailor your answers for a bioinformatician.'}
-
-{'role': 'user', 'content': 'What is logistic regression?'}
-
-{'role': 'assistant', 'content': "**Logistic Regression**\n=======================\n\nLogistic regression is a statistical method used for binary classification problems, where the goal is to predict a binary outcome (0/1, yes/no, etc.) based on one or more predictor variables. It is a widely used technique in bioinformatics, particularly in the analysis of high-throughput data, such as gene expression or genomic variation.\n\n**Mathematical Formulation**\n---------------------------\n\nLogistic regression models the probability of the positive class (e.g., disease presence) using a logistic function, also known as the sigmoid function:\n\np = 1 / (1 + e^(-z))\n\nwhere:\n\n* p is the probability of the positive class\n* e is the base of the natural logarithm\n* z is a linear combination of the predictor variables: z = β0 + β1*x1 + β2*x2 + … + βn\\*xn\n\nThe coefficients β0, β1, …, βn are estimated from the data using maximum likelihood estimation.\n\n**Key Concepts**\n----------------\n\n* **Odds ratio**: The ratio of the odds of the positive class to the odds of the negative class. In logistic regression, the odds ratio is exponential in the coefficients (e^β).\n* **Confusion matrix**: A table used to evaluate the performance of a classification model, including metrics such as accuracy, precision, recall, and F1 score.\n* **Receiver operating characteristic (ROC) curve**: A plot of the true positive rate against the false positive rate at different thresholds, used to evaluate the model's ability to distinguish between classes.\n\n**Common Applications in Bioinformatics**\n-----------------------------------------\n\n* **Gene expression analysis**: Logistic regression can be used to identify genes associated with a particular disease or phenotype.\n* **Genomic variation analysis**: Logistic regression can be used to identify genetic variants associated with a particular trait or disease.\n* **Protein function prediction**: Logistic regression can be used to predict the function of a protein based on its sequence or structural features.\n\n**Example Code in Python**\n-------------------------\n\n```python\nimport pandas as pd\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score, classification_report, confusion_matrix\n\n# Load data\ndf = pd.read_csv('data.csv')\n\n# Split data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(df.drop('target', axis=1), df['target'], test_size=0.2, random_state=42)\n\n# Train logistic regression model\nmodel = LogisticRegression()\nmodel.fit(X_train, y_train)\n\n# Make predictions on test set\ny_pred = model.predict(X_test)\n\n# Evaluate model performance\nprint('Accuracy:', accuracy_score(y_test, y_pred))\nprint('Classification Report:')\nprint(classification_report(y_test, y_pred))\nprint('Confusion Matrix:')\nprint(confusion_matrix(y_test, y_pred))\n```\n\nThis code trains a logistic regression model on a dataset, makes predictions on a test set, and evaluates the model's performance using accuracy, classification report, and confusion matrix."}
-
-{'role': 'user', 'content': 'How does it differ from linear regression?'}
-
-{'role': 'assistant', 'content': "**Differences between Logistic Regression and Linear Regression**\n=============================================================\n\nLogistic regression and linear regression are both supervised learning algorithms used for regression tasks. However, they differ in their approach, application, and output.\n\n**1. Output Variable**\n--------------------\n\n* **Linear Regression**: The output variable is continuous, and the goal is to predict a numerical value.\n* **Logistic Regression**: The output variable is binary (0/1, yes/no, etc.), and the goal is to predict the probability of the positive class.\n\n**2. Cost Function**\n------------------\n\n* **Linear Regression**: The cost function is typically mean squared error (MSE) or mean absolute error (MAE), which measures the difference between predicted and actual values.\n* **Logistic Regression**: The cost function is typically log loss or cross-entropy loss, which measures the difference between predicted probabilities and actual labels.\n\n**3. Activation Function**\n----------------------\n\n* **Linear Regression**: No activation function is used, as the output is a linear combination of the input features.\n* **Logistic Regression**: The sigmoid function (1 / (1 + e^(-z))) is used as the activation function to map the linear combination of input features to a probability between 0 and 1.\n\n**4. Interpretation of Coefficients**\n----------------------------------\n\n* **Linear Regression**: The coefficients represent the change in the output variable for a one-unit change in the input feature, while holding all other features constant.\n* **Logistic Regression**: The coefficients represent the change in the log-odds of the positive class for a one-unit change in the input feature, while holding all other features constant.\n\n**5. Assumptions**\n----------------\n\n* **Linear Regression**: Assumes linearity, independence, homoscedasticity, normality, and no multicollinearity.\n* **Logistic Regression**: Assumes independence, no multicollinearity, and a binary output variable.\n\n**Example Code in Python**\n-------------------------\n\n```python\nimport numpy as np\nfrom sklearn.linear_model import LinearRegression, LogisticRegression\nimport matplotlib.pyplot as plt\n\n# Generate sample data\nnp.random.seed(0)\nX = np.random.rand(100, 1)\ny_linear = 3 + 2 * X + np.random.randn(100, 1) / 1.5\ny_logistic = (X &gt; 0.5).astype(int)\n\n# Train linear regression model\nmodel_linear = LinearRegression()\nmodel_linear.fit(X, y_linear)\n\n# Train logistic regression model\nmodel_logistic = LogisticRegression()\nmodel_logistic.fit(X, y_logistic)\n\n# Plot data and regression lines\nplt.figure(figsize=(12, 6))\n\nplt.subplot(1, 2, 1)\nplt.scatter(X, y_linear)\nplt.plot(X, model_linear.predict(X), color='red')\nplt.title('Linear Regression')\n\nplt.subplot(1, 2, 2)\nplt.scatter(X, y_logistic)\nplt.plot(X, model_logistic.predict_proba(X)[:, 1], color='red')\nplt.title('Logistic Regression')\n\nplt.show()\n```\n\nThis code generates sample data, trains linear and logistic regression models, and plots the data with the regression lines. The linear regression model predicts a continuous output, while the logistic regression model predicts the probability of the positive class."}</code></pre>
-</div>
-</div>
-<div id="867fad61" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>chat(<span class="st">"what are some other classification methods?"</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ch <span class="kw">in</span> chat_history:</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>()</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(ch)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-{'role': 'system', 'content': 'Tailor your answers for a bioinformatician.'}
-
-{'role': 'user', 'content': 'What is logistic regression?'}
-
-{'role': 'assistant', 'content': "**Logistic Regression**\n=======================\n\nLogistic regression is a statistical method used for binary classification problems, where the goal is to predict a binary outcome (0/1, yes/no, etc.) based on one or more predictor variables. It is a widely used technique in bioinformatics, particularly in the analysis of high-throughput data, such as gene expression or genomic variation.\n\n**Mathematical Formulation**\n---------------------------\n\nLogistic regression models the probability of the positive class (e.g., disease presence) using a logistic function, also known as the sigmoid function:\n\np = 1 / (1 + e^(-z))\n\nwhere:\n\n* p is the probability of the positive class\n* e is the base of the natural logarithm\n* z is a linear combination of the predictor variables: z = β0 + β1*x1 + β2*x2 + … + βn\\*xn\n\nThe coefficients β0, β1, …, βn are estimated from the data using maximum likelihood estimation.\n\n**Key Concepts**\n----------------\n\n* **Odds ratio**: The ratio of the odds of the positive class to the odds of the negative class. In logistic regression, the odds ratio is exponential in the coefficients (e^β).\n* **Confusion matrix**: A table used to evaluate the performance of a classification model, including metrics such as accuracy, precision, recall, and F1 score.\n* **Receiver operating characteristic (ROC) curve**: A plot of the true positive rate against the false positive rate at different thresholds, used to evaluate the model's ability to distinguish between classes.\n\n**Common Applications in Bioinformatics**\n-----------------------------------------\n\n* **Gene expression analysis**: Logistic regression can be used to identify genes associated with a particular disease or phenotype.\n* **Genomic variation analysis**: Logistic regression can be used to identify genetic variants associated with a particular trait or disease.\n* **Protein function prediction**: Logistic regression can be used to predict the function of a protein based on its sequence or structural features.\n\n**Example Code in Python**\n-------------------------\n\n```python\nimport pandas as pd\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score, classification_report, confusion_matrix\n\n# Load data\ndf = pd.read_csv('data.csv')\n\n# Split data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(df.drop('target', axis=1), df['target'], test_size=0.2, random_state=42)\n\n# Train logistic regression model\nmodel = LogisticRegression()\nmodel.fit(X_train, y_train)\n\n# Make predictions on test set\ny_pred = model.predict(X_test)\n\n# Evaluate model performance\nprint('Accuracy:', accuracy_score(y_test, y_pred))\nprint('Classification Report:')\nprint(classification_report(y_test, y_pred))\nprint('Confusion Matrix:')\nprint(confusion_matrix(y_test, y_pred))\n```\n\nThis code trains a logistic regression model on a dataset, makes predictions on a test set, and evaluates the model's performance using accuracy, classification report, and confusion matrix."}
-
-{'role': 'user', 'content': 'How does it differ from linear regression?'}
-
-{'role': 'assistant', 'content': "**Differences between Logistic Regression and Linear Regression**\n=============================================================\n\nLogistic regression and linear regression are both supervised learning algorithms used for regression tasks. However, they differ in their approach, application, and output.\n\n**1. Output Variable**\n--------------------\n\n* **Linear Regression**: The output variable is continuous, and the goal is to predict a numerical value.\n* **Logistic Regression**: The output variable is binary (0/1, yes/no, etc.), and the goal is to predict the probability of the positive class.\n\n**2. Cost Function**\n------------------\n\n* **Linear Regression**: The cost function is typically mean squared error (MSE) or mean absolute error (MAE), which measures the difference between predicted and actual values.\n* **Logistic Regression**: The cost function is typically log loss or cross-entropy loss, which measures the difference between predicted probabilities and actual labels.\n\n**3. Activation Function**\n----------------------\n\n* **Linear Regression**: No activation function is used, as the output is a linear combination of the input features.\n* **Logistic Regression**: The sigmoid function (1 / (1 + e^(-z))) is used as the activation function to map the linear combination of input features to a probability between 0 and 1.\n\n**4. Interpretation of Coefficients**\n----------------------------------\n\n* **Linear Regression**: The coefficients represent the change in the output variable for a one-unit change in the input feature, while holding all other features constant.\n* **Logistic Regression**: The coefficients represent the change in the log-odds of the positive class for a one-unit change in the input feature, while holding all other features constant.\n\n**5. Assumptions**\n----------------\n\n* **Linear Regression**: Assumes linearity, independence, homoscedasticity, normality, and no multicollinearity.\n* **Logistic Regression**: Assumes independence, no multicollinearity, and a binary output variable.\n\n**Example Code in Python**\n-------------------------\n\n```python\nimport numpy as np\nfrom sklearn.linear_model import LinearRegression, LogisticRegression\nimport matplotlib.pyplot as plt\n\n# Generate sample data\nnp.random.seed(0)\nX = np.random.rand(100, 1)\ny_linear = 3 + 2 * X + np.random.randn(100, 1) / 1.5\ny_logistic = (X &gt; 0.5).astype(int)\n\n# Train linear regression model\nmodel_linear = LinearRegression()\nmodel_linear.fit(X, y_linear)\n\n# Train logistic regression model\nmodel_logistic = LogisticRegression()\nmodel_logistic.fit(X, y_logistic)\n\n# Plot data and regression lines\nplt.figure(figsize=(12, 6))\n\nplt.subplot(1, 2, 1)\nplt.scatter(X, y_linear)\nplt.plot(X, model_linear.predict(X), color='red')\nplt.title('Linear Regression')\n\nplt.subplot(1, 2, 2)\nplt.scatter(X, y_logistic)\nplt.plot(X, model_logistic.predict_proba(X)[:, 1], color='red')\nplt.title('Logistic Regression')\n\nplt.show()\n```\n\nThis code generates sample data, trains linear and logistic regression models, and plots the data with the regression lines. The linear regression model predicts a continuous output, while the logistic regression model predicts the probability of the positive class."}
-
-{'role': 'user', 'content': 'what are some other classification methods?'}
-
-{'role': 'assistant', 'content': '**Other Classification Methods**\n=============================\n\nBesides logistic regression, there are many other classification methods used in machine learning and bioinformatics. Here are some popular ones:\n\n### 1. **Decision Trees**\n\n* **Description**: A decision tree is a tree-like model that splits the data into subsets based on the features.\n* **Advantages**: Easy to interpret, handles categorical features, and can handle missing values.\n* **Disadvantages**: Can be prone to overfitting, and the tree can become complex.\n\n### 2. **Random Forests**\n\n* **Description**: An ensemble method that combines multiple decision trees to improve the accuracy and robustness of the model.\n* **Advantages**: Handles high-dimensional data, reduces overfitting, and improves accuracy.\n* **Disadvantages**: Can be computationally expensive, and the model can be difficult to interpret.\n\n### 3. **Support Vector Machines (SVMs)**\n\n* **Description**: A method that finds the hyperplane that maximally separates the classes in the feature space.\n* **Advantages**: Handles high-dimensional data, robust to noise, and can handle non-linear relationships.\n* **Disadvantages**: Can be computationally expensive, and the model can be difficult to interpret.\n\n### 4. **K-Nearest Neighbors (KNN)**\n\n* **Description**: A method that assigns a new sample to the class of the majority of its k-nearest neighbors.\n* **Advantages**: Simple to implement, handles non-linear relationships, and can handle high-dimensional data.\n* **Disadvantages**: Can be computationally expensive, and the choice of k can be critical.\n\n### 5. **Naive Bayes**\n\n* **Description**: A method that assumes independence between features and calculates the probability of a sample belonging to a class based on Bayes\' theorem.\n* **Advantages**: Simple to implement, handles high-dimensional data, and can handle missing values.\n* **Disadvantages**: Can be sensitive to the choice of prior probabilities, and the independence assumption can be violated.\n\n### 6. **Gradient Boosting**\n\n* **Description**: An ensemble method that combines multiple weak models to create a strong predictive model.\n* **Advantages**: Handles high-dimensional data, reduces overfitting, and improves accuracy.\n* **Disadvantages**: Can be computationally expensive, and the model can be difficult to interpret.\n\n### 7. **Neural Networks**\n\n* **Description**: A method that uses artificial neural networks to learn complex relationships between features and classes.\n* **Advantages**: Can handle high-dimensional data, non-linear relationships, and can learn complex patterns.\n* **Disadvantages**: Can be computationally expensive, and the model can be difficult to interpret.\n\n**Example Code in Python**\n-------------------------\n\n```python\nfrom sklearn.datasets import load_iris\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.svm import SVC\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.naive_bayes import GaussianNB\nfrom sklearn.ensemble import GradientBoostingClassifier\nfrom sklearn.neural_network import MLPClassifier\nfrom sklearn.metrics import accuracy_score\n\n# Load iris dataset\niris = load_iris()\nX = iris.data\ny = iris.target\n\n# Split data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n\n# Train decision tree classifier\ndt = DecisionTreeClassifier()\ndt.fit(X_train, y_train)\nprint("Decision Tree Accuracy:", accuracy_score(y_test, dt.predict(X_test)))\n\n# Train random forest classifier\nrf = RandomForestClassifier()\nrf.fit(X_train, y_train)\nprint("Random Forest Accuracy:", accuracy_score(y_test, rf.predict(X_test)))\n\n# Train SVM classifier\nsvm = SVC()\nsvm.fit(X_train, y_train)\nprint("SVM Accuracy:", accuracy_score(y_test, svm.predict(X_test)))\n\n# Train KNN classifier\nknn = KNeighborsClassifier()\nknn.fit(X_train, y_train)\nprint("KNN Accuracy:", accuracy_score(y_test, knn.predict(X_test)))\n\n# Train Naive Bayes classifier\nnb = GaussianNB()\nnb.fit(X_train, y_train)\nprint("Naive Bayes Accuracy:", accuracy_score(y_test, nb.predict(X_test)))\n\n# Train Gradient Boosting classifier\ngb = GradientBoostingClassifier()\ngb.fit(X_train, y_train)\nprint("Gradient Boosting Accuracy:", accuracy_score(y_test, gb.predict(X_test)))\n\n# Train Neural Network classifier\nnn = MLPClassifier()\nnn.fit(X_train, y_train)\nprint("Neural Network Accuracy:", accuracy_score(y_test, nn.predict(X_test)))\n```\n\nThis code trains different classification models on the iris dataset and prints their accuracy on the test set.'}</code></pre>
-</div>
-</div>
-</section>
-<section id="exercise-your-first-prompt" class="level2">
-<h2 class="anchored" data-anchor-id="exercise-your-first-prompt">8) Exercise — Your First Prompt</h2>
-<p>Try your own research-related prompts. A few ideas:</p>
+<p>We provide two helpers:</p>
 <ol type="1">
-<li>Summarise your current project in <strong>one paragraph</strong>.</li>
-<li>Ask for <strong>three open research questions</strong> in your field.</li>
-<li>Request a <strong>draft methods paragraph</strong> describing your dataset and analysis steps.</li>
+<li><code>chat(...)</code> — <strong>stateful</strong>, keeps a short conversation history in this notebook</li>
+<li><code>chat_reset(...)</code> — deletes history and sets system prompt</li>
 </ol>
-<p>Remember you can tweak <code>temperature</code> to trade off consistency vs creativity.</p>
-<div id="36d1cda6" class="cell" data-execution_count="11">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>chat_history <span class="op">=</span> [</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: <span class="st">"Tailor your answers for a bioinformatician."</span>}</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="58ace76d" class="cell" data-execution_count="12">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: replace with your own question(s)</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>question <span class="op">=</span> <span class="st">"Summarise the challenges in renewable energy policy research."</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(question))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This keeps things simple: participants only need to call <code>chat()</code> without worrying about API details.</p>
+<div id="7158ffc7" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the client using the API key and base URL.</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span>os.environ[<span class="st">"GROQ_API_KEY"</span>],  <span class="co"># Read the key from the environment variable</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span>os.environ[<span class="st">"BASE_URL"</span>],     <span class="co"># Read the base URL from the environment variable</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># We keep a small conversation history in memory to make multi-turn interactions easy.</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>chat_history <span class="op">=</span> []</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chat_reset(system_prompt<span class="op">=</span><span class="st">"You are a helpful research assistant."</span>):</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Reset chat history to a single system message (in-place)."""</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    chat_history[:] <span class="op">=</span> [{<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: system_prompt}]</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>chat_reset()</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chat(user_text, temperature<span class="op">=</span><span class="fl">0.2</span>, max_turns<span class="op">=</span><span class="dv">8</span>):</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Multi-turn helper that keeps a short conversation history.</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">    Use this instead of calling the API directly in most workshop cells.</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add the user's message to the conversation history.</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: user_text})</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Keep only the system message plus the most recent turns (to manage context length).</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    system <span class="op">=</span> chat_history[:<span class="dv">1</span>]  <span class="co"># First message is the system instruction</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    recent <span class="op">=</span> chat_history[<span class="op">-</span>(max_turns <span class="op">*</span> <span class="dv">2</span>):]  <span class="co"># Each turn has user+assistant, hence *2</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> system <span class="op">+</span> recent  <span class="co"># Final message window sent to the model</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make the API call.</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    resp <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>model,         <span class="co"># Model name</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>window,     <span class="co"># Conversation history window</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>        temperature<span class="op">=</span>temperature,  <span class="co"># Randomness / creativity control</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract the assistant's reply text.</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    reply <span class="op">=</span> resp.choices[<span class="dv">0</span>].message.content</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Store the assistant reply so the next call has memory.</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: reply})</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return just the text (simple and workshop-friendly).</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> reply</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Setup complete. `client`, `model`, and `chat()` are available."</span>)</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Testing chat function..."</span>)</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"User: Hello LLM"</span>)</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Assistant: "</span> <span class="op">+</span> chat(<span class="st">"Heloo LLM"</span>))  <span class="co"># Test the chat function </span></span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>chat_reset()  <span class="co"># Reset chat history for next cells</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>As a bioinformatician, you're likely familiar with complex systems and data-driven approaches. Renewable energy policy research presents several challenges that can be broken down into the following categories:
-
-1. **Integration and Interoperability**: Renewable energy sources, such as solar and wind power, have variable output, making it challenging to integrate them into existing energy grids. This requires advanced forecasting and grid management systems to ensure a stable and reliable energy supply.
-2. **Data Quality and Availability**: High-quality data on energy production, consumption, and grid operations is essential for informed policy decisions. However, data gaps, inconsistencies, and lack of standardization can hinder research and policy development.
-3. **Complexity and Uncertainty**: Renewable energy systems involve complex interactions between technological, economic, social, and environmental factors. Uncertainties, such as future energy demand, technology costs, and policy frameworks, can make it difficult to predict the effectiveness of different policy interventions.
-4. **Spatial and Temporal Scales**: Renewable energy policy research must consider multiple spatial scales (e.g., local, regional, national) and temporal scales (e.g., short-term, long-term). This requires balancing competing priorities, such as energy security, economic development, and environmental protection.
-5. **Stakeholder Engagement and Social Acceptance**: Effective policy development requires engagement with diverse stakeholders, including industry, government, civil society, and local communities. Social acceptance of renewable energy technologies and infrastructure can be a significant challenge, particularly if it involves land use changes or community disruption.
-6. **Economic and Financial Challenges**: Renewable energy technologies can be capital-intensive, and their economic viability often depends on policy support, such as tax incentives, subsidies, or carbon pricing. Fluctuations in energy markets, technology costs, and policy frameworks can create uncertainty and affect investment decisions.
-7. **Policy Frameworks and Governance**: Renewable energy policy research must navigate complex governance structures, including international agreements, national policies, and regional regulations. Effective policy frameworks require coordination, consistency, and adaptability to address the dynamic nature of the energy sector.
-8. **Technology and Innovation**: The rapid evolution of renewable energy technologies, such as solar panels and wind turbines, creates opportunities for improved efficiency and reduced costs. However, it also poses challenges for policy development, as technologies may become outdated or new ones may emerge, requiring updates to policy frameworks.
-9. **Environmental and Social Impacts**: Renewable energy technologies can have environmental and social implications, such as land use changes, water usage, or community displacement. Policy research must consider these impacts and develop strategies to mitigate them.
-10. **Scalability and Replicability**: Renewable energy policy research must be scalable and replicable across different contexts, including developed and developing countries, to ensure widespread adoption and maximize global benefits.
-
-By acknowledging these challenges, researchers and policymakers can develop more effective strategies to address the complexities of renewable energy policy research and create a more sustainable energy future. As a bioinformatician, you can apply your expertise in data analysis, modeling, and computational methods to help tackle these challenges and contribute to the development of evidence-based renewable energy policies.</code></pre>
+<pre><code>Setup complete. `client`, `model`, and `chat()` are available.
+Testing chat function...
+User: Hello LLM
+Assistant: Hello. It's nice to meet you. Is there something I can help you with or would you like to chat? I'm here to assist you with any questions or topics you'd like to discuss.</code></pre>
 </div>
 </div>
 </section>
-<section id="wrap-up-next-steps" class="level2">
-<h2 class="anchored" data-anchor-id="wrap-up-next-steps">9) Wrap-Up &amp; Next Steps</h2>
+<section id="quick-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="quick-exercises">8) Quick exercises</h2>
+<section id="exercise-a-rewrite-for-clarity" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-a-rewrite-for-clarity">Exercise A — rewrite for clarity</h3>
+<p>Provide a sentence from your current draft and ask for a clearer version.</p>
+</section>
+<section id="exercise-b-extract-structured-fields" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-b-extract-structured-fields">Exercise B — extract structured fields</h3>
+<p>Give a short abstract and ask for: <em>aim, methods, datasets, main result, limitation</em>.</p>
+</section>
+<section id="exercise-c-propose-search-keywords" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-c-propose-search-keywords">Exercise C — propose search keywords</h3>
+<p>Ask the model to propose arXiv/Google Scholar keywords for a research question.</p>
+<div id="8296dec0" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise A: rewrite for clarity (replace the text with your own).</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> <span class="st">"This paper introduces a method that can potentially improve performance in some tasks."</span>  <span class="co"># example sentence</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="st">"Rewrite this sentence to be clearer and more specific, without adding new facts:</span><span class="ch">\n\n</span><span class="st">"</span> <span class="op">+</span> text</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(prompt</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>This paper presents a method that may enhance performance in certain specific tasks.</code></pre>
+</div>
+</div>
+<div id="57332c8e" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise B: extract structured fields from a short abstract-like paragraph.</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>abstract <span class="op">=</span> (</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"We propose a new approach to classify cell types from single-cell RNA sequencing data using self-supervised learning. "</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Across three public datasets, our method improves macro-F1 by 3–5</span><span class="sc">% c</span><span class="st">ompared to strong baselines. "</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"However, performance drops on rare cell populations with limited labels."</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># small example text</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> (</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Extract the following fields as JSON with keys:</span><span class="ch">\n</span><span class="st">"</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"- aim</span><span class="ch">\n</span><span class="st">- methods</span><span class="ch">\n</span><span class="st">- datasets</span><span class="ch">\n</span><span class="st">- main_result</span><span class="ch">\n</span><span class="st">- limitation</span><span class="ch">\n\n</span><span class="st">"</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Text:</span><span class="ch">\n</span><span class="st">"</span> <span class="op">+</span> abstract</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># prompt that requests structured output</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(prompt))  <span class="co"># run extraction</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Here are the extracted fields as JSON:
+
+```
+{
+  "aim": "classify cell types from single-cell RNA sequencing data using self-supervised learning",
+  "methods": "self-supervised learning",
+  "datasets": "three public datasets",
+  "main_result": "improves macro-F1 by 3–5% compared to strong baselines",
+  "limitation": "performance drops on rare cell populations with limited labels"
+}
+```</code></pre>
+</div>
+</div>
+<div id="f3bac598" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise C: generate search keywords for a literature review.</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>question <span class="op">=</span> <span class="st">"How are LLMs used to accelerate hypothesis generation in biomedical research?"</span>  <span class="co"># example topic</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="st">"""Propose 8–12 search keywords/phrases for arXiv and Google Scholar. </span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="st">    Group them into 3 themes and keep them concise.</span><span class="ch">\n\n</span><span class="st">"</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="st">    Question: """</span> <span class="op">+</span> question</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(prompt</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Here are 10 search keywords/phrases grouped into 3 themes:
+
+**Theme 1: LLMs in Biomedical Research**
+1. "LLMs in biomedicine"
+2. "biomedical hypothesis generation"
+3. "large language models biomed"
+
+**Theme 2: Hypothesis Generation and Acceleration**
+4. "accelerating hypothesis generation"
+5. "biomedical hypothesis formation"
+6. "AI-driven hypothesis generation"
+
+**Theme 3: LLM Applications and Techniques**
+7. "LLM-based biomedical research tools"
+8. "natural language processing biomed"
+9. "language models for biomedical discovery"
+10. "biomedical text analysis with LLMs"</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="wrap-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrap-up">9) Wrap-up</h2>
+<p>You now have:</p>
 <ul>
-<li>You configured an OpenAI-compatible client to talk to <strong>Groq</strong>.</li>
-<li>You sent your first prompts using <strong>Llama-3 70B</strong> and explored the impact of <code>temperature</code>.</li>
-<li>You kept conversation state locally in a Python list and learned how to save it.</li>
+<li>A working Groq/OpenAI-compatible client</li>
+<li>The chat <strong>message format</strong> (<code>system</code>, <code>user</code>, <code>assistant</code>)</li>
+<li>Two helper functions used in later notebooks:
+<ul>
+<li><code>chat(...)</code> for iterative tasks with short memory</li>
+<li><code>chat_reset(...)</code> to restart chat and set system prompt</li>
+</ul></li>
 </ul>
-<p><strong>Key terms:</strong> tokens, temperature, logits, softmax, stateless API, chat history.</p>
 
 
 </section>
@@ -606,7 +605,7 @@ By acknowledging these challenges, researchers and policymakers can develop more
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/qcif-training\.github\.io\/llm_workshop\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
