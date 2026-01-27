@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Theory and Concepts: Understanding LLMs Before You Trust Them – Fundamentals of Regression</title>
+<title>02) Core concepts – Fundamentals of Regression</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,35 +104,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -193,25 +164,25 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_literature_review.html" class="sidebar-item-text sidebar-link">
+  <a href="./03_literature_review.ipynb" class="sidebar-item-text sidebar-link">
  <span class="menu-text">03_literature_review</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_review_with_rag.html" class="sidebar-item-text sidebar-link">
+  <a href="./04_review_with_rag.ipynb" class="sidebar-item-text sidebar-link">
  <span class="menu-text">04_review_with_rag</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_code_and_data_prep.html" class="sidebar-item-text sidebar-link">
+  <a href="./05_code_and_data_prep.ipynb" class="sidebar-item-text sidebar-link">
  <span class="menu-text">05_code_and_data_prep</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06_ethics_and_wrapup.html" class="sidebar-item-text sidebar-link">
+  <a href="./06_ethics_and_wrapup.ipynb" class="sidebar-item-text sidebar-link">
  <span class="menu-text">06_ethics_and_wrapup</span></a>
   </div>
 </li>
@@ -231,27 +202,25 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#what-is-a-large-language-model-llm" id="toc-what-is-a-large-language-model-llm" class="nav-link active" data-scroll-target="#what-is-a-large-language-model-llm">1. What Is a Large Language Model (LLM)?</a></li>
-  <li><a href="#what-llms-are-good-for-and-what-they-are-not" id="toc-what-llms-are-good-for-and-what-they-are-not" class="nav-link" data-scroll-target="#what-llms-are-good-for-and-what-they-are-not">2. What LLMs Are Good For — and What They Are Not</a></li>
-  <li><a href="#prompt-engineering-essentials" id="toc-prompt-engineering-essentials" class="nav-link" data-scroll-target="#prompt-engineering-essentials">3. Prompt Engineering Essentials</a>
+  <li><a href="#quick-setup" id="toc-quick-setup" class="nav-link active" data-scroll-target="#quick-setup">1) Quick setup</a></li>
+  <li><a href="#hallucinations-what-they-are-and-how-to-handle-them" id="toc-hallucinations-what-they-are-and-how-to-handle-them" class="nav-link" data-scroll-target="#hallucinations-what-they-are-and-how-to-handle-them">2) Hallucinations (what they are and how to handle them)</a>
   <ul class="collapse">
-  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
-  <li><a href="#best-practices" id="toc-best-practices" class="nav-link" data-scroll-target="#best-practices">Best Practices</a></li>
-  <li><a href="#reflection" id="toc-reflection" class="nav-link" data-scroll-target="#reflection">Reflection</a></li>
+  <li><a href="#a-quick-demonstration" id="toc-a-quick-demonstration" class="nav-link" data-scroll-target="#a-quick-demonstration">2.1 A quick demonstration</a></li>
+  <li><a href="#a-better-pattern-ask-for-uncertainty-a-verification-plan" id="toc-a-better-pattern-ask-for-uncertainty-a-verification-plan" class="nav-link" data-scroll-target="#a-better-pattern-ask-for-uncertainty-a-verification-plan">2.2 A better pattern: ask for uncertainty + a verification plan</a></li>
   </ul></li>
-  <li><a href="#why-hallucination-happens" id="toc-why-hallucination-happens" class="nav-link" data-scroll-target="#why-hallucination-happens">4. Why Hallucination Happens</a></li>
-  <li><a href="#benefits-and-risks-in-research" id="toc-benefits-and-risks-in-research" class="nav-link" data-scroll-target="#benefits-and-risks-in-research">5. Benefits and Risks in Research</a></li>
-  <li><a href="#agentic-ai-concept-only" id="toc-agentic-ai-concept-only" class="nav-link" data-scroll-target="#agentic-ai-concept-only">6. Agentic AI (Concept Only)</a>
+  <li><a href="#context-why-it-matters" id="toc-context-why-it-matters" class="nav-link" data-scroll-target="#context-why-it-matters">3) Context: why it matters</a>
   <ul class="collapse">
-  <li><a href="#why-it-matters" id="toc-why-it-matters" class="nav-link" data-scroll-target="#why-it-matters">Why it matters</a></li>
+  <li><a href="#context-budgeting-a-practical-habit" id="toc-context-budgeting-a-practical-habit" class="nav-link" data-scroll-target="#context-budgeting-a-practical-habit">3.1 Context budgeting (a practical habit)</a></li>
   </ul></li>
-  <li><a href="#running-llms-via-api-vs-locally" id="toc-running-llms-via-api-vs-locally" class="nav-link" data-scroll-target="#running-llms-via-api-vs-locally">7. Running LLMs via API vs Locally</a>
+  <li><a href="#temperature-practical-guidance" id="toc-temperature-practical-guidance" class="nav-link" data-scroll-target="#temperature-practical-guidance">4) Temperature: practical guidance</a></li>
+  <li><a href="#prompt-patterns-that-work-in-research" id="toc-prompt-patterns-that-work-in-research" class="nav-link" data-scroll-target="#prompt-patterns-that-work-in-research">5) Prompt patterns that work in research</a>
   <ul class="collapse">
-  <li><a href="#comparison" id="toc-comparison" class="nav-link" data-scroll-target="#comparison">Comparison</a></li>
+  <li><a href="#structured-output-example" id="toc-structured-output-example" class="nav-link" data-scroll-target="#structured-output-example">5.1 Structured output example</a></li>
+  <li><a href="#safety-check-force-the-model-to-separate-facts-from-assumptions" id="toc-safety-check-force-the-model-to-separate-facts-from-assumptions" class="nav-link" data-scroll-target="#safety-check-force-the-model-to-separate-facts-from-assumptions">5.2 Safety check: force the model to separate facts from assumptions</a></li>
   </ul></li>
-  <li><a href="#pros-and-cons-summary-of-using-api" id="toc-pros-and-cons-summary-of-using-api" class="nav-link" data-scroll-target="#pros-and-cons-summary-of-using-api">8. Pros and Cons Summary of using API</a></li>
-  <li><a href="#reflection-1" id="toc-reflection-1" class="nav-link" data-scroll-target="#reflection-1">9. Reflection</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">✅ Summary</a></li>
+  <li><a href="#rag-in-one-minute-concept-only" id="toc-rag-in-one-minute-concept-only" class="nav-link" data-scroll-target="#rag-in-one-minute-concept-only">6) RAG in one minute (concept only)</a></li>
+  <li><a href="#mini-exercise-23-minutes" id="toc-mini-exercise-23-minutes" class="nav-link" data-scroll-target="#mini-exercise-23-minutes">7) Mini exercise (2–3 minutes)</a></li>
+  <li><a href="#wrap-up" id="toc-wrap-up" class="nav-link" data-scroll-target="#wrap-up">8) Wrap-up</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/02_theory_and_concepts.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -260,7 +229,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Theory and Concepts: Understanding LLMs Before You Trust Them</h1>
+<h1 class="title">02) Core concepts</h1>
 </div>
 
 
@@ -277,290 +246,389 @@ window.Quarto = {
 </header>
 
 
-<p>This notebook introduces the conceptual foundations of Large Language Models (LLMs) in research contexts. Before working with APIs, it’s crucial to understand what LLMs are, what they can and cannot do, and how to use them responsibly.</p>
-<p>We will cover: - What LLMs are and how they work - Strengths and weaknesses in research use - Basics of <strong>prompt engineering</strong> - Why <strong>hallucination</strong> occurs and how to detect it - Benefits and risks across use cases - Concept of <strong>Agentic AI</strong> - Running LLMs via <strong>API vs locally</strong></p>
-<section id="what-is-a-large-language-model-llm" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-a-large-language-model-llm">1. What Is a Large Language Model (LLM)?</h2>
-<p>An LLM is a <strong>probabilistic text generator</strong>. It predicts the next word in a sequence based on all the previous words.</p>
-<p>Formally, it learns to estimate:</p>
-<p><span class="math display">\[p(x_{t+1} \mid x_{1:t}) = \text{softmax}\left(\frac{z_i}{T}\right)\]</span></p>
-<p>where <span class="math inline">\(z_i\)</span> are logits (raw scores), and <span class="math inline">\(T\)</span> is temperature controlling randomness.</p>
-<p><strong>Key ideas:</strong> - The model is not reasoning; it’s <em>pattern matching</em>. - It is trained on billions of text samples. - It does not know whether statements are <em>true</em>.</p>
-<p>💡 <strong>Analogy:</strong> LLMs complete text the way autocomplete finishes a sentence — just on a massive scale.</p>
-</section>
-<section id="what-llms-are-good-for-and-what-they-are-not" class="level2">
-<h2 class="anchored" data-anchor-id="what-llms-are-good-for-and-what-they-are-not">2. What LLMs Are Good For — and What They Are Not</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>✅ Good At</th>
-<th>⚠️ Not Good At</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Summarising academic text</td>
-<td>Producing verified facts</td>
-</tr>
-<tr class="even">
-<td>Paraphrasing and rewriting</td>
-<td>Mathematical proofs or derivations</td>
-</tr>
-<tr class="odd">
-<td>Explaining code or methods</td>
-<td>Statistical inference without data</td>
-</tr>
-<tr class="even">
-<td>Generating boilerplate writing</td>
-<td>Handling private or sensitive data</td>
-</tr>
-<tr class="odd">
-<td>Brainstorming research ideas</td>
-<td>Acting as a source of truth</td>
-</tr>
-</tbody>
-</table>
-<p>Think of an LLM as an <em>assistant</em>, not a <em>co-author</em>.</p>
-</section>
-<section id="prompt-engineering-essentials" class="level2">
-<h2 class="anchored" data-anchor-id="prompt-engineering-essentials">3. Prompt Engineering Essentials</h2>
-<p>Prompt engineering means <strong>crafting the input</strong> to shape the model’s response.</p>
-<section id="example" class="level3">
-<h3 class="anchored" data-anchor-id="example">Example</h3>
-<pre><code>❌ Bad: Explain machine learning.
-✅ Better: In three sentences, explain machine learning to a biology PhD student unfamiliar with computer science.</code></pre>
-</section>
-<section id="best-practices" class="level3">
-<h3 class="anchored" data-anchor-id="best-practices">Best Practices</h3>
-<ul>
-<li>Be <strong>specific</strong> about role, audience, and format.</li>
-<li>Use <strong>system messages</strong> to set tone or constraints.</li>
-<li>Break complex queries into smaller sub-prompts.</li>
-<li>Ask for <strong>structured output</strong> (e.g., JSON, tables).</li>
-</ul>
-<p>Let’s illustrate how different prompt structures might be interpreted.</p>
-<div id="4b45bc63" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Demonstration: Prompt variety examples (no API calls)</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This cell just prints examples and explanations of what makes prompts effective.</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>example_prompts <span class="op">=</span> [</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Explain AI."</span>, <span class="st">"Too vague — model may produce generic output."</span>),</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Explain Artificial Intelligence in two sentences for an interdisciplinary audience."</span>, <span class="st">"Better — specifies length and audience."</span>),</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"As a data scientist, summarise Artificial Intelligence focusing on statistical learning methods."</span>, <span class="st">"Excellent — adds role and context, leading to relevant focus."</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> text, comment <span class="kw">in</span> example_prompts:</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Prompt: </span><span class="sc">{</span>text<span class="sc">}</span><span class="ch">\n</span><span class="ss">Comment: </span><span class="sc">{</span>comment<span class="sc">}</span><span class="ch">\n</span><span class="sc">{</span><span class="st">'-'</span><span class="op">*</span><span class="dv">70</span><span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Prompt: Explain AI.
-Comment: Too vague — model may produce generic output.
-----------------------------------------------------------------------
-Prompt: Explain Artificial Intelligence in two sentences for an interdisciplinary audience.
-Comment: Better — specifies length and audience.
-----------------------------------------------------------------------
-Prompt: As a data scientist, summarise Artificial Intelligence focusing on statistical learning methods.
-Comment: Excellent — adds role and context, leading to relevant focus.
-----------------------------------------------------------------------</code></pre>
+<p><strong>Goal (15 min):</strong> understand the <em>practical</em> concepts you need to use LLMs responsibly in research.</p>
+<p>By the end you will be able to: - Explain (and detect) <strong>hallucinations</strong> - Understand why <strong>context</strong> matters (and how to manage it) - Use <strong>temperature</strong> intentionally (without overthinking the maths) - Write prompts that produce <strong>structured, checkable outputs</strong></p>
+<section id="quick-setup" class="level2">
+<h2 class="anchored" data-anchor-id="quick-setup">1) Quick setup</h2>
+<div id="5e9441c3" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove # from the line below and run if packages are not installed </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># !pip install numpy pandas matplotlib openai requests</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<div id="ff850c12" class="cell" data-execution_count="50">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We import only what we need.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os  <span class="co"># Environment variables for API keys and configuration</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai <span class="im">import</span> OpenAI  <span class="co"># OpenAI-compatible client (works with Groq base_url too)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section>
-<section id="reflection" class="level3">
-<h3 class="anchored" data-anchor-id="reflection">Reflection</h3>
 <ul>
-<li>How would you phrase prompts for your research area?</li>
-<li>What happens if your question is ambiguous or underspecified?</li>
-<li>How might prompt reproducibility affect research transparency?</li>
+<li>Paste your Groq API key below</li>
+<li>You can also change the model if you like.</li>
+<li><code>chat()</code> can be used to have a continuous chat. Usage: chat(“Your question”)</li>
+<li><code>chat_reset()</code> can used to delete the history and set a new system prompt. Usage: chat_reset(“You are a helper for a bioinformatician.”) or simply chat_reset()</li>
 </ul>
-</section>
-</section>
-<section id="why-hallucination-happens" class="level2">
-<h2 class="anchored" data-anchor-id="why-hallucination-happens">4. Why Hallucination Happens</h2>
-<p><strong>Hallucination</strong> is when the model produces false but plausible information.</p>
-<p><strong>Causes:</strong> 1. Models optimise for <em>fluency</em>, not <em>truth</em>. 2. They lack external knowledge verification. 3. They use patterns, not evidence.</p>
-<p><strong>Mitigations:</strong> - Use grounded prompts (e.g., with text context or retrieval). - Ask for <em>sources</em> and check them. - Rephrase prompts to encourage uncertainty awareness (e.g., “If unsure, say so.”)</p>
-<div id="8bc4dfe6" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulating hallucination detection with a fabricated response</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This code checks whether a response contains uncertainty words.</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> <span class="st">"Dr. Jane Quantum won the Nobel Prize in Quantum Psychology in 2024."</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>uncertainty_markers <span class="op">=</span> [<span class="st">"might"</span>, <span class="st">"possibly"</span>, <span class="st">"may"</span>, <span class="st">"perhaps"</span>, <span class="st">"uncertain"</span>]</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>uncertain <span class="op">=</span> <span class="bu">any</span>(word <span class="kw">in</span> response.lower() <span class="cf">for</span> word <span class="kw">in</span> uncertainty_markers)</span>
+<div id="57b09dde" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Setup ---</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># paste your key here for the session.</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"GROQ_API_KEY"</span>] <span class="op">=</span> <span class="st">""</span>  <span class="co"># &lt;-- Paste key for workshop only. Do NOT share publicly.</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep the same model string used in the workshop.</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="st">"llama-3.3-70b-versatile"</span>  <span class="co"># You can change this later if needed.</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep the same base URL pattern used in the workshop.</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"BASE_URL"</span>] <span class="op">=</span> <span class="st">"https://api.groq.com/openai/v1"</span>  <span class="co"># Groq's OpenAI-compatible endpoint</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-7" class="cell" data-execution_count="42">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the client using the API key and base URL.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span>os.environ[<span class="st">"GROQ_API_KEY"</span>],  <span class="co"># Read the key from the environment variable</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span>os.environ[<span class="st">"BASE_URL"</span>],     <span class="co"># Read the base URL from the environment variable</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> uncertain:</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"✅ The statement expresses uncertainty."</span>)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"⚠️ This response shows *overconfidence* — likely hallucination."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># We keep a small conversation history in memory to make multi-turn interactions easy.</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>chat_history <span class="op">=</span> []</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chat_reset(system_prompt<span class="op">=</span><span class="st">"You are a helpful research assistant."</span>):</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Reset chat history to a single system message (in-place)."""</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    chat_history[:] <span class="op">=</span> [{<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: system_prompt}]</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>chat_reset()</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chat(user_text, temperature<span class="op">=</span><span class="fl">0.2</span>, max_turns<span class="op">=</span><span class="dv">8</span>):</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Multi-turn helper that keeps a short conversation history.</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">    Use this instead of calling the API directly in most workshop cells.</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add the user's message to the conversation history.</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: user_text})</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Keep only the system message plus the most recent turns (to manage context length).</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    system <span class="op">=</span> chat_history[:<span class="dv">1</span>]  <span class="co"># First message is the system instruction</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    recent <span class="op">=</span> chat_history[<span class="op">-</span>(max_turns <span class="op">*</span> <span class="dv">2</span>):]  <span class="co"># Each turn has user+assistant, hence *2</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> system <span class="op">+</span> recent  <span class="co"># Final message window sent to the model</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make the API call.</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    resp <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>model,         <span class="co"># Model name</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>window,     <span class="co"># Conversation history window</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>        temperature<span class="op">=</span>temperature,  <span class="co"># Randomness / creativity control</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract the assistant's reply text.</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    reply <span class="op">=</span> resp.choices[<span class="dv">0</span>].message.content</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Store the assistant reply so the next call has memory.</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: reply})</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return just the text (simple and workshop-friendly).</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> reply</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Setup complete. `client`, `model`, and `chat()` are available."</span>)</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Testing chat function..."</span>)</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"User: Hello LLM"</span>)</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Assistant: "</span> <span class="op">+</span> chat(<span class="st">"Heloo LLM"</span>))  <span class="co"># Test the chat function </span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>chat_reset()  <span class="co"># Reset chat history for next cells</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>⚠️ This response shows *overconfidence* — likely hallucination.</code></pre>
+<pre><code>Setup complete. `client`, `model`, and `chat()` are available.
+Testing chat function...
+User: Hello LLM
+Assistant: Hello. It's nice to meet you. Is there something I can help you with or would you like to chat? I'm here to assist you with any questions or topics you'd like to discuss.</code></pre>
 </div>
 </div>
 </section>
-<section id="benefits-and-risks-in-research" class="level2">
-<h2 class="anchored" data-anchor-id="benefits-and-risks-in-research">5. Benefits and Risks in Research</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 23%">
-<col style="width: 42%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Application</th>
-<th>Benefit</th>
-<th>Risk / Limitation</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Literature summarisation</td>
-<td>Saves time, finds patterns</td>
-<td>Hallucinated facts or missing nuance</td>
-</tr>
-<tr class="even">
-<td>Coding help</td>
-<td>Faster prototyping</td>
-<td>Wrong syntax or unsafe imports</td>
-</tr>
-<tr class="odd">
-<td>Academic writing</td>
-<td>Better grammar, flow</td>
-<td>Style drift, plagiarism concerns</td>
-</tr>
-<tr class="even">
-<td>Brainstorming ideas</td>
-<td>Expands creativity</td>
-<td>May output unverified claims</td>
-</tr>
-<tr class="odd">
-<td>Data cleaning</td>
-<td>Quick suggestions</td>
-<td>May fabricate column names</td>
-</tr>
-</tbody>
-</table>
-<p>🧭 Always cross-check LLM-generated outputs before citing or integrating into research.</p>
-</section>
-<section id="agentic-ai-concept-only" class="level2">
-<h2 class="anchored" data-anchor-id="agentic-ai-concept-only">6. Agentic AI (Concept Only)</h2>
-<p><strong>Agentic AI</strong> refers to models that can take <em>initiative</em> — plan actions, call tools, and iteratively refine results.</p>
-<p><strong>Examples:</strong> AutoGPT, LangChain Agents, ChatGPT with code or browsing.</p>
-<p>They combine: - <strong>Planning</strong> (deciding what to do next) - <strong>Memory</strong> (recalling previous steps) - <strong>Tool use</strong> (e.g., running Python or querying databases)</p>
-<section id="why-it-matters" class="level3">
-<h3 class="anchored" data-anchor-id="why-it-matters">Why it matters</h3>
-<ul>
-<li>Moves from passive Q&amp;A to <em>autonomous workflows</em>.</li>
-<li>Raises questions of <strong>accountability</strong> and <strong>control</strong>.</li>
-</ul>
-<p>🧩 The RAG (Retrieval-Augmented Generation) notebook later in this series is a <em>small step</em> toward agentic systems.</p>
-</section>
-</section>
-<section id="running-llms-via-api-vs-locally" class="level2">
-<h2 class="anchored" data-anchor-id="running-llms-via-api-vs-locally">7. Running LLMs via API vs Locally</h2>
-<section id="comparison" class="level3">
-<h3 class="anchored" data-anchor-id="comparison">Comparison</h3>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 47%">
-<col style="width: 26%">
-<col style="width: 26%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Approach</th>
-<th>Pros</th>
-<th>Cons</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>API (Groq, OpenAI)</strong></td>
-<td>No setup, scalable, always updated</td>
-<td>Requires internet, API cost, data privacy concerns</td>
-</tr>
-<tr class="even">
-<td><strong>Local (Hugging Face, vLLM)</strong></td>
-<td>Full control, offline</td>
-<td>Needs high VRAM, complex setup</td>
-</tr>
-</tbody>
-</table>
-<p>Below we estimate how much GPU memory is needed to run different models locally.</p>
-<div id="8f3bafeb" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate GPU VRAM requirement for hosting models locally</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Rule of thumb: 1 billion parameters ≈ 2 GB VRAM (16-bit precision)</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> estimate_vram(params_billion, precision_bits<span class="op">=</span><span class="dv">16</span>):</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Estimate GPU memory needed for model parameters."""</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    bytes_per_param <span class="op">=</span> precision_bits <span class="op">/</span> <span class="dv">8</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    total_gb <span class="op">=</span> (params_billion <span class="op">*</span> <span class="fl">1e9</span> <span class="op">*</span> bytes_per_param) <span class="op">/</span> (<span class="fl">1e9</span> <span class="op">*</span> <span class="fl">1.024</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">round</span>(total_gb, <span class="dv">1</span>)</span>
+<section id="hallucinations-what-they-are-and-how-to-handle-them" class="level2">
+<h2 class="anchored" data-anchor-id="hallucinations-what-they-are-and-how-to-handle-them">2) Hallucinations (what they are and how to handle them)</h2>
+<p><strong>Hallucination</strong> = the model produces a confident-looking statement that is <em>not grounded</em> in your provided context.</p>
+<p>In research, this shows up as: - invented citations / DOIs - incorrect numbers or claims - fabricated details about a paper that sounds plausible</p>
+<p><strong>Rule of thumb:</strong> treat the model as a <em>drafting and reasoning tool</em>, not as an authoritative source. Always verify critical facts against primary sources.</p>
+<section id="a-quick-demonstration" class="level3">
+<h3 class="anchored" data-anchor-id="a-quick-demonstration">2.1 A quick demonstration</h3>
+<p>We will ask the model for <em>very specific facts</em> without giving it any sources. Then we will ask it to provide a verification plan.</p>
+<blockquote class="blockquote">
+<p>The point is not to “trick” the model. The point is to learn the habit: <strong>ask for checks</strong>.</p>
+</blockquote>
+<div id="cell-10" class="cell" data-execution_count="43">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Hallucination demo ---</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># We ask a very specific question *without giving any citations or context*.</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># In real research, this is where hallucinations can sneak in.</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>question <span class="op">=</span> <span class="st">"What is the exact DOI of the first paper that introduced the Transformer architecture? Provide the DOI and the full citation."</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># We use a low temperature to reduce randomness (but hallucinations can still happen).</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>answer <span class="op">=</span> chat(question, temperature<span class="op">=</span><span class="fl">0.2</span>)</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> {<span class="st">"Llama-3 8B"</span>: <span class="dv">8</span>, <span class="st">"Llama-3 70B"</span>: <span class="dv">70</span>, <span class="st">"Mistral 7B"</span>: <span class="dv">7</span>}</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Approximate VRAM needed (16-bit precision):</span><span class="ch">\n</span><span class="st">"</span>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> model, size <span class="kw">in</span> models.items():</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>model<span class="sc">:15s}</span><span class="ss">: </span><span class="sc">{</span>estimate_vram(size)<span class="sc">}</span><span class="ss"> GB"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(answer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Approximate VRAM needed (16-bit precision):
+<pre><code>The first paper that introduced the Transformer architecture is:
 
-Llama-3 8B     : 15.6 GB
-Llama-3 70B    : 136.7 GB
-Mistral 7B     : 13.7 GB</code></pre>
+"Attention Is All You Need" by Vaswani et al.
+
+The DOI of this paper is: 10.5555/3295222.3295349
+
+The full citation is:
+Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... &amp; Polosukhin, I. (2017). Attention is all you need. In Advances in neural information processing systems (pp. 5998-6008).
+
+However, a more commonly used citation format is:
+
+Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... &amp; Polosukhin, I. (2017). Attention is all you need. Advances in Neural Information Processing Systems, 30.</code></pre>
 </div>
 </div>
-<p>➡️ A 70B model would require well over <strong>140 GB of GPU VRAM</strong>, so APIs are currently the most practical solution for most researchers.</p>
+</section>
+<section id="a-better-pattern-ask-for-uncertainty-a-verification-plan" class="level3">
+<h3 class="anchored" data-anchor-id="a-better-pattern-ask-for-uncertainty-a-verification-plan">2.2 A better pattern: ask for uncertainty + a verification plan</h3>
+<p>Instead of trusting the first answer, ask the model to: - state what it <em>knows vs.&nbsp;guesses</em> - propose how to verify - provide queries you could run in Google Scholar / arXiv / Semantic Scholar</p>
+<p>This turns the model into a <strong>research assistant</strong> rather than a <strong>source of truth</strong>.</p>
+<div id="cell-12" class="cell" data-execution_count="44">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Verification plan prompt ---</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="st">You may be wrong. Do NOT guess.</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="st">1) Say whether you are certain about the DOI (yes/no).</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="st">2) If not certain, propose a verification plan with 3-5 concrete steps.</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="st">3) Provide 3 search queries I can paste into Google Scholar.</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>plan <span class="op">=</span> chat(prompt, temperature<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(plan)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1. No, I am not certain about the DOI.
+
+2. To verify the DOI, I propose the following verification plan:
+* Step 1: Check the official NeurIPS (Conference on Neural Information Processing Systems) website for the paper "Attention Is All You Need" by Vaswani et al.
+* Step 2: Search for the paper on academic databases such as Google Scholar, arXiv, or ResearchGate to find the correct DOI.
+* Step 3: Verify the DOI on the paper's official publication page or through a reliable citation manager like Crossref or PubMed.
+* Step 4: Cross-check the DOI with other trusted sources, such as the authors' personal websites or institutional repositories.
+* Step 5: If necessary, contact the authors or the publication team to confirm the correct DOI.
+
+3. Here are three search queries you can paste into Google Scholar:
+* "Attention Is All You Need" Vaswani
+* "Vaswani et al. 2017 Attention Is All You Need"
+* "Transformer architecture introduction paper Vaswani"</code></pre>
+</div>
+</div>
 </section>
 </section>
-<section id="pros-and-cons-summary-of-using-api" class="level2">
-<h2 class="anchored" data-anchor-id="pros-and-cons-summary-of-using-api">8. Pros and Cons Summary of using API</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Aspect</th>
-<th>Pros</th>
-<th>Cons</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Ease of use</td>
-<td>Minimal setup</td>
-<td>Reliance on vendor uptime</td>
-</tr>
-<tr class="even">
-<td>Cost</td>
-<td>Free/cheap for small workloads</td>
-<td>Expensive at scale</td>
-</tr>
-<tr class="odd">
-<td>Reproducibility</td>
-<td>Controlled APIs</td>
-<td>Model updates may change outputs</td>
-</tr>
-<tr class="even">
-<td>Ethics</td>
-<td>Accessible to all</td>
-<td>Privacy and bias concerns</td>
-</tr>
-</tbody>
-</table>
-<p>Balance practicality with reproducibility — document all model versions and API calls when publishing results.</p>
+<section id="context-why-it-matters" class="level2">
+<h2 class="anchored" data-anchor-id="context-why-it-matters">3) Context: why it matters</h2>
+<p>LLMs generate answers based on the <strong>messages you provide</strong> (system + conversation history + any pasted content).</p>
+<p>If you don’t provide: - the relevant paragraphs - the table / figure description - the definitions / constraints</p>
+<p>…then the model must <em>guess</em>, which increases error risk.</p>
+<p><strong>Two practical tricks:</strong> 1) Keep the prompt short and specific 2) Provide <em>just enough</em> context (not everything)</p>
+<section id="context-budgeting-a-practical-habit" class="level3">
+<h3 class="anchored" data-anchor-id="context-budgeting-a-practical-habit">3.1 Context budgeting (a practical habit)</h3>
+<p>Below is a template you can reuse: - <strong>Task:</strong> what you want - <strong>Context:</strong> pasted text (only the relevant parts) - <strong>Output format:</strong> what you want back (table, bullets, JSON) - <strong>Checks:</strong> ask the model to quote supporting lines / highlight uncertainty</p>
+<div id="cell-15" class="cell" data-execution_count="45">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Context budgeting template ---</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>task <span class="op">=</span> <span class="st">"Summarise the key claim and the main limitation."</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>context <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="st">[Paste 1-3 relevant paragraphs here. Keep it short.]</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="ss">f"""</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ss">TASK:</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>task<span class="sc">}</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="ss">CONTEXT:</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>context<span class="sc">}</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="ss">OUTPUT FORMAT:</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- Key claim (1 sentence)</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="ss">- Main limitation (1 sentence)</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="ss">- 1 quote from the context that supports the key claim</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="ss">- 1 quote from the context that supports the limitation</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="ss">If the context is insufficient, say what is missing.</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(prompt, temperature<span class="op">=</span><span class="fl">0.2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>There is no context provided. To complete the task, I need 1-3 relevant paragraphs from the paper "Attention Is All You Need" by Vaswani et al. Please provide the context, and I will be happy to assist you in summarizing the key claim and the main limitation.</code></pre>
+</div>
+</div>
 </section>
-<section id="reflection-1" class="level2">
-<h2 class="anchored" data-anchor-id="reflection-1">9. Reflection</h2>
-<p><strong>Questions for you:</strong> 1. Which tasks in your workflow could LLMs assist with? 2. What risks might arise from automation in your field? 3. How can you document LLM involvement transparently in your papers?</p>
-<p>Write your reflections below as markdown cells.</p>
 </section>
-<section id="summary" class="level2">
-<h2 class="anchored" data-anchor-id="summary">✅ Summary</h2>
-<ul>
-<li>LLMs predict words, not truths — verification is essential.</li>
-<li>Prompt engineering is key to consistent behaviour.</li>
-<li>Hallucinations are unavoidable but detectable.</li>
-<li>Agentic AI is emerging; RAG is its foundation.</li>
-<li>APIs simplify use; local models give control but need hardware.</li>
-</ul>
+<section id="temperature-practical-guidance" class="level2">
+<h2 class="anchored" data-anchor-id="temperature-practical-guidance">4) Temperature: practical guidance</h2>
+<p><strong>Temperature controls randomness</strong> in the model’s outputs.</p>
+<p>Practical defaults: - <strong>0.0–0.3</strong>: summarisation, extraction, careful writing - <strong>0.4–0.8</strong>: brainstorming, alternatives, creative ideation - <strong>0.9+</strong>: rarely needed for research workflows</p>
+<blockquote class="blockquote">
+<p>In this workshop, we mostly stay around <strong>0.2</strong>.</p>
+</blockquote>
+<div id="cell-17" class="cell" data-execution_count="46">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Temperature demo (short) ---</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="st">"Give me one concise sentence describing how RAG helps with literature review."</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Low temperature: more consistent phrasing.</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Temperature 0.05:"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    chat_reset()</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(chat(prompt, temperature<span class="op">=</span><span class="fl">0.05</span>))</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Higher temperature: more variation / creativity.</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Temperature 0.95:"</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    chat_reset()</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(chat(prompt, temperature<span class="op">=</span><span class="fl">0.95</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Temperature 0.05:
+RAG (Retrieval-Augmented Generation) assists with literature review by efficiently retrieving and summarizing relevant existing research, saving time and effort in identifying key studies and synthesizing findings.
+RAG (Retrieval-Augmented Generation) assists with literature review by efficiently retrieving and summarizing relevant existing research, saving time and effort in identifying key studies and synthesizing findings.
+RAG (Retrieval-Augmented Generation) assists with literature review by efficiently retrieving and summarizing relevant existing research, saving time and effort in identifying key studies and synthesizing findings.
+
+Temperature 0.95:
+RAG (Retrieval-Augmented Generator) helps with literature review by efficiently searching and summarizing relevant papers, allowing researchers to quickly identify key findings and gaps in existing research.
+RAG (Retrieve, Augment, Generate) assists with literature reviews by efficiently retrieving relevant papers, augmenting the search with additional sources, and generating summaries to help researchers quickly identify key findings and trends.
+RAG (Retrieval-Augmented Generator) assists with literature reviews by efficiently retrieving and summarizing relevant existing research, saving time and effort in identifying and synthesizing key findings and concepts.</code></pre>
+</div>
+</div>
+</section>
+<section id="prompt-patterns-that-work-in-research" class="level2">
+<h2 class="anchored" data-anchor-id="prompt-patterns-that-work-in-research">5) Prompt patterns that work in research</h2>
+<p>Most failures in LLM usage come from <strong>underspecified prompts</strong>.</p>
+<p>Here are reliable patterns: 1) <strong>Role + task + constraints</strong> 2) <strong>Ask for structured outputs</strong> (tables / JSON / bullet fields) 3) <strong>Ask for caveats</strong> (“what could be wrong?”) 4) <strong>Ask for sources</strong> (“cite from the provided context”), or explicitly say “no external claims”</p>
+<section id="structured-output-example" class="level3">
+<h3 class="anchored" data-anchor-id="structured-output-example">5.1 Structured output example</h3>
+<p>In later notebooks, we will extract structured fields from abstracts. Here is the basic pattern with a small example text.</p>
+<div id="cell-20" class="cell" data-execution_count="47">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Structured output example ---</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>abstract <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="st">We propose a method for improving retrieval-augmented generation by re-ranking passages using a lightweight classifier.</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="st">Across three benchmarks, we show improved factual consistency and a reduction in citation errors.</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="st">Limitations include dependence on retrieval quality and reduced performance on highly novel queries.</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="ss">f"""</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="ss">Extract the following fields from the text.</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="ss">TEXT:</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>abstract<span class="sc">}</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="ss">Return a JSON object with exactly these keys:</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- research_goal</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="ss">- method</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="ss">- evidence</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="ss">- limitation</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="ss">Rules:</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="ss">- Do not invent anything not present in the text.</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="ss">- Keep each value under 25 words.</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(prompt, temperature<span class="op">=</span><span class="fl">0.2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>```
+{
+  "research_goal": "improving retrieval-augmented generation",
+  "method": "re-ranking passages using classifier",
+  "evidence": "improved factual consistency",
+  "limitation": "dependence on retrieval quality"
+}
+```</code></pre>
+</div>
+</div>
+</section>
+<section id="safety-check-force-the-model-to-separate-facts-from-assumptions" class="level3">
+<h3 class="anchored" data-anchor-id="safety-check-force-the-model-to-separate-facts-from-assumptions">5.2 Safety check: force the model to separate facts from assumptions</h3>
+<p>This is especially useful when you ask the model to interpret results or summarise claims.</p>
+<div id="cell-22" class="cell" data-execution_count="48">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Facts vs assumptions prompt pattern ---</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="st">This approach improves performance and should generalise to other datasets.</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="ss">f"""</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="ss">Analyse the text below and separate:</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="ss">1) Facts explicitly stated</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="ss">2) Assumptions / claims that would need evidence</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="ss">TEXT:</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>text<span class="sc">}</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(prompt, temperature<span class="op">=</span><span class="fl">0.2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>**Facts explicitly stated:**
+ None, the text only mentions a claim about the approach.
+
+**Assumptions / claims that would need evidence:**
+1. This approach improves performance.
+2. The approach should generalise to other datasets.</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="rag-in-one-minute-concept-only" class="level2">
+<h2 class="anchored" data-anchor-id="rag-in-one-minute-concept-only">6) RAG in one minute (concept only)</h2>
+<p><strong>RAG (Retrieval-Augmented Generation)</strong> means: 1) retrieve relevant documents (papers, notes, PDFs) 2) pass the most relevant parts into the model as context 3) generate an answer that is <em>grounded</em> in that context</p>
+<p>Why it matters: - reduces hallucination risk - enables citations (links / quotes) from provided sources - makes answers checkable</p>
+<blockquote class="blockquote">
+<p>We implement RAG hands-on in the merged literature workflow notebook.</p>
+</blockquote>
+</section>
+<section id="mini-exercise-23-minutes" class="level2">
+<h2 class="anchored" data-anchor-id="mini-exercise-23-minutes">7) Mini exercise (2–3 minutes)</h2>
+<p>Pick one research topic you care about. Ask the model for: - <strong>3 subquestions</strong> worth investigating - <strong>a structured table</strong> describing what evidence you would need</p>
+<p>Keep temperature around <strong>0.4</strong> for this brainstorming task.</p>
+<div id="cell-25" class="cell" data-execution_count="49">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Mini exercise ---</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>topic <span class="op">=</span> <span class="st">"Your topic here (e.g., 'LLMs for systematic reviews in medicine')"</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="ss">f"""</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="ss">Topic: </span><span class="sc">{</span>topic<span class="sc">}</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="ss">1) Propose 3 specific research subquestions.</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="ss">2) For each subquestion, give a 2-column table:</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="ss">   - What evidence/data would answer it?</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="ss">   - What risks/biases could mislead us?</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(prompt, temperature<span class="op">=</span><span class="fl">0.4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>**Topic: LLMs for Systematic Reviews in Medicine**
+
+Here are 3 specific research subquestions:
+
+1. Can LLMs accurately extract relevant data from medical literature?
+2. How do LLMs compare to human reviewers in terms of efficiency and accuracy in systematic reviews?
+3. Can LLMs help reduce bias in systematic reviews by identifying and mitigating potential sources of error?
+
+Here are the 2-column tables for each subquestion:
+
+**Subquestion 1: Can LLMs accurately extract relevant data from medical literature?**
+
+| What evidence/data would answer it? | What risks/biases could mislead us? |
+| --- | --- |
+| Benchmarking datasets with annotated medical texts | Overfitting to specific datasets or domains |
+| Comparison of LLM-extracted data to human-annotated gold standards | Lack of generalizability to diverse medical literature |
+
+**Subquestion 2: How do LLMs compare to human reviewers in terms of efficiency and accuracy in systematic reviews?**
+
+| What evidence/data would answer it? | What risks/biases could mislead us? |
+| --- | --- |
+| Head-to-head comparisons of LLMs and human reviewers on systematic review tasks | Selection bias in choosing which reviews to compare |
+| Time-to-completion and accuracy metrics for LLMs and human reviewers | Differences in training data or expertise between LLMs and human reviewers |
+
+**Subquestion 3: Can LLMs help reduce bias in systematic reviews by identifying and mitigating potential sources of error?**
+
+| What evidence/data would answer it? | What risks/biases could mislead us? |
+| --- | --- |
+| Analysis of LLM-identified biases and errors in systematic reviews | Overreliance on LLMs to detect biases, rather than human critical appraisal |
+| Comparison of bias detection and mitigation strategies with and without LLMs | Failure to account for LLMs' own potential biases or limitations |</code></pre>
+</div>
+</div>
+</section>
+<section id="wrap-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrap-up">8) Wrap-up</h2>
+<p><strong>Key takeaways:</strong> - Hallucinations happen — mitigate with <strong>context + structured outputs + verification prompts</strong> - Context is your strongest control lever - Temperature is a simple knob: low for extraction, medium for brainstorming - RAG makes answers more checkable (we do it next)</p>
 
 
 </section>
