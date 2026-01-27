@@ -544,7 +544,7 @@
     "href": "04_llms_for_code_and_data_analysis.html#wrap-up",
     "title": "04) LLMs for coding + data cleaning (workshop style)",
     "section": "9) Wrap-up",
-    "text": "9) Wrap-up\nWhat you learned: - How to prompt for a function with a clear goal - How to prompt for quick test code - How to improve robustness via edge cases - How to use explanation + failure modes to build trust\nKey habit: treat the LLM like a fast collaborator. You still run the code, check outputs, and decide what is scientifically appropriate.\nNext notebook (if time): Structured extraction (turning text into research tables).",
+    "text": "9) Wrap-up\nWhat you learned: - How to prompt for a function with a clear goal - How to prompt for quick test code - How to improve robustness via edge cases - How to use explanation + failure modes to build trust\nKey habit: treat the LLM like a fast collaborator. You still run the code, check outputs, and decide what is scientifically appropriate.",
     "crumbs": [
       "04_llms_for_code_and_data_analysis"
     ]
