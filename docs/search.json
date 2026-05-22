@@ -1,5 +1,375 @@
 [
   {
+    "objectID": "02_theory_and_concepts.html",
+    "href": "02_theory_and_concepts.html",
+    "title": "02) Core concepts",
+    "section": "",
+    "text": "Goal (15 min): understand the practical concepts you need to use LLMs responsibly in research.\nBy the end you will be able to: - Explain (and detect) hallucinations - Understand why context matters (and how to manage it) - Use temperature intentionally (without overthinking the maths) - Write prompts that produce structured, checkable outputs",
+    "crumbs": [
+      "02_theory_and_concepts"
+    ]
+  },
+  {
+    "objectID": "02_theory_and_concepts.html#quick-setup",
+    "href": "02_theory_and_concepts.html#quick-setup",
+    "title": "02) Core concepts",
+    "section": "1) Quick setup",
+    "text": "1) Quick setup\n\n# remove # from the line below and run if packages are not installed \n# !pip install numpy pandas matplotlib openai requests\n\n\n# We import only what we need.\nimport os  # Environment variables for API keys and configuration\nfrom openai import OpenAI  # OpenAI-compatible client (works with Groq base_url too)\n\n\nPaste your Groq API key below\nYou can also change the model if you like.\nchat() can be used to have a continuous chat. Usage: chat(“Your question”)\nchat_reset() can used to delete the history and set a new system prompt. Usage: chat_reset(“You are a helper for a bioinformatician.”) or simply chat_reset()\n\n\n# --- Setup ---\n\n# paste your key here for the session.\nos.environ[\"GROQ_API_KEY\"] = \"\"  # &lt;-- Paste key for workshop only. Do NOT share publicly.\n\n# Keep the same model string used in the workshop.\nmodel = \"llama-3.3-70b-versatile\"  # You can change this later if needed.\n\n# Keep the same base URL pattern used in the workshop.\nos.environ[\"BASE_URL\"] = \"https://api.groq.com/openai/v1\"  # Groq's OpenAI-compatible endpoint\n\n\n\n\n# Create the client using the API key and base URL.\nclient = OpenAI(\n    api_key=os.environ[\"GROQ_API_KEY\"],  # Read the key from the environment variable\n    base_url=os.environ[\"BASE_URL\"],     # Read the base URL from the environment variable\n)\n\n# We keep a small conversation history in memory to make multi-turn interactions easy.\nchat_history = []\n\ndef chat_reset(system_prompt=\"You are a helpful research assistant.\"):\n    \"\"\"Reset chat history to a single system message (in-place).\"\"\"\n    chat_history[:] = [{\"role\": \"system\", \"content\": system_prompt}]\n\nchat_reset()\n\ndef chat(user_text, temperature=0.2, max_turns=8):\n    \"\"\"Multi-turn helper that keeps a short conversation history.\n    Use this instead of calling the API directly in most workshop cells.\n    \"\"\"\n    # Add the user's message to the conversation history.\n    chat_history.append({\"role\": \"user\", \"content\": user_text})\n    \n    # Keep only the system message plus the most recent turns (to manage context length).\n    system = chat_history[:1]  # First message is the system instruction\n    recent = chat_history[-(max_turns * 2):]  # Each turn has user+assistant, hence *2\n    window = system + recent  # Final message window sent to the model\n    \n    # Make the API call.\n    resp = client.chat.completions.create(\n        model=model,         # Model name\n        messages=window,     # Conversation history window\n        temperature=temperature,  # Randomness / creativity control\n    )\n    \n    # Extract the assistant's reply text.\n    reply = resp.choices[0].message.content\n    \n    # Store the assistant reply so the next call has memory.\n    chat_history.append({\"role\": \"assistant\", \"content\": reply})\n    \n    # Return just the text (simple and workshop-friendly).\n    return reply\n\n\n\nprint(\"Setup complete. `client`, `model`, and `chat()` are available.\")\nprint(\"Testing chat function...\")\nprint(\"User: Hello LLM\")\nprint(\"Assistant: \" + chat(\"Heloo LLM\"))  # Test the chat function \n\nchat_reset()  # Reset chat history for next cells\n\nSetup complete. `client`, `model`, and `chat()` are available.\nTesting chat function...\nUser: Hello LLM\nAssistant: Hello. It's nice to meet you. Is there something I can help you with or would you like to chat? I'm here to assist you with any questions or topics you'd like to discuss.",
+    "crumbs": [
+      "02_theory_and_concepts"
+    ]
+  },
+  {
+    "objectID": "02_theory_and_concepts.html#hallucinations-what-they-are-and-how-to-handle-them",
+    "href": "02_theory_and_concepts.html#hallucinations-what-they-are-and-how-to-handle-them",
+    "title": "02) Core concepts",
+    "section": "2) Hallucinations (what they are and how to handle them)",
+    "text": "2) Hallucinations (what they are and how to handle them)\nHallucination = the model produces a confident-looking statement that is not grounded in your provided context.\nIn research, this shows up as: - invented citations / DOIs - incorrect numbers or claims - fabricated details about a paper that sounds plausible\nRule of thumb: treat the model as a drafting and reasoning tool, not as an authoritative source. Always verify critical facts against primary sources.\n\n2.1 A quick demonstration\nWe will ask the model for very specific facts without giving it any sources. Then we will ask it to provide a verification plan.\n\nThe point is not to “trick” the model. The point is to learn the habit: ask for checks.\n\n\n# --- Hallucination demo ---\n\n# We ask a very specific question *without giving any citations or context*.\n# In real research, this is where hallucinations can sneak in.\nquestion = \"What is the exact DOI of the first paper that introduced the Transformer architecture? Provide the DOI and the full citation.\"\n\n# We use a low temperature to reduce randomness (but hallucinations can still happen).\nanswer = chat(question, temperature=0.2)\n\nprint(answer)\n\nThe first paper that introduced the Transformer architecture is:\n\n\"Attention Is All You Need\" by Vaswani et al.\n\nThe DOI of this paper is: 10.5555/3295222.3295349\n\nThe full citation is:\nVaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... & Polosukhin, I. (2017). Attention is all you need. In Advances in neural information processing systems (pp. 5998-6008).\n\nHowever, a more commonly used citation format is:\n\nVaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... & Polosukhin, I. (2017). Attention is all you need. Advances in Neural Information Processing Systems, 30.\n\n\n\n\n2.2 A better pattern: ask for uncertainty + a verification plan\nInstead of trusting the first answer, ask the model to: - state what it knows vs. guesses - propose how to verify - provide queries you could run in Google Scholar / arXiv / Semantic Scholar\nThis turns the model into a research assistant rather than a source of truth.\n\n# --- Verification plan prompt ---\n\nprompt = \"\"\"\nYou may be wrong. Do NOT guess.\n1) Say whether you are certain about the DOI (yes/no).\n2) If not certain, propose a verification plan with 3-5 concrete steps.\n3) Provide 3 search queries I can paste into Google Scholar.\n\"\"\"\n\nplan = chat(prompt, temperature=0.2)\n\nprint(plan)\n\n1. No, I am not certain about the DOI.\n\n2. To verify the DOI, I propose the following verification plan:\n* Step 1: Check the official NeurIPS (Conference on Neural Information Processing Systems) website for the paper \"Attention Is All You Need\" by Vaswani et al.\n* Step 2: Search for the paper on academic databases such as Google Scholar, arXiv, or ResearchGate to find the correct DOI.\n* Step 3: Verify the DOI on the paper's official publication page or through a reliable citation manager like Crossref or PubMed.\n* Step 4: Cross-check the DOI with other trusted sources, such as the authors' personal websites or institutional repositories.\n* Step 5: If necessary, contact the authors or the publication team to confirm the correct DOI.\n\n3. Here are three search queries you can paste into Google Scholar:\n* \"Attention Is All You Need\" Vaswani\n* \"Vaswani et al. 2017 Attention Is All You Need\"\n* \"Transformer architecture introduction paper Vaswani\"",
+    "crumbs": [
+      "02_theory_and_concepts"
+    ]
+  },
+  {
+    "objectID": "02_theory_and_concepts.html#context-why-it-matters",
+    "href": "02_theory_and_concepts.html#context-why-it-matters",
+    "title": "02) Core concepts",
+    "section": "3) Context: why it matters",
+    "text": "3) Context: why it matters\nLLMs generate answers based on the messages you provide (system + conversation history + any pasted content).\nIf you don’t provide: - the relevant paragraphs - the table / figure description - the definitions / constraints\n…then the model must guess, which increases error risk.\nTwo practical tricks: 1) Keep the prompt short and specific 2) Provide just enough context (not everything)\n\n3.1 Context budgeting (a practical habit)\nBelow is a template you can reuse: - Task: what you want - Context: pasted text (only the relevant parts) - Output format: what you want back (table, bullets, JSON) - Checks: ask the model to quote supporting lines / highlight uncertainty\n\n# --- Context budgeting template ---\n\ntask = \"Summarise the key claim and the main limitation.\"\ncontext = \"\"\"\n[Paste 1-3 relevant paragraphs here. Keep it short.]\n\"\"\"\n\nprompt = f\"\"\"\nTASK:\n{task}\n\nCONTEXT:\n{context}\n\nOUTPUT FORMAT:\n- Key claim (1 sentence)\n- Main limitation (1 sentence)\n- 1 quote from the context that supports the key claim\n- 1 quote from the context that supports the limitation\n\nIf the context is insufficient, say what is missing.\n\"\"\"\n\nprint(chat(prompt, temperature=0.2))\n\nThere is no context provided. To complete the task, I need 1-3 relevant paragraphs from the paper \"Attention Is All You Need\" by Vaswani et al. Please provide the context, and I will be happy to assist you in summarizing the key claim and the main limitation.",
+    "crumbs": [
+      "02_theory_and_concepts"
+    ]
+  },
+  {
+    "objectID": "02_theory_and_concepts.html#temperature-practical-guidance",
+    "href": "02_theory_and_concepts.html#temperature-practical-guidance",
+    "title": "02) Core concepts",
+    "section": "4) Temperature: practical guidance",
+    "text": "4) Temperature: practical guidance\nTemperature controls randomness in the model’s outputs.\nPractical defaults: - 0.0–0.3: summarisation, extraction, careful writing - 0.4–0.8: brainstorming, alternatives, creative ideation - 0.9+: rarely needed for research workflows\n\nIn this workshop, we mostly stay around 0.2.\n\n\n# --- Temperature demo (short) ---\n\nprompt = \"Give me one concise sentence describing how RAG helps with literature review.\"\n\n# Low temperature: more consistent phrasing.\nprint(\"Temperature 0.05:\")\nfor i in range(3):\n    chat_reset()\n    print(chat(prompt, temperature=0.05))\n\n# Higher temperature: more variation / creativity.\nprint(\"\\nTemperature 0.95:\")\nfor i in range(3):\n    chat_reset()\n    print(chat(prompt, temperature=0.95))\n\nTemperature 0.05:\nRAG (Retrieval-Augmented Generation) assists with literature review by efficiently retrieving and summarizing relevant existing research, saving time and effort in identifying key studies and synthesizing findings.\nRAG (Retrieval-Augmented Generation) assists with literature review by efficiently retrieving and summarizing relevant existing research, saving time and effort in identifying key studies and synthesizing findings.\nRAG (Retrieval-Augmented Generation) assists with literature review by efficiently retrieving and summarizing relevant existing research, saving time and effort in identifying key studies and synthesizing findings.\n\nTemperature 0.95:\nRAG (Retrieval-Augmented Generator) helps with literature review by efficiently searching and summarizing relevant papers, allowing researchers to quickly identify key findings and gaps in existing research.\nRAG (Retrieve, Augment, Generate) assists with literature reviews by efficiently retrieving relevant papers, augmenting the search with additional sources, and generating summaries to help researchers quickly identify key findings and trends.\nRAG (Retrieval-Augmented Generator) assists with literature reviews by efficiently retrieving and summarizing relevant existing research, saving time and effort in identifying and synthesizing key findings and concepts.",
+    "crumbs": [
+      "02_theory_and_concepts"
+    ]
+  },
+  {
+    "objectID": "02_theory_and_concepts.html#prompt-patterns-that-work-in-research",
+    "href": "02_theory_and_concepts.html#prompt-patterns-that-work-in-research",
+    "title": "02) Core concepts",
+    "section": "5) Prompt patterns that work in research",
+    "text": "5) Prompt patterns that work in research\nMost failures in LLM usage come from underspecified prompts.\nHere are reliable patterns: 1) Role + task + constraints 2) Ask for structured outputs (tables / JSON / bullet fields) 3) Ask for caveats (“what could be wrong?”) 4) Ask for sources (“cite from the provided context”), or explicitly say “no external claims”\n\n5.1 Structured output example\nIn later notebooks, we will extract structured fields from abstracts. Here is the basic pattern with a small example text.\n\n# --- Structured output example ---\n\nabstract = \"\"\"\nWe propose a method for improving retrieval-augmented generation by re-ranking passages using a lightweight classifier.\nAcross three benchmarks, we show improved factual consistency and a reduction in citation errors.\nLimitations include dependence on retrieval quality and reduced performance on highly novel queries.\n\"\"\"\n\nprompt = f\"\"\"\nExtract the following fields from the text.\n\nTEXT:\n{abstract}\n\nReturn a JSON object with exactly these keys:\n- research_goal\n- method\n- evidence\n- limitation\n\nRules:\n- Do not invent anything not present in the text.\n- Keep each value under 25 words.\n\"\"\"\n\nprint(chat(prompt, temperature=0.2))\n\n```\n{\n  \"research_goal\": \"improving retrieval-augmented generation\",\n  \"method\": \"re-ranking passages using classifier\",\n  \"evidence\": \"improved factual consistency\",\n  \"limitation\": \"dependence on retrieval quality\"\n}\n```\n\n\n\n\n5.2 Safety check: force the model to separate facts from assumptions\nThis is especially useful when you ask the model to interpret results or summarise claims.\n\n# --- Facts vs assumptions prompt pattern ---\n\ntext = \"\"\"\nThis approach improves performance and should generalise to other datasets.\n\"\"\"\n\nprompt = f\"\"\"\nAnalyse the text below and separate:\n1) Facts explicitly stated\n2) Assumptions / claims that would need evidence\n\nTEXT:\n{text}\n\"\"\"\n\nprint(chat(prompt, temperature=0.2))\n\n**Facts explicitly stated:**\n None, the text only mentions a claim about the approach.\n\n**Assumptions / claims that would need evidence:**\n1. This approach improves performance.\n2. The approach should generalise to other datasets.",
+    "crumbs": [
+      "02_theory_and_concepts"
+    ]
+  },
+  {
+    "objectID": "02_theory_and_concepts.html#rag-in-one-minute-concept-only",
+    "href": "02_theory_and_concepts.html#rag-in-one-minute-concept-only",
+    "title": "02) Core concepts",
+    "section": "6) RAG in one minute (concept only)",
+    "text": "6) RAG in one minute (concept only)\nRAG (Retrieval-Augmented Generation) means: 1) retrieve relevant documents (papers, notes, PDFs) 2) pass the most relevant parts into the model as context 3) generate an answer that is grounded in that context\nWhy it matters: - reduces hallucination risk - enables citations (links / quotes) from provided sources - makes answers checkable\n\nWe implement RAG hands-on in the merged literature workflow notebook.",
+    "crumbs": [
+      "02_theory_and_concepts"
+    ]
+  },
+  {
+    "objectID": "02_theory_and_concepts.html#mini-exercise-23-minutes",
+    "href": "02_theory_and_concepts.html#mini-exercise-23-minutes",
+    "title": "02) Core concepts",
+    "section": "7) Mini exercise (2–3 minutes)",
+    "text": "7) Mini exercise (2–3 minutes)\nPick one research topic you care about. Ask the model for: - 3 subquestions worth investigating - a structured table describing what evidence you would need\nKeep temperature around 0.4 for this brainstorming task.\n\n# --- Mini exercise ---\n\ntopic = \"Your topic here (e.g., 'LLMs for systematic reviews in medicine')\"\n\nprompt = f\"\"\"\nTopic: {topic}\n\n1) Propose 3 specific research subquestions.\n2) For each subquestion, give a 2-column table:\n   - What evidence/data would answer it?\n   - What risks/biases could mislead us?\n\"\"\"\n\nprint(chat(prompt, temperature=0.4))\n\n**Topic: LLMs for Systematic Reviews in Medicine**\n\nHere are 3 specific research subquestions:\n\n1. Can LLMs accurately extract relevant data from medical literature?\n2. How do LLMs compare to human reviewers in terms of efficiency and accuracy in systematic reviews?\n3. Can LLMs help reduce bias in systematic reviews by identifying and mitigating potential sources of error?\n\nHere are the 2-column tables for each subquestion:\n\n**Subquestion 1: Can LLMs accurately extract relevant data from medical literature?**\n\n| What evidence/data would answer it? | What risks/biases could mislead us? |\n| --- | --- |\n| Benchmarking datasets with annotated medical texts | Overfitting to specific datasets or domains |\n| Comparison of LLM-extracted data to human-annotated gold standards | Lack of generalizability to diverse medical literature |\n\n**Subquestion 2: How do LLMs compare to human reviewers in terms of efficiency and accuracy in systematic reviews?**\n\n| What evidence/data would answer it? | What risks/biases could mislead us? |\n| --- | --- |\n| Head-to-head comparisons of LLMs and human reviewers on systematic review tasks | Selection bias in choosing which reviews to compare |\n| Time-to-completion and accuracy metrics for LLMs and human reviewers | Differences in training data or expertise between LLMs and human reviewers |\n\n**Subquestion 3: Can LLMs help reduce bias in systematic reviews by identifying and mitigating potential sources of error?**\n\n| What evidence/data would answer it? | What risks/biases could mislead us? |\n| --- | --- |\n| Analysis of LLM-identified biases and errors in systematic reviews | Overreliance on LLMs to detect biases, rather than human critical appraisal |\n| Comparison of bias detection and mitigation strategies with and without LLMs | Failure to account for LLMs' own potential biases or limitations |",
+    "crumbs": [
+      "02_theory_and_concepts"
+    ]
+  },
+  {
+    "objectID": "02_theory_and_concepts.html#wrap-up",
+    "href": "02_theory_and_concepts.html#wrap-up",
+    "title": "02) Core concepts",
+    "section": "8) Wrap-up",
+    "text": "8) Wrap-up\nKey takeaways: - Hallucinations happen — mitigate with context + structured outputs + verification prompts - Context is your strongest control lever - Temperature is a simple knob: low for extraction, medium for brainstorming - RAG makes answers more checkable (we do it next)",
+    "crumbs": [
+      "02_theory_and_concepts"
+    ]
+  },
+  {
+    "objectID": "00_workshop_guide.html",
+    "href": "00_workshop_guide.html",
+    "title": "Large Language Models for Research",
+    "section": "",
+    "text": "A workshop by: QCIF\nhttps://www.qcif.edu.au/",
+    "crumbs": [
+      "00_workshop_guide"
+    ]
+  },
+  {
+    "objectID": "00_workshop_guide.html#install-python-recommended-version-3.10-or-newer",
+    "href": "00_workshop_guide.html#install-python-recommended-version-3.10-or-newer",
+    "title": "Large Language Models for Research",
+    "section": "🐍 1. Install Python (Recommended: Version 3.10 or newer)",
+    "text": "🐍 1. Install Python (Recommended: Version 3.10 or newer)\n\nWindows\n\nGo to the official Python website: https://www.python.org/downloads/\nDownload the latest Python 3.x installer.\nRun the installer and check the box that says:\n\n✅ Add Python to PATH\n\nChoose Install Now and follow the prompts.\n\nTo verify installation, open Command Prompt (cmd) and type:\npython --version\nYou should see something like:\nPython 3.11.6\n\n\n\nmacOS / Linux\nMost systems come with Python preinstalled. You can check your version:\npython3 --version\nIf Python is not installed, install it using your system package manager:\nmacOS (Homebrew):\nbrew install python\nUbuntu / Debian:\nsudo apt update && sudo apt install python3 python3-pip -y",
+    "crumbs": [
+      "00_workshop_guide"
+    ]
+  },
+  {
+    "objectID": "00_workshop_guide.html#install-jupyterlab",
+    "href": "00_workshop_guide.html#install-jupyterlab",
+    "title": "Large Language Models for Research",
+    "section": "📦 2. Install jupyterlab",
+    "text": "📦 2. Install jupyterlab\nOnce Python is installed, you can install packages using pip (Python’s package manager).\nRun this command in your terminal or command prompt:\npip install jupyterlab\n\njupyterlab is used for running notebooks interactively.",
+    "crumbs": [
+      "00_workshop_guide"
+    ]
+  },
+  {
+    "objectID": "00_workshop_guide.html#download-notebooks",
+    "href": "00_workshop_guide.html#download-notebooks",
+    "title": "Large Language Models for Research",
+    "section": "📦 3. Download notebooks",
+    "text": "📦 3. Download notebooks\nDownload notebooks.zip from the left menu of workshop website and extract to your desired folder.",
+    "crumbs": [
+      "00_workshop_guide"
+    ]
+  },
+  {
+    "objectID": "00_workshop_guide.html#launch-jupyterlab",
+    "href": "00_workshop_guide.html#launch-jupyterlab",
+    "title": "Large Language Models for Research",
+    "section": "🧠 4. Launch JupyterLab",
+    "text": "🧠 4. Launch JupyterLab\nOpen terminal or command prompt and navigate to the folder containing your workshop notebooks (or navigate then open a terminal), then run:\npython -m jupyter lab\nThis will open a new tab in your default web browser with the JupyterLab interface.\nYou can then click on any notebook to open it.",
+    "crumbs": [
+      "00_workshop_guide"
+    ]
+  },
+  {
+    "objectID": "00_workshop_guide.html#running-on-hpc",
+    "href": "00_workshop_guide.html#running-on-hpc",
+    "title": "Large Language Models for Research",
+    "section": "⚙️ 5. Running on HPC",
+    "text": "⚙️ 5. Running on HPC\nIf you’re using a hosted JupyterLab instance on HPC infrastructure, Python and most dependencies are already installed. You typically only need to:\n\nOpen the web-based JupyterLab interface.\nLoad the correct Python environment (via module or dropdown).\ndownload and extract notebooks.zip from the left menu of the website.\nUpload notebooks to the HPC’s jupyter lab.\nRun 00_setup_guide.ipynb (this notebook).",
+    "crumbs": [
+      "00_workshop_guide"
+    ]
+  },
+  {
+    "objectID": "00_workshop_guide.html#install-required-python-packages",
+    "href": "00_workshop_guide.html#install-required-python-packages",
+    "title": "Large Language Models for Research",
+    "section": "📦 6. Install Required Python Packages",
+    "text": "📦 6. Install Required Python Packages\nIf the packages below are not installed uncomment (remove #) and run the cell below to install packages:\n\n# remove # from the line below and run if packages are not installed \n# !pip install numpy pandas matplotlib openai requests\n\nNote if you are running this in a terminal you need to remove “!” from teh start of the command. This will install:\n\nnumpy – for handling arrays.\npandas – for handling data.\nmatplotlib – for plotting.\nopenai – to connect to Groq or OpenAI-compatible APIs.\nrequests – for fetching data from APIs.\n\nTo verify installation, run the code below:\n\nimport importlib.metadata\n\npackages = [\"numpy\", \"pandas\", \"matplotlib\", \"openai\", \"requests\"]\nfor pkg in packages:\n    try:\n        print(f\"{pkg}: {importlib.metadata.version(pkg)}\")\n    except importlib.metadata.PackageNotFoundError:\n        print(f\"{pkg}: not installed\")\n\nnumpy: 2.3.3\npandas: 2.3.3\nmatplotlib: 3.10.7\nopenai: 2.6.0\nrequests: 2.32.5",
+    "crumbs": [
+      "00_workshop_guide"
+    ]
+  },
+  {
+    "objectID": "00_workshop_guide.html#get-a-groq-api-key-to-access-a-llm-online",
+    "href": "00_workshop_guide.html#get-a-groq-api-key-to-access-a-llm-online",
+    "title": "Large Language Models for Research",
+    "section": "⚙️ 7: Get a Groq API key to access a llm online",
+    "text": "⚙️ 7: Get a Groq API key to access a llm online\n\nSign In to Your Groq Account. Go to https://console.groq.com/login.\nIf you already have an account, sign in.\n\nIf not, create a new account and complete the verification process.\n\nGenerate Your Groq API Key: 1. Navigate to the API Keys section from the left menu.\n2. Click Create API Key. 3. In the pop-up window, enter a descriptive name for your key (e.g., AI Content Labs) in the Display name for the key field.\n- This helps you easily identify the key later.\n4. Click Submit.\n5. Copy the displayed API key — it will only be shown once.\n- Save it securely for future use.",
+    "crumbs": [
+      "00_workshop_guide"
+    ]
+  },
+  {
+    "objectID": "00_workshop_guide.html#summary",
+    "href": "00_workshop_guide.html#summary",
+    "title": "Large Language Models for Research",
+    "section": "✅ Summary",
+    "text": "✅ Summary\n\nInstall Python ≥ 3.10\nUse pip to install required packages\nRun jupyter lab\nVerify everything by opening the example notebooks\nGet a Groq API key",
+    "crumbs": [
+      "00_workshop_guide"
+    ]
+  },
+  {
+    "objectID": "01_introduction_llm.html",
+    "href": "01_introduction_llm.html",
+    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
+    "section": "",
+    "text": "In this notebook you will:",
+    "crumbs": [
+      "01_introduction_llm"
+    ]
+  },
+  {
+    "objectID": "01_introduction_llm.html#imports",
+    "href": "01_introduction_llm.html#imports",
+    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
+    "section": "1) Imports",
+    "text": "1) Imports\nWe keep imports minimal and explicit so it’s clear what each library is used for.\n\n# remove # from the line below and run if packages are not installed \n# !pip install numpy pandas matplotlib openai requests\n\n\n# Standard library: access environment variables safely\nimport os  # used for storing API keys and configuration\n\n# OpenAI Python client (works with Groq because Groq exposes an OpenAI-compatible endpoint)\nfrom openai import OpenAI  # used to create a client and call chat completions",
+    "crumbs": [
+      "01_introduction_llm"
+    ]
+  },
+  {
+    "objectID": "01_introduction_llm.html#configuration-api-key-model",
+    "href": "01_introduction_llm.html#configuration-api-key-model",
+    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
+    "section": "2) Configuration (API key + model)",
+    "text": "2) Configuration (API key + model)\n⚠️ Keep your API key private.\nIn a real project, it’s better to set keys as environment variables (not in a notebook).\nFor this workshop, we keep the pattern simple and consistent with the existing course.\n\n# Paste your Groq API key below (between quotes).\n# NOTE: This is not a secure way of entering an API key because it becomes visible in the notebook.\n# For safer setups, prefer environment variables or secret managers (especially if sharing notebooks).\n\nos.environ[\"GROQ_API_KEY\"] = \"\"  # &lt;-- replace with your key.\nos.environ[\"BASE_URL\"] = \"https://api.groq.com/openai/v1\"  # Groq uses an OpenAI-compatible API base URL.\nos.environ[\"MODEL\"] = \"llama-3.3-70b-versatile\"  # Select a model: https://console.groq.com/docs/models",
+    "crumbs": [
+      "01_introduction_llm"
+    ]
+  },
+  {
+    "objectID": "01_introduction_llm.html#create-a-client",
+    "href": "01_introduction_llm.html#create-a-client",
+    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
+    "section": "3) Create a client",
+    "text": "3) Create a client\nThe OpenAI client can point to different providers as long as they implement the OpenAI API. Here we point it to Groq’s base URL and authenticate using your key.\n\n# Read configuration from the environment (so it’s in one place).\n# If the key is missing, calls will fail with an authentication error.\napi_key = os.environ[\"GROQ_API_KEY\"]  # your Groq API key (string)\nbase_url = os.environ.get(\"BASE_URL\", \"https://api.groq.com/openai/v1\")     # Groq's OpenAI-compatible endpoint base URL\nmodel = os.environ.get(\"MODEL\", \"llama-3.3-70b-versatile\")  # Select a model: https://console.groq.com/docs/models\n\n# Create a client instance.\n# This object will be reused for the rest of the workshop.\nclient = OpenAI(\n    api_key=api_key,   # authentication\n    base_url=base_url  # provider endpoint\n)\n\nresponse = client.responses.create(\n    model=model,\n    input=\"Tell me a fun fact about the moon in one sentence.\",\n)\n# Quick sanity check: print a short confirmation message.\nprint(\"✅ Client initialized\")\nprint(response.output_text)\n\n✅ Client initialized",
+    "crumbs": [
+      "01_introduction_llm"
+    ]
+  },
+  {
+    "objectID": "01_introduction_llm.html#your-first-chat-call",
+    "href": "01_introduction_llm.html#your-first-chat-call",
+    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
+    "section": "4) Your first chat call",
+    "text": "4) Your first chat call\nA chat call is a list of messages. Each message is a dictionary with:\n\nrole: \"system\", \"user\", or \"assistant\"\ncontent: the text for that message\n\nThe model reads the messages and returns the assistant’s next reply.\n\n# Build a minimal message list.\n# - The system message sets the style/rules.\n# - The user message is your question/instruction.\nmessages = [\n    {\"role\": \"system\", \"content\": \"You are a helpful research assistant. Be concise.\"},  # behavior\n    {\"role\": \"user\", \"content\": \"Explain what a large language model (LLM) is in two sentences.\"},  # task\n]\n\n# Call the chat completion endpoint.\nresponse = client.responses.create(\n    model=model,        # which model to use\n    messages=messages,  # conversation so far\n    temperature=0.2,    # low randomness for factual, stable answers\n)\n\n# Extract the assistant text safely (this is the part you usually want).\nreply_text = response.output_text  # the generated assistant reply\nprint(reply_text)  # display the result\n\nA large language model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, typically trained on vast amounts of text data to generate human-like responses. LLMs use complex algorithms and neural networks to learn patterns and relationships in language, enabling them to perform tasks such as language translation, text summarization, and conversation generation.",
+    "crumbs": [
+      "01_introduction_llm"
+    ]
+  },
+  {
+    "objectID": "01_introduction_llm.html#optional-inspect-the-response-object",
+    "href": "01_introduction_llm.html#optional-inspect-the-response-object",
+    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
+    "section": "5) (Optional) Inspect the response object",
+    "text": "5) (Optional) Inspect the response object\nSometimes you want to debug: - which model was used - token usage / metadata (if provided) - full structured payload\n\n# Many modern OpenAI-style clients support `model_dump()` (Pydantic-style).\n# If it's not available, we fall back to casting to a plain dict (best-effort).\npayload = response.model_dump() if hasattr(response, \"model_dump\") else dict(response)  # safe conversion\n\n# Print top-level keys so you know what's inside without dumping everything.\nprint(\"Top-level keys:\", list(payload.keys()))  # quick peek\n\n# Print the reported model name if available.\nprint(\"Model used:\", payload.get(\"model\", \"unknown\"))  # model identifier (string)\n\n# Print token usage if the provider returns it (not all providers do).\nusage = payload.get(\"usage\", None)  # usage metadata (may be missing)\nprint(\"Usage:\", usage)  # token counts, etc. (or None)\n\nTop-level keys: ['id', 'choices', 'created', 'model', 'object', 'service_tier', 'system_fingerprint', 'usage', 'usage_breakdown', 'x_groq']\nModel used: llama-3.3-70b-versatile\nUsage: {'completion_tokens': 75, 'prompt_tokens': 61, 'total_tokens': 136, 'completion_tokens_details': None, 'prompt_tokens_details': None, 'queue_time': 0.010413828, 'prompt_time': 0.002431792, 'completion_time': 0.151746588, 'total_time': 0.15417838}",
+    "crumbs": [
+      "01_introduction_llm"
+    ]
+  },
+  {
+    "objectID": "01_introduction_llm.html#helper-functions-the-workshop-style",
+    "href": "01_introduction_llm.html#helper-functions-the-workshop-style",
+    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
+    "section": "6) Helper functions (the workshop style)",
+    "text": "6) Helper functions (the workshop style)\nFrom now on we’ll use helper functions so:\n\nnotebooks stay clean\nyou focus on research tasks, not API details\nlater notebooks can reuse the same interface\n\nWe provide two helpers:\n\nchat(...) — stateful, keeps a short conversation history in this notebook\nchat_reset(...) — deletes history and sets system prompt\n\nThis keeps things simple: participants only need to call chat() without worrying about API details.\n\n# Create the client using the API key and base URL.\nclient = OpenAI(\n    api_key=os.environ[\"GROQ_API_KEY\"],  # Read the key from the environment variable\n    base_url=os.environ.get(\"BASE_URL\", \"https://api.groq.com/openai/v1\")    # Read the base URL from the environment variable\n)\nmodel = os.environ.get(\"MODEL\", \"llama-3.3-70b-versatile\")  # Select a model: https://console.groq.com/docs/models\n\n# We keep a small conversation history in memory to make multi-turn interactions easy.\nchat_history = []\n\ndef chat_reset(system_prompt=\"You are a helpful research assistant.\"):\n    \"\"\"Reset chat history to a single system message (in-place).\"\"\"\n    chat_history[:] = [{\"role\": \"system\", \"content\": system_prompt}]\n\nchat_reset()\n\ndef chat(user_text, temperature=0.2, max_turns=8):\n    \"\"\"Multi-turn helper that keeps a short conversation history.\n    Use this instead of calling the API directly in most workshop cells.\n    \"\"\"\n    # Add the user's message to the conversation history.\n    chat_history.append({\"role\": \"user\", \"content\": user_text})\n    \n    # Keep only the system message plus the most recent turns (to manage context length).\n    system = chat_history[:1]  # First message is the system instruction\n    recent = chat_history[-(max_turns * 2):]  # Each turn has user+assistant, hence *2\n    window = system + recent  # Final message window sent to the model\n    \n    # Make the API call.\n    resp = client.responses.create(\n        model=model,         # Model name\n        messages=window,     # Conversation history window\n        temperature=temperature,  # Randomness / creativity control\n    )\n    \n    # Extract the assistant's reply text.\n    reply = resp.output_text\n    \n    # Store the assistant reply so the next call has memory.\n    chat_history.append({\"role\": \"assistant\", \"content\": reply})\n    \n    # Return just the text (simple and workshop-friendly).\n    return reply\n\nprint(\"Setup complete. `client`, `model`, and `chat()` are available.\")\nprint(\"Testing chat function...\")\nprint(\"User: Hello LLM\")\nprint(\"Assistant: \" + chat(\"Hello LLM\"))  # Test the chat function \n\nchat_reset()  # Reset chat history for next cells\n\nSetup complete. `client`, `model`, and `chat()` are available.\nTesting chat function...\nUser: Hello LLM\nAssistant: Hello. It's nice to meet you. Is there something I can help you with or would you like to chat? I'm here to assist you with any questions or topics you'd like to discuss.",
+    "crumbs": [
+      "01_introduction_llm"
+    ]
+  },
+  {
+    "objectID": "01_introduction_llm.html#quick-exercises",
+    "href": "01_introduction_llm.html#quick-exercises",
+    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
+    "section": "8) Quick exercises",
+    "text": "8) Quick exercises\n\nExercise A — rewrite for clarity\nProvide a sentence from your current draft and ask for a clearer version.\n\n\nExercise B — extract structured fields\nGive a short abstract and ask for: aim, methods, datasets, main result, limitation.\n\n\nExercise C — propose search keywords\nAsk the model to propose arXiv/Google Scholar keywords for a research question.\n\n# Exercise A: rewrite for clarity (replace the text with your own).\ntext = \"This paper introduces a method that can potentially improve performance in some tasks.\"  # example sentence\nprompt = \"Rewrite this sentence to be clearer and more specific, without adding new facts:\\n\\n\" + text\n\nprint(chat(prompt))\n\nThis paper presents a method that may enhance performance in certain specific tasks.\n\n\n\n# Exercise B: extract structured fields from a short abstract-like paragraph.\nabstract = (\n    \"We propose a new approach to classify cell types from single-cell RNA sequencing data using self-supervised learning. \"\n    \"Across three public datasets, our method improves macro-F1 by 3–5% compared to strong baselines. \"\n    \"However, performance drops on rare cell populations with limited labels.\"\n)  # small example text\n\nprompt = (\n    \"Extract the following fields as JSON with keys:\\n\"\n    \"- aim\\n- methods\\n- datasets\\n- main_result\\n- limitation\\n\\n\"\n    \"Text:\\n\" + abstract\n)  # prompt that requests structured output\n\nprint(chat(prompt))  # run extraction\n\nHere are the extracted fields as JSON:\n\n```\n{\n  \"aim\": \"classify cell types from single-cell RNA sequencing data using self-supervised learning\",\n  \"methods\": \"self-supervised learning\",\n  \"datasets\": \"three public datasets\",\n  \"main_result\": \"improves macro-F1 by 3–5% compared to strong baselines\",\n  \"limitation\": \"performance drops on rare cell populations with limited labels\"\n}\n```\n\n\n\n# Exercise C: generate search keywords for a literature review.\nquestion = \"How are LLMs used to accelerate hypothesis generation in biomedical research?\"  # example topic\n\nprompt = \"\"\"Propose 8–12 search keywords/phrases for arXiv and Google Scholar. \n    Group them into 3 themes and keep them concise.\\n\\n\"\n    Question: \"\"\" + question\n\nprint(chat(prompt))\n\nHere are 10 search keywords/phrases grouped into 3 themes:\n\n**Theme 1: LLMs in Biomedical Research**\n1. \"LLMs in biomedicine\"\n2. \"biomedical hypothesis generation\"\n3. \"large language models biomed\"\n\n**Theme 2: Hypothesis Generation and Acceleration**\n4. \"accelerating hypothesis generation\"\n5. \"biomedical hypothesis formation\"\n6. \"AI-driven hypothesis generation\"\n\n**Theme 3: LLM Applications and Techniques**\n7. \"LLM-based biomedical research tools\"\n8. \"natural language processing biomed\"\n9. \"language models for biomedical discovery\"\n10. \"biomedical text analysis with LLMs\"",
+    "crumbs": [
+      "01_introduction_llm"
+    ]
+  },
+  {
+    "objectID": "01_introduction_llm.html#wrap-up",
+    "href": "01_introduction_llm.html#wrap-up",
+    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
+    "section": "9) Wrap-up",
+    "text": "9) Wrap-up\nYou now have:\n\nA working Groq/OpenAI-compatible client\nThe chat message format (system, user, assistant)\nTwo helper functions used in later notebooks:\n\nchat(...) for iterative tasks with short memory\nchat_reset(...) to restart chat and set system prompt",
+    "crumbs": [
+      "01_introduction_llm"
+    ]
+  },
+  {
+    "objectID": "04_llms_for_code_and_data_analysis.html",
+    "href": "04_llms_for_code_and_data_analysis.html",
+    "title": "04) LLMs for coding + data cleaning (workshop style)",
+    "section": "",
+    "text": "Goal (25–30 min): learn a reliable workflow for using an LLM to write useful code for research — with one realistic data-cleaning example.\nBy the end you will be able to: - Ask for a function with a clear goal (inputs/outputs) - Ask for test code to validate it quickly - Ask for edge cases and improve robustness - Ask the LLM to explain the code line-by-line - Ask about failure modes (when your approach can mislead)",
+    "crumbs": [
+      "04_llms_for_code_and_data_analysis"
+    ]
+  },
+  {
+    "objectID": "04_llms_for_code_and_data_analysis.html#quick-setup",
+    "href": "04_llms_for_code_and_data_analysis.html#quick-setup",
+    "title": "04) LLMs for coding + data cleaning (workshop style)",
+    "section": "1) Quick setup",
+    "text": "1) Quick setup\n\n# remove # from the line below and run if packages are not installed \n# !pip install numpy pandas matplotlib openai requests\n\n\n# We import only what we need.\nimport os  # Environment variables for API keys and configuration\nfrom openai import OpenAI  # OpenAI-compatible client (works with Groq base_url too)\n\n\nPaste your Groq API key below\nYou can also change the model if you like.\nchat() can be used to have a continuous chat. Usage: chat(“Your question”)\nchat_reset() can used to delete the history and set a new system prompt. Usage: chat_reset(“You are a helper for a bioinformatician.”) or simply chat_reset()\n\n\n# --- Setup ---\n\n# paste your key here for the session.\nos.environ[\"GROQ_API_KEY\"] = \"\"  # &lt;-- Paste key for workshop only. Do NOT share publicly.\n\n# Keep the same model string used in the workshop.\nmodel = \"llama-3.3-70b-versatile\"  # You can change this later if needed.\n\n# Keep the same base URL pattern used in the workshop.\nos.environ[\"BASE_URL\"] = \"https://api.groq.com/openai/v1\"  # Groq's OpenAI-compatible endpoint\n\n\n\n\n# Create the client using the API key and base URL.\nclient = OpenAI(\n    api_key=os.environ[\"GROQ_API_KEY\"],  # Read the key from the environment variable\n    base_url=os.environ[\"BASE_URL\"],     # Read the base URL from the environment variable\n)\n\n# We keep a small conversation history in memory to make multi-turn interactions easy.\nchat_history = []\n\ndef chat_reset(system_prompt=\"You are a helpful research assistant.\"):\n    \"\"\"Reset chat history to a single system message (in-place).\"\"\"\n    chat_history[:] = [{\"role\": \"system\", \"content\": system_prompt}]\n\nchat_reset()\n\ndef chat(user_text, temperature=0.2, max_turns=8):\n    \"\"\"Multi-turn helper that keeps a short conversation history.\n    Use this instead of calling the API directly in most workshop cells.\n    \"\"\"\n    # Add the user's message to the conversation history.\n    chat_history.append({\"role\": \"user\", \"content\": user_text})\n    \n    # Keep only the system message plus the most recent turns (to manage context length).\n    system = chat_history[:1]  # First message is the system instruction\n    recent = chat_history[-(max_turns * 2):]  # Each turn has user+assistant, hence *2\n    window = system + recent  # Final message window sent to the model\n    \n    # Make the API call.\n    resp = client.chat.completions.create(\n        model=model,         # Model name\n        messages=window,     # Conversation history window\n        temperature=temperature,  # Randomness / creativity control\n    )\n    \n    # Extract the assistant's reply text.\n    reply = resp.choices[0].message.content\n    \n    # Store the assistant reply so the next call has memory.\n    chat_history.append({\"role\": \"assistant\", \"content\": reply})\n    \n    # Return just the text (simple and workshop-friendly).\n    return reply\n\n\n\nprint(\"Setup complete. `client`, `model`, and `chat()` are available.\")\nprint(\"Testing chat function...\")\nprint(\"User: Hello LLM\")\nprint(\"Assistant: \" + chat(\"Heloo LLM\"))  # Test the chat function \n\nchat_reset()  # Reset chat history for next cells\n\nSetup complete. `client`, `model`, and `chat()` are available.\nTesting chat function...\nUser: Hello LLM\nAssistant: Hello. It's nice to meet you. Is there something I can help you with or would you like to chat? I'm here to assist you with any questions or topics you'd like to discuss.",
+    "crumbs": [
+      "04_llms_for_code_and_data_analysis"
+    ]
+  },
+  {
+    "objectID": "04_llms_for_code_and_data_analysis.html#the-llm-coding-checklist-fast",
+    "href": "04_llms_for_code_and_data_analysis.html#the-llm-coding-checklist-fast",
+    "title": "04) LLMs for coding + data cleaning (workshop style)",
+    "section": "2) The LLM coding checklist (fast)",
+    "text": "2) The LLM coding checklist (fast)\nWhen you ask an LLM to write code, include:\n\nClear goal — what the function should do\nInputs/outputs — types, columns, shapes\nConstraints — e.g. do not modify inputs in place\nEdge cases — what could break it\nExplanation — ask it to explain the code back to you\nFailure modes — ask when this approach could mislead\nIterate — run the code, show errors/output, refine\n\n\nIn this notebook we will apply most of these using one data-cleaning example.",
+    "crumbs": [
+      "04_llms_for_code_and_data_analysis"
+    ]
+  },
+  {
+    "objectID": "04_llms_for_code_and_data_analysis.html#a-realistic-example-cleaning-a-messy-dataset",
+    "href": "04_llms_for_code_and_data_analysis.html#a-realistic-example-cleaning-a-messy-dataset",
+    "title": "04) LLMs for coding + data cleaning (workshop style)",
+    "section": "3) A realistic example: cleaning a messy dataset",
+    "text": "3) A realistic example: cleaning a messy dataset\nImagine you received a CSV from a collaborator. It contains: - missing values - numeric columns stored as strings - stray whitespace in text fields - an optional date column that might need parsing\nWe will use the LLM to: 1) generate a reusable cleaning function 2) generate a small test dataset 3) improve the function for edge cases 4) discuss failure modes (when cleaning choices can bias results)\n\n# --- Create a tiny \"messy\" dataset to motivate the task ---\n\nimport pandas as pd  # Tables\nimport numpy as np   # NaN values and numeric helpers\n\n# We build a small DataFrame with common messiness patterns.\ndf_raw = pd.DataFrame({\n    \"patient_id\": [\" 001\", \"002 \", \"003\", \"004\"],          # whitespace around IDs\n    \"age\": [\"34\", None, \"29\", \"unknown\"],                   # numeric stored as strings + missing + bad token\n    \"biomarker\": [1.2, np.nan, 0.9, 1.5],                         # numeric + NaN\n    \"group\": [\" control\", \"treatment \", None, \"control\"],   # whitespace + missing\n    \"date\": [\"2024-01-05\", \"05/01/2024\", \"\", None],         # mixed formats + empty + missing\n})\n\ndf_raw\n\n\n\n\n\n\n\n\npatient_id\nage\nbiomarker\ngroup\ndate\n\n\n\n\n0\n001\n34\n1.2\ncontrol\n2024-01-05\n\n\n1\n002\nNone\nNaN\ntreatment\n05/01/2024\n\n\n2\n003\n29\n0.9\nNone\n\n\n\n3\n004\nunknown\n1.5\ncontrol\nNone",
+    "crumbs": [
+      "04_llms_for_code_and_data_analysis"
+    ]
+  },
+  {
+    "objectID": "04_llms_for_code_and_data_analysis.html#step-a-ask-for-a-cleaning-function-prompt-code",
+    "href": "04_llms_for_code_and_data_analysis.html#step-a-ask-for-a-cleaning-function-prompt-code",
+    "title": "04) LLMs for coding + data cleaning (workshop style)",
+    "section": "4) Step A — Ask for a cleaning function (prompt → code)",
+    "text": "4) Step A — Ask for a cleaning function (prompt → code)\n\nPrompt pattern\nAsk for: - a function with a clear signature - no in-place modification - minimal dependencies - readable code\nBelow we ask the LLM to generate a function named clean_research_df(df).\n\n# --- Ask the LLM for a cleaning function ---\n\n# We reset chat history so earlier prompts don't influence this code generation.\nchat_reset(\"You are a senior Python data scientist. Write clean, readable code.\")\n\nprompt = \"\"\"\nWrite a Python function named clean_research_df(df) that cleans a pandas DataFrame.\n\nRequirements:\n1) Input: a pandas DataFrame.\n2) Output: a NEW cleaned DataFrame (do NOT modify the input df in place).\n3) Strip whitespace from ALL string/object columns.\n4) For numeric-looking columns that may contain strings (e.g., '34', '29', 'unknown'):\n   - convert to numeric with errors coerced to NaN.\n5) For numeric columns, fill missing values with the column mean.\n6) If a column named 'date' exists:\n   - parse it to datetime with errors coerced to NaT.\n7) Keep the code minimal and readable (no classes).\n\nReturn ONLY Python code (no markdown).\n\"\"\"\n\ngenerated_code = chat(prompt, temperature=0.2)\n\nprint(generated_code)\n\n```python\nimport pandas as pd\nimport numpy as np\n\ndef clean_research_df(df):\n    # Create a copy of the input DataFrame to avoid modifying it in place\n    cleaned_df = df.copy()\n\n    # Strip whitespace from all string/object columns\n    for col in cleaned_df.select_dtypes(include=['object']).columns:\n        cleaned_df[col] = cleaned_df[col].str.strip()\n\n    # Convert numeric-looking columns to numeric with errors coerced to NaN\n    for col in cleaned_df.select_dtypes(include=['object']).columns:\n        cleaned_df[col] = pd.to_numeric(cleaned_df[col], errors='coerce')\n\n    # Fill missing values in numeric columns with the column mean\n    for col in cleaned_df.select_dtypes(include=['int64', 'float64']).columns:\n        cleaned_df[col] = cleaned_df[col].fillna(cleaned_df[col].mean())\n\n    # Parse 'date' column to datetime with errors coerced to NaT if it exists\n    if 'date' in cleaned_df.columns:\n        cleaned_df['date'] = pd.to_datetime(cleaned_df['date'], errors='coerce')\n\n    return cleaned_df\n```\n\n\n\n\nRun the generated code\nCopy/paste the generated function into the cell below.\n\nIn a workshop, this copy/paste step is intentional: it makes it clear what code came from the model.\n\n\n# --- Paste the generated function here ---\n# After pasting, run this cell.\n\n# Example:\n# def clean_research_df(df):\n#     ...\n\nimport pandas as pd\nimport numpy as np\n\ndef clean_research_df(df):\n    # Create a copy of the input DataFrame to avoid modifying it in place\n    cleaned_df = df.copy()\n\n    # Strip whitespace from all string/object columns\n    for col in cleaned_df.select_dtypes(include=['object', 'string']).columns:\n        cleaned_df[col] = cleaned_df[col].str.strip()\n\n    # Convert numeric-looking columns to numeric with errors coerced to NaN\n    for col in cleaned_df.select_dtypes(include=['object', 'string']).columns:\n        cleaned_df[col] = pd.to_numeric(cleaned_df[col], errors='coerce')\n\n    # Fill missing values in numeric columns with the column mean\n    for col in cleaned_df.select_dtypes(include=['int64', 'float64']).columns:\n        cleaned_df[col] = cleaned_df[col].fillna(cleaned_df[col].mean())\n\n    # Parse 'date' column to datetime with errors coerced to NaT if it exists\n    if 'date' in cleaned_df.columns:\n        cleaned_df['date'] = pd.to_datetime(cleaned_df['date'], errors='coerce')\n\n    return cleaned_df\n\n\n\nApply the function\nOnce you have pasted the function, run it on df_raw.\n\n# --- Apply the cleaning function (after you pasted it above) ---\n\ndf_clean = clean_research_df(df_raw)\ndf_clean\n\n# pass\n\n\n\n\n\n\n\n\npatient_id\nage\nbiomarker\ngroup\ndate\n\n\n\n\n0\n1\n34.0\n1.2\nNaN\nNaT\n\n\n1\n2\n31.5\n1.2\nNaN\nNaT\n\n\n2\n3\n29.0\n0.9\nNaN\nNaT\n\n\n3\n4\n31.5\n1.5\nNaN\nNaT",
+    "crumbs": [
+      "04_llms_for_code_and_data_analysis"
+    ]
+  },
+  {
+    "objectID": "04_llms_for_code_and_data_analysis.html#step-b-ask-for-test-code",
+    "href": "04_llms_for_code_and_data_analysis.html#step-b-ask-for-test-code",
+    "title": "04) LLMs for coding + data cleaning (workshop style)",
+    "section": "5) Step B — Ask for test code",
+    "text": "5) Step B — Ask for test code\nTesting doesn’t have to be fancy. Even a small “toy” test dataset plus a few checks can catch many mistakes.\n\nPrompt pattern\nAsk for a minimal test that verifies: - input not modified - whitespace removed - numeric conversion works - NaNs filled for numeric columns - date parsed if present\n\n# --- Ask the LLM for simple test code ---\n\nchat_reset(\"You write short, practical test code for a workshop.\")\n\nprompt = \"\"\"\nWrite a small Python test snippet (no pytest) to validate a function clean_research_df(df).\n\nAssume pandas is imported.\n\nThe test should:\n1) Create a small messy DataFrame.\n2) Call clean_research_df(df).\n3) Print checks that demonstrate:\n   - the original DataFrame did not change\n   - whitespace stripping worked\n   - numeric conversion worked (bad tokens become NaN)\n   - missing numeric values were filled\n   - 'date' column was parsed to datetime if present\n\nReturn ONLY Python code (no markdown).\n\"\"\"\n\ntest_code = chat(prompt, temperature=0.2)\nprint(test_code)\n\n```python\nimport pandas as pd\nimport numpy as np\n\ndef clean_research_df(df):\n    df = df.copy()\n    df = df.apply(lambda x: x.str.strip() if x.dtype == 'object' else x)\n    df = df.apply(pd.to_numeric, errors='coerce')\n    df = df.fillna(0)\n    if 'date' in df.columns:\n        df['date'] = pd.to_datetime(df['date'], errors='coerce')\n    return df\n\n# Create a small messy DataFrame\ndf = pd.DataFrame({\n    'id': [' 1 ', ' 2 ', ' 3 '],\n    'name': [' John ', ' Mary ', ' David '],\n    'age': [' 25 ', ' thirty ', ' 30 '],\n    'date': ['2022-01-01', '2022-02-02', 'not a date']\n})\n\n# Store the original DataFrame\noriginal_df = df.copy()\n\n# Call clean_research_df(df)\nclean_df = clean_research_df(df)\n\n# Print checks\nprint(\"Original DataFrame did not change:\")\nprint(original_df.equals(df))\n\nprint(\"\\nWhitespace stripping worked:\")\nprint(clean_df['name'].equals(pd.Series(['John', 'Mary', 'David'])))\n\nprint(\"\\nNumeric conversion worked:\")\nprint(clean_df['age'].equals(pd.Series([25.0, np.nan, 30.0])))\n\nprint(\"\\nMissing numeric values were filled:\")\nprint(clean_df['age'].equals(pd.Series([25.0, 0.0, 30.0])))\n\nprint(\"\\n'date' column was parsed to datetime:\")\nprint(clean_df['date'].dtype == 'datetime64[ns]')\n```",
+    "crumbs": [
+      "04_llms_for_code_and_data_analysis"
+    ]
+  },
+  {
+    "objectID": "04_llms_for_code_and_data_analysis.html#step-c-edge-cases-ask-what-could-break",
+    "href": "04_llms_for_code_and_data_analysis.html#step-c-edge-cases-ask-what-could-break",
+    "title": "04) LLMs for coding + data cleaning (workshop style)",
+    "section": "6) Step C — Edge cases: ask what could break",
+    "text": "6) Step C — Edge cases: ask what could break\nAfter you run the function once, ask: - What edge cases could break this? - How should we handle them?\nExamples: - column already numeric - all values missing (mean is NaN) - mixed types (numbers + strings) - date formats inconsistent\n\n# --- Ask for edge cases + an improved version (FIXED: includes the actual function) ---\n\nimport inspect  # Lets us extract the actual function source code from the notebook\n\n# Reset chat so the model follows instructions cleanly (but we will INCLUDE the function code explicitly)\nchat_reset(\"You are careful. Identify edge cases and improve the function. Follow instructions exactly.\")\n\n# Try to capture the function code the user actually pasted/ran earlier in the notebook.\n# This avoids triple-quote issues and ensures the LLM is reasoning about the real function.\ntry:\n    function_code = inspect.getsource(clean_research_df)\nexcept Exception as e:\n    # Fallback: if inspect can't retrieve it (rare), ask the user to paste it.\n    function_code = \"PASTE clean_research_df(df) FUNCTION CODE HERE\"\n\nprompt = f\"\"\"\nYou are reviewing and improving a Python function.\n\nFUNCTION:\n{function_code}\n\nTASK:\n1) List 5 realistic edge cases that could break this function or produce surprising results.\n2) Provide an improved version of the function that handles those edge cases.\n\nOUTPUT FORMAT:\n- Bullet list of edge cases (short)\n- Then ONLY Python code for the improved function (no markdown, no extra commentary)\n\nRULES:\n- Keep code minimal and readable.\n- Do not add extra dependencies.\n- Do not change the function name (must remain clean_research_df).\n\"\"\"\n\nedge_case_response = chat(prompt, temperature=0.2)\nprint(edge_case_response)\n\n* Empty DataFrame\n* DataFrame with no string or object columns\n* DataFrame with no numeric columns\n* DataFrame with a 'date' column that is not in a parseable format\n* DataFrame with columns that have a mix of numeric and non-numeric data\n\n```python\nimport pandas as pd\nimport numpy as np\n\ndef clean_research_df(df):\n    if df.empty:\n        return df\n\n    cleaned_df = df.copy()\n\n    for col in cleaned_df.select_dtypes(include=['object', 'string']).columns:\n        cleaned_df[col] = cleaned_df[col].str.strip()\n\n    for col in cleaned_df.select_dtypes(include=['object', 'string']).columns:\n        try:\n            cleaned_df[col] = pd.to_numeric(cleaned_df[col], errors='coerce')\n        except ValueError:\n            pass\n\n    for col in cleaned_df.select_dtypes(include=['int64', 'float64']).columns:\n        if cleaned_df[col].notnull().any():\n            cleaned_df[col] = cleaned_df[col].fillna(cleaned_df[col].mean())\n        else:\n            cleaned_df[col] = cleaned_df[col].fillna(0)\n\n    if 'date' in cleaned_df.columns:\n        try:\n            cleaned_df['date'] = pd.to_datetime(cleaned_df['date'], errors='coerce')\n        except ValueError:\n            pass\n\n    return cleaned_df\n```",
+    "crumbs": [
+      "04_llms_for_code_and_data_analysis"
+    ]
+  },
+  {
+    "objectID": "04_llms_for_code_and_data_analysis.html#step-d-ask-the-model-to-explain-the-code",
+    "href": "04_llms_for_code_and_data_analysis.html#step-d-ask-the-model-to-explain-the-code",
+    "title": "04) LLMs for coding + data cleaning (workshop style)",
+    "section": "7) Step D — Ask the model to explain the code",
+    "text": "7) Step D — Ask the model to explain the code\nThis is a very effective habit. It helps you: - understand what the model wrote - spot silent errors - learn patterns you can reuse\n\n# --- Ask for an explanation of YOUR function (correct version) ---\n\nchat_reset(\"Explain code clearly to a researcher. Be concise.\")\n\n# Try to capture the function code the user actually pasted/ran earlier in the notebook.\n# This avoids triple-quote issues and ensures the LLM is reasoning about the real function.\ntry:\n    function_code = inspect.getsource(clean_research_df)\nexcept Exception as e:\n    # Fallback: if inspect can't retrieve it (rare), ask the user to paste it.\n    function_code = \"PASTE clean_research_df(df) FUNCTION CODE HERE\"\n    \n    \n\nprompt = f'''Explain the following Python function line by line in simple terms.\nAlso point out 3 places where silent mistakes could happen.\n\nFUNCTION:\n{function_code}\n'''\n\nexplanation = chat(prompt, temperature=0.2)\nprint(explanation)\n\nHere's a line-by-line explanation of the function:\n\n1. `def clean_research_df(df):` \n   - This line defines a function named `clean_research_df` that takes one argument, `df`, which is expected to be a pandas DataFrame.\n\n2. `cleaned_df = df.copy()` \n   - This line creates a copy of the input DataFrame `df` and assigns it to `cleaned_df`. This is done to avoid modifying the original DataFrame.\n\n3. `for col in cleaned_df.select_dtypes(include=['object', 'string']).columns:` \n   - This line starts a loop that will iterate over all columns in `cleaned_df` that contain string or object data types.\n\n4. `cleaned_df[col] = cleaned_df[col].str.strip()` \n   - Inside the loop, this line removes leading and trailing whitespace from all string values in the current column.\n\n5. `for col in cleaned_df.select_dtypes(include=['object', 'string']).columns:` \n   - This line starts another loop that will iterate over the same columns as before (those with string or object data types).\n\n6. `cleaned_df[col] = pd.to_numeric(cleaned_df[col], errors='coerce')` \n   - Inside the loop, this line attempts to convert the values in the current column to numeric values. If a value cannot be converted, it will be replaced with NaN (Not a Number).\n\n7. `for col in cleaned_df.select_dtypes(include=['int64', 'float64']).columns:` \n   - This line starts a loop that will iterate over all columns in `cleaned_df` that contain integer or floating-point data types.\n\n8. `cleaned_df[col] = cleaned_df[col].fillna(cleaned_df[col].mean())` \n   - Inside the loop, this line replaces any missing values (NaN) in the current column with the mean value of that column.\n\n9. `if 'date' in cleaned_df.columns:` \n   - This line checks if `cleaned_df` has a column named 'date'.\n\n10. `cleaned_df['date'] = pd.to_datetime(cleaned_df['date'], errors='coerce')` \n    - If the 'date' column exists, this line attempts to convert its values to datetime format. If a value cannot be converted, it will be replaced with NaT (Not a Time).\n\n11. `return cleaned_df` \n    - This line returns the cleaned DataFrame.\n\nAs for silent mistakes, here are three potential issues:\n\n1. **Overwriting numeric columns**: In the second loop, the function attempts to convert all string/object columns to numeric. However, if a column was previously converted to numeric in the first loop (because it contained numeric-looking strings), this conversion will overwrite the existing numeric values with NaN if they cannot be converted again. To avoid this, the function should only attempt to convert columns that were not already converted to numeric.\n\n2. **Mean calculation with NaN**: When calculating the mean of a column to fill missing values, the function will ignore NaN values. However, if a column contains only NaN values, the mean will also be NaN, and the function will not replace the NaN values. To avoid this, the function should check if a column contains only NaN values before attempting to calculate its mean.\n\n3. **Loss of original data types**: The function converts all string/object columns to numeric, which can lead to loss of original data types. For example, if a column contains a mix of numeric and non-numeric strings, the non-numeric strings will be replaced with NaN. To avoid this, the function should preserve the original data types of columns that cannot be converted to numeric.",
+    "crumbs": [
+      "04_llms_for_code_and_data_analysis"
+    ]
+  },
+  {
+    "objectID": "04_llms_for_code_and_data_analysis.html#step-e-failure-modes-research-thinking",
+    "href": "04_llms_for_code_and_data_analysis.html#step-e-failure-modes-research-thinking",
+    "title": "04) LLMs for coding + data cleaning (workshop style)",
+    "section": "8) Step E — Failure modes (research thinking)",
+    "text": "8) Step E — Failure modes (research thinking)\nCleaning choices can change your conclusions.\nFor example: - mean imputation can shrink variance - missingness might be systematic (not random) - stripping whitespace might merge categories unintentionally - date parsing might silently fail and create missing timestamps\nHere we ask the model to reason about when this approach could mislead.\n\n# --- Ask about failure modes ---\n\nchat_reset(\"You are a careful applied statistician. Focus on research risks.\")\n\n# Try to capture the function code the user actually pasted/ran earlier in the notebook.\n# This avoids triple-quote issues and ensures the LLM is reasoning about the real function.\ntry:\n    function_code = inspect.getsource(clean_research_df)\nexcept Exception as e:\n    # Fallback: if inspect can't retrieve it (rare), ask the user to paste it.\n    function_code = \"PASTE clean_research_df(df) FUNCTION CODE HERE\"\n    \n\nprompt = \"\"\"\nIn the cleaning approach we used (whitespace stripping, numeric coercion, mean imputation, date parsing):\n\n1) List 5 ways these choices could mislead downstream analysis.\n2) For each, suggest one simple mitigation a researcher could do quickly.\n\nKeep it practical and not too long.\n\nFUNCTION:\n{function_code}\n\"\"\"\n\nrisks = chat(prompt, temperature=0.2)\nprint(risks)\n\nHere are 5 ways the cleaning approach could mislead downstream analysis, along with a simple mitigation for each:\n\n1. **Loss of meaningful zeros**: Whitespace stripping and numeric coercion might remove meaningful zeros, leading to incorrect interpretations.\nMitigation: Verify that zeros are correctly preserved by checking a sample of data before and after cleaning.\n\n2. **Over-imputation**: Mean imputation might over-estimate or under-estimate values, especially for skewed distributions.\nMitigation: Use a simple visualization (e.g., histogram) to check the distribution of imputed values against the original data.\n\n3. **Date parsing errors**: Incorrect date parsing might lead to incorrect time-related analyses.\nMitigation: Spot-check a sample of parsed dates against the original data to ensure accuracy.\n\n4. **Masking of outliers**: Mean imputation might mask outliers, leading to incorrect models or conclusions.\nMitigation: Use a simple outlier detection method (e.g., boxplot) to identify potential outliers before imputing missing values.\n\n5. **Ignoring data context**: Automated cleaning might ignore important context-specific information (e.g., missing values indicating a specific condition).\nMitigation: Review the data cleaning process with a domain expert to ensure that context-specific information is preserved and correctly interpreted.\n\nThese mitigations can help researchers quickly identify and address potential issues in their data cleaning approach.",
+    "crumbs": [
+      "04_llms_for_code_and_data_analysis"
+    ]
+  },
+  {
+    "objectID": "04_llms_for_code_and_data_analysis.html#wrap-up",
+    "href": "04_llms_for_code_and_data_analysis.html#wrap-up",
+    "title": "04) LLMs for coding + data cleaning (workshop style)",
+    "section": "9) Wrap-up",
+    "text": "9) Wrap-up\nWhat you learned: - How to prompt for a function with a clear goal - How to prompt for quick test code - How to improve robustness via edge cases - How to use explanation + failure modes to build trust\nKey habit: treat the LLM like a fast collaborator. You still run the code, check outputs, and decide what is scientifically appropriate.",
+    "crumbs": [
+      "04_llms_for_code_and_data_analysis"
+    ]
+  },
+  {
     "objectID": "05_ethics_and_wrapup.html",
     "href": "05_ethics_and_wrapup.html",
     "title": "Responsible Use, Bias, and Academic Writing",
@@ -177,376 +547,6 @@
     "text": "8) Optional take-home ideas\nIf you want to extend this workflow later: - Increase corpus size (e.g., 50–200 papers) - Add PDF fetching + chunking (but keep it optional — PDF extraction can be messy) - Swap Top‑K scoring to embeddings / vector search - Use stricter JSON outputs (tool calling / JSON mode where supported)\nNext notebook: Structured extraction as a general technique (beyond arXiv).",
     "crumbs": [
       "03_literature_workflow_with_llms"
-    ]
-  },
-  {
-    "objectID": "01_introduction_llm.html",
-    "href": "01_introduction_llm.html",
-    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
-    "section": "",
-    "text": "In this notebook you will:",
-    "crumbs": [
-      "01_introduction_llm"
-    ]
-  },
-  {
-    "objectID": "01_introduction_llm.html#imports",
-    "href": "01_introduction_llm.html#imports",
-    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
-    "section": "1) Imports",
-    "text": "1) Imports\nWe keep imports minimal and explicit so it’s clear what each library is used for.\n\n# remove # from the line below and run if packages are not installed \n# !pip install numpy pandas matplotlib openai requests\n\n\n# Standard library: access environment variables safely\nimport os  # used for storing API keys and configuration\n\n# OpenAI Python client (works with Groq because Groq exposes an OpenAI-compatible endpoint)\nfrom openai import OpenAI  # used to create a client and call chat completions",
-    "crumbs": [
-      "01_introduction_llm"
-    ]
-  },
-  {
-    "objectID": "01_introduction_llm.html#configuration-api-key-model",
-    "href": "01_introduction_llm.html#configuration-api-key-model",
-    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
-    "section": "2) Configuration (API key + model)",
-    "text": "2) Configuration (API key + model)\n⚠️ Keep your API key private.\nIn a real project, it’s better to set keys as environment variables (not in a notebook).\nFor this workshop, we keep the pattern simple and consistent with the existing course.\n\n# Paste your Groq API key below (between quotes).\n# NOTE: This is not a secure way of entering an API key because it becomes visible in the notebook.\n# For safer setups, prefer environment variables or secret managers (especially if sharing notebooks).\n\nos.environ[\"GROQ_API_KEY\"] = \"\"  # &lt;-- replace with your key.\nmodel = \"llama-3.3-70b-versatile\"  # Select a model: https://console.groq.com/docs/models\nos.environ[\"BASE_URL\"] = \"https://api.groq.com/openai/v1\"  # Groq uses an OpenAI-compatible API base URL.",
-    "crumbs": [
-      "01_introduction_llm"
-    ]
-  },
-  {
-    "objectID": "01_introduction_llm.html#create-a-client",
-    "href": "01_introduction_llm.html#create-a-client",
-    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
-    "section": "3) Create a client",
-    "text": "3) Create a client\nThe OpenAI client can point to different providers as long as they implement the OpenAI API. Here we point it to Groq’s base URL and authenticate using your key.\n\n# Read configuration from the environment (so it’s in one place).\n# If the key is missing, calls will fail with an authentication error.\napi_key = os.environ[\"GROQ_API_KEY\"]  # your Groq API key (string)\nbase_url = os.environ[\"BASE_URL\"]     # Groq's OpenAI-compatible endpoint base URL\n\n# Create a client instance.\n# This object will be reused for the rest of the workshop.\nclient = OpenAI(\n    api_key=api_key,   # authentication\n    base_url=base_url  # provider endpoint\n)\n\n# Quick sanity check: print a short confirmation message.\nprint(\"✅ Client initialized\")\n\n✅ Client initialized",
-    "crumbs": [
-      "01_introduction_llm"
-    ]
-  },
-  {
-    "objectID": "01_introduction_llm.html#your-first-chat-call",
-    "href": "01_introduction_llm.html#your-first-chat-call",
-    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
-    "section": "4) Your first chat call",
-    "text": "4) Your first chat call\nA chat call is a list of messages. Each message is a dictionary with:\n\nrole: \"system\", \"user\", or \"assistant\"\ncontent: the text for that message\n\nThe model reads the messages and returns the assistant’s next reply.\n\n# Build a minimal message list.\n# - The system message sets the style/rules.\n# - The user message is your question/instruction.\nmessages = [\n    {\"role\": \"system\", \"content\": \"You are a helpful research assistant. Be concise.\"},  # behavior\n    {\"role\": \"user\", \"content\": \"Explain what a large language model (LLM) is in two sentences.\"},  # task\n]\n\n# Call the chat completion endpoint.\nresponse = client.chat.completions.create(\n    model=model,        # which model to use\n    messages=messages,  # conversation so far\n    temperature=0.2,    # low randomness for factual, stable answers\n)\n\n# Extract the assistant text safely (this is the part you usually want).\nreply_text = response.choices[0].message.content  # the generated assistant reply\nprint(reply_text)  # display the result\n\nA large language model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, typically trained on vast amounts of text data to generate human-like responses. LLMs use complex algorithms and neural networks to learn patterns and relationships in language, enabling them to perform tasks such as language translation, text summarization, and conversation generation.",
-    "crumbs": [
-      "01_introduction_llm"
-    ]
-  },
-  {
-    "objectID": "01_introduction_llm.html#optional-inspect-the-response-object",
-    "href": "01_introduction_llm.html#optional-inspect-the-response-object",
-    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
-    "section": "5) (Optional) Inspect the response object",
-    "text": "5) (Optional) Inspect the response object\nSometimes you want to debug: - which model was used - token usage / metadata (if provided) - full structured payload\n\n# Many modern OpenAI-style clients support `model_dump()` (Pydantic-style).\n# If it's not available, we fall back to casting to a plain dict (best-effort).\npayload = response.model_dump() if hasattr(response, \"model_dump\") else dict(response)  # safe conversion\n\n# Print top-level keys so you know what's inside without dumping everything.\nprint(\"Top-level keys:\", list(payload.keys()))  # quick peek\n\n# Print the reported model name if available.\nprint(\"Model used:\", payload.get(\"model\", \"unknown\"))  # model identifier (string)\n\n# Print token usage if the provider returns it (not all providers do).\nusage = payload.get(\"usage\", None)  # usage metadata (may be missing)\nprint(\"Usage:\", usage)  # token counts, etc. (or None)\n\nTop-level keys: ['id', 'choices', 'created', 'model', 'object', 'service_tier', 'system_fingerprint', 'usage', 'usage_breakdown', 'x_groq']\nModel used: llama-3.3-70b-versatile\nUsage: {'completion_tokens': 75, 'prompt_tokens': 61, 'total_tokens': 136, 'completion_tokens_details': None, 'prompt_tokens_details': None, 'queue_time': 0.010413828, 'prompt_time': 0.002431792, 'completion_time': 0.151746588, 'total_time': 0.15417838}",
-    "crumbs": [
-      "01_introduction_llm"
-    ]
-  },
-  {
-    "objectID": "01_introduction_llm.html#helper-functions-the-workshop-style",
-    "href": "01_introduction_llm.html#helper-functions-the-workshop-style",
-    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
-    "section": "6) Helper functions (the workshop style)",
-    "text": "6) Helper functions (the workshop style)\nFrom now on we’ll use helper functions so:\n\nnotebooks stay clean\nyou focus on research tasks, not API details\nlater notebooks can reuse the same interface\n\nWe provide two helpers:\n\nchat(...) — stateful, keeps a short conversation history in this notebook\nchat_reset(...) — deletes history and sets system prompt\n\nThis keeps things simple: participants only need to call chat() without worrying about API details.\n\n\n\n# Create the client using the API key and base URL.\nclient = OpenAI(\n    api_key=os.environ[\"GROQ_API_KEY\"],  # Read the key from the environment variable\n    base_url=os.environ[\"BASE_URL\"],     # Read the base URL from the environment variable\n)\n\n# We keep a small conversation history in memory to make multi-turn interactions easy.\nchat_history = []\n\ndef chat_reset(system_prompt=\"You are a helpful research assistant.\"):\n    \"\"\"Reset chat history to a single system message (in-place).\"\"\"\n    chat_history[:] = [{\"role\": \"system\", \"content\": system_prompt}]\n\nchat_reset()\n\ndef chat(user_text, temperature=0.2, max_turns=8):\n    \"\"\"Multi-turn helper that keeps a short conversation history.\n    Use this instead of calling the API directly in most workshop cells.\n    \"\"\"\n    # Add the user's message to the conversation history.\n    chat_history.append({\"role\": \"user\", \"content\": user_text})\n    \n    # Keep only the system message plus the most recent turns (to manage context length).\n    system = chat_history[:1]  # First message is the system instruction\n    recent = chat_history[-(max_turns * 2):]  # Each turn has user+assistant, hence *2\n    window = system + recent  # Final message window sent to the model\n    \n    # Make the API call.\n    resp = client.chat.completions.create(\n        model=model,         # Model name\n        messages=window,     # Conversation history window\n        temperature=temperature,  # Randomness / creativity control\n    )\n    \n    # Extract the assistant's reply text.\n    reply = resp.choices[0].message.content\n    \n    # Store the assistant reply so the next call has memory.\n    chat_history.append({\"role\": \"assistant\", \"content\": reply})\n    \n    # Return just the text (simple and workshop-friendly).\n    return reply\n\n\n\nprint(\"Setup complete. `client`, `model`, and `chat()` are available.\")\nprint(\"Testing chat function...\")\nprint(\"User: Hello LLM\")\nprint(\"Assistant: \" + chat(\"Heloo LLM\"))  # Test the chat function \n\nchat_reset()  # Reset chat history for next cells\n\nSetup complete. `client`, `model`, and `chat()` are available.\nTesting chat function...\nUser: Hello LLM\nAssistant: Hello. It's nice to meet you. Is there something I can help you with or would you like to chat? I'm here to assist you with any questions or topics you'd like to discuss.",
-    "crumbs": [
-      "01_introduction_llm"
-    ]
-  },
-  {
-    "objectID": "01_introduction_llm.html#quick-exercises",
-    "href": "01_introduction_llm.html#quick-exercises",
-    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
-    "section": "8) Quick exercises",
-    "text": "8) Quick exercises\n\nExercise A — rewrite for clarity\nProvide a sentence from your current draft and ask for a clearer version.\n\n\nExercise B — extract structured fields\nGive a short abstract and ask for: aim, methods, datasets, main result, limitation.\n\n\nExercise C — propose search keywords\nAsk the model to propose arXiv/Google Scholar keywords for a research question.\n\n# Exercise A: rewrite for clarity (replace the text with your own).\ntext = \"This paper introduces a method that can potentially improve performance in some tasks.\"  # example sentence\nprompt = \"Rewrite this sentence to be clearer and more specific, without adding new facts:\\n\\n\" + text\nprint(chat(prompt\n    \n))\n\nThis paper presents a method that may enhance performance in certain specific tasks.\n\n\n\n# Exercise B: extract structured fields from a short abstract-like paragraph.\nabstract = (\n    \"We propose a new approach to classify cell types from single-cell RNA sequencing data using self-supervised learning. \"\n    \"Across three public datasets, our method improves macro-F1 by 3–5% compared to strong baselines. \"\n    \"However, performance drops on rare cell populations with limited labels.\"\n)  # small example text\n\nprompt = (\n    \"Extract the following fields as JSON with keys:\\n\"\n    \"- aim\\n- methods\\n- datasets\\n- main_result\\n- limitation\\n\\n\"\n    \"Text:\\n\" + abstract\n)  # prompt that requests structured output\n\nprint(chat(prompt))  # run extraction\n\nHere are the extracted fields as JSON:\n\n```\n{\n  \"aim\": \"classify cell types from single-cell RNA sequencing data using self-supervised learning\",\n  \"methods\": \"self-supervised learning\",\n  \"datasets\": \"three public datasets\",\n  \"main_result\": \"improves macro-F1 by 3–5% compared to strong baselines\",\n  \"limitation\": \"performance drops on rare cell populations with limited labels\"\n}\n```\n\n\n\n# Exercise C: generate search keywords for a literature review.\nquestion = \"How are LLMs used to accelerate hypothesis generation in biomedical research?\"  # example topic\n\nprompt = \"\"\"Propose 8–12 search keywords/phrases for arXiv and Google Scholar. \n    Group them into 3 themes and keep them concise.\\n\\n\"\n    Question: \"\"\" + question\n\nprint(chat(prompt\n\n))\n\nHere are 10 search keywords/phrases grouped into 3 themes:\n\n**Theme 1: LLMs in Biomedical Research**\n1. \"LLMs in biomedicine\"\n2. \"biomedical hypothesis generation\"\n3. \"large language models biomed\"\n\n**Theme 2: Hypothesis Generation and Acceleration**\n4. \"accelerating hypothesis generation\"\n5. \"biomedical hypothesis formation\"\n6. \"AI-driven hypothesis generation\"\n\n**Theme 3: LLM Applications and Techniques**\n7. \"LLM-based biomedical research tools\"\n8. \"natural language processing biomed\"\n9. \"language models for biomedical discovery\"\n10. \"biomedical text analysis with LLMs\"",
-    "crumbs": [
-      "01_introduction_llm"
-    ]
-  },
-  {
-    "objectID": "01_introduction_llm.html#wrap-up",
-    "href": "01_introduction_llm.html#wrap-up",
-    "title": "01 — Introduction to LLMs for Research (Hands‑on)",
-    "section": "9) Wrap-up",
-    "text": "9) Wrap-up\nYou now have:\n\nA working Groq/OpenAI-compatible client\nThe chat message format (system, user, assistant)\nTwo helper functions used in later notebooks:\n\nchat(...) for iterative tasks with short memory\nchat_reset(...) to restart chat and set system prompt",
-    "crumbs": [
-      "01_introduction_llm"
-    ]
-  },
-  {
-    "objectID": "00_workshop_guide.html",
-    "href": "00_workshop_guide.html",
-    "title": "Large Language Models for Research",
-    "section": "",
-    "text": "A workshop by: QCIF\nhttps://www.qcif.edu.au/",
-    "crumbs": [
-      "00_workshop_guide"
-    ]
-  },
-  {
-    "objectID": "00_workshop_guide.html#install-python-recommended-version-3.10-or-newer",
-    "href": "00_workshop_guide.html#install-python-recommended-version-3.10-or-newer",
-    "title": "Large Language Models for Research",
-    "section": "🐍 1. Install Python (Recommended: Version 3.10 or newer)",
-    "text": "🐍 1. Install Python (Recommended: Version 3.10 or newer)\n\nWindows\n\nGo to the official Python website: https://www.python.org/downloads/\nDownload the latest Python 3.x installer.\nRun the installer and check the box that says:\n\n✅ Add Python to PATH\n\nChoose Install Now and follow the prompts.\n\nTo verify installation, open Command Prompt (cmd) and type:\npython --version\nYou should see something like:\nPython 3.11.6\n\n\n\nmacOS / Linux\nMost systems come with Python preinstalled. You can check your version:\npython3 --version\nIf Python is not installed, install it using your system package manager:\nmacOS (Homebrew):\nbrew install python\nUbuntu / Debian:\nsudo apt update && sudo apt install python3 python3-pip -y",
-    "crumbs": [
-      "00_workshop_guide"
-    ]
-  },
-  {
-    "objectID": "00_workshop_guide.html#install-jupyterlab",
-    "href": "00_workshop_guide.html#install-jupyterlab",
-    "title": "Large Language Models for Research",
-    "section": "📦 2. Install jupyterlab",
-    "text": "📦 2. Install jupyterlab\nOnce Python is installed, you can install packages using pip (Python’s package manager).\nRun this command in your terminal or command prompt:\npip install jupyterlab\n\njupyterlab is used for running notebooks interactively.",
-    "crumbs": [
-      "00_workshop_guide"
-    ]
-  },
-  {
-    "objectID": "00_workshop_guide.html#download-notebooks",
-    "href": "00_workshop_guide.html#download-notebooks",
-    "title": "Large Language Models for Research",
-    "section": "📦 3. Download notebooks",
-    "text": "📦 3. Download notebooks\nDownload notebooks.zip from the left menu of workshop website and extract to your desired folder.",
-    "crumbs": [
-      "00_workshop_guide"
-    ]
-  },
-  {
-    "objectID": "00_workshop_guide.html#launch-jupyterlab",
-    "href": "00_workshop_guide.html#launch-jupyterlab",
-    "title": "Large Language Models for Research",
-    "section": "🧠 4. Launch JupyterLab",
-    "text": "🧠 4. Launch JupyterLab\nOpen terminal or command prompt and navigate to the folder containing your workshop notebooks (or navigate then open a terminal), then run:\npython -m jupyter lab\nThis will open a new tab in your default web browser with the JupyterLab interface.\nYou can then click on any notebook to open it.",
-    "crumbs": [
-      "00_workshop_guide"
-    ]
-  },
-  {
-    "objectID": "00_workshop_guide.html#running-on-hpc",
-    "href": "00_workshop_guide.html#running-on-hpc",
-    "title": "Large Language Models for Research",
-    "section": "⚙️ 5. Running on HPC",
-    "text": "⚙️ 5. Running on HPC\nIf you’re using a hosted JupyterLab instance on HPC infrastructure, Python and most dependencies are already installed. You typically only need to:\n\nOpen the web-based JupyterLab interface.\nLoad the correct Python environment (via module or dropdown).\ndownload and extract notebooks.zip from the left menu of the website.\nUpload notebooks to the HPC’s jupyter lab.\nRun 00_setup_guide.ipynb (this notebook).",
-    "crumbs": [
-      "00_workshop_guide"
-    ]
-  },
-  {
-    "objectID": "00_workshop_guide.html#install-required-python-packages",
-    "href": "00_workshop_guide.html#install-required-python-packages",
-    "title": "Large Language Models for Research",
-    "section": "📦 6. Install Required Python Packages",
-    "text": "📦 6. Install Required Python Packages\nIf the packages below are not installed uncomment (remove #) and run the cell below to install packages:\n\n# remove # from the line below and run if packages are not installed \n# !pip install numpy pandas matplotlib openai requests\n\nNote if you are running this in a terminal you need to remove “!” from teh start of the command. This will install:\n\nnumpy – for handling arrays.\npandas – for handling data.\nmatplotlib – for plotting.\nopenai – to connect to Groq or OpenAI-compatible APIs.\nrequests – for fetching data from APIs.\n\nTo verify installation, run the code below:\n\nimport importlib.metadata\n\npackages = [\"numpy\", \"pandas\", \"matplotlib\", \"openai\", \"requests\"]\nfor pkg in packages:\n    try:\n        print(f\"{pkg}: {importlib.metadata.version(pkg)}\")\n    except importlib.metadata.PackageNotFoundError:\n        print(f\"{pkg}: not installed\")\n\nnumpy: 2.3.3\npandas: 2.3.3\nmatplotlib: 3.10.7\nopenai: 2.6.0\nrequests: 2.32.5",
-    "crumbs": [
-      "00_workshop_guide"
-    ]
-  },
-  {
-    "objectID": "00_workshop_guide.html#get-a-groq-api-key-to-access-a-llm-online",
-    "href": "00_workshop_guide.html#get-a-groq-api-key-to-access-a-llm-online",
-    "title": "Large Language Models for Research",
-    "section": "⚙️ 7: Get a Groq API key to access a llm online",
-    "text": "⚙️ 7: Get a Groq API key to access a llm online\n\nSign In to Your Groq Account. Go to https://console.groq.com/login.\nIf you already have an account, sign in.\n\nIf not, create a new account and complete the verification process.\n\nGenerate Your Groq API Key: 1. Navigate to the API Keys section from the left menu.\n2. Click Create API Key. 3. In the pop-up window, enter a descriptive name for your key (e.g., AI Content Labs) in the Display name for the key field.\n- This helps you easily identify the key later.\n4. Click Submit.\n5. Copy the displayed API key — it will only be shown once.\n- Save it securely for future use.",
-    "crumbs": [
-      "00_workshop_guide"
-    ]
-  },
-  {
-    "objectID": "00_workshop_guide.html#summary",
-    "href": "00_workshop_guide.html#summary",
-    "title": "Large Language Models for Research",
-    "section": "✅ Summary",
-    "text": "✅ Summary\n\nInstall Python ≥ 3.10\nUse pip to install required packages\nRun jupyter lab\nVerify everything by opening the example notebooks\nGet a Groq API key",
-    "crumbs": [
-      "00_workshop_guide"
-    ]
-  },
-  {
-    "objectID": "02_theory_and_concepts.html",
-    "href": "02_theory_and_concepts.html",
-    "title": "02) Core concepts",
-    "section": "",
-    "text": "Goal (15 min): understand the practical concepts you need to use LLMs responsibly in research.\nBy the end you will be able to: - Explain (and detect) hallucinations - Understand why context matters (and how to manage it) - Use temperature intentionally (without overthinking the maths) - Write prompts that produce structured, checkable outputs",
-    "crumbs": [
-      "02_theory_and_concepts"
-    ]
-  },
-  {
-    "objectID": "02_theory_and_concepts.html#quick-setup",
-    "href": "02_theory_and_concepts.html#quick-setup",
-    "title": "02) Core concepts",
-    "section": "1) Quick setup",
-    "text": "1) Quick setup\n\n# remove # from the line below and run if packages are not installed \n# !pip install numpy pandas matplotlib openai requests\n\n\n# We import only what we need.\nimport os  # Environment variables for API keys and configuration\nfrom openai import OpenAI  # OpenAI-compatible client (works with Groq base_url too)\n\n\nPaste your Groq API key below\nYou can also change the model if you like.\nchat() can be used to have a continuous chat. Usage: chat(“Your question”)\nchat_reset() can used to delete the history and set a new system prompt. Usage: chat_reset(“You are a helper for a bioinformatician.”) or simply chat_reset()\n\n\n# --- Setup ---\n\n# paste your key here for the session.\nos.environ[\"GROQ_API_KEY\"] = \"\"  # &lt;-- Paste key for workshop only. Do NOT share publicly.\n\n# Keep the same model string used in the workshop.\nmodel = \"llama-3.3-70b-versatile\"  # You can change this later if needed.\n\n# Keep the same base URL pattern used in the workshop.\nos.environ[\"BASE_URL\"] = \"https://api.groq.com/openai/v1\"  # Groq's OpenAI-compatible endpoint\n\n\n\n\n# Create the client using the API key and base URL.\nclient = OpenAI(\n    api_key=os.environ[\"GROQ_API_KEY\"],  # Read the key from the environment variable\n    base_url=os.environ[\"BASE_URL\"],     # Read the base URL from the environment variable\n)\n\n# We keep a small conversation history in memory to make multi-turn interactions easy.\nchat_history = []\n\ndef chat_reset(system_prompt=\"You are a helpful research assistant.\"):\n    \"\"\"Reset chat history to a single system message (in-place).\"\"\"\n    chat_history[:] = [{\"role\": \"system\", \"content\": system_prompt}]\n\nchat_reset()\n\ndef chat(user_text, temperature=0.2, max_turns=8):\n    \"\"\"Multi-turn helper that keeps a short conversation history.\n    Use this instead of calling the API directly in most workshop cells.\n    \"\"\"\n    # Add the user's message to the conversation history.\n    chat_history.append({\"role\": \"user\", \"content\": user_text})\n    \n    # Keep only the system message plus the most recent turns (to manage context length).\n    system = chat_history[:1]  # First message is the system instruction\n    recent = chat_history[-(max_turns * 2):]  # Each turn has user+assistant, hence *2\n    window = system + recent  # Final message window sent to the model\n    \n    # Make the API call.\n    resp = client.chat.completions.create(\n        model=model,         # Model name\n        messages=window,     # Conversation history window\n        temperature=temperature,  # Randomness / creativity control\n    )\n    \n    # Extract the assistant's reply text.\n    reply = resp.choices[0].message.content\n    \n    # Store the assistant reply so the next call has memory.\n    chat_history.append({\"role\": \"assistant\", \"content\": reply})\n    \n    # Return just the text (simple and workshop-friendly).\n    return reply\n\n\n\nprint(\"Setup complete. `client`, `model`, and `chat()` are available.\")\nprint(\"Testing chat function...\")\nprint(\"User: Hello LLM\")\nprint(\"Assistant: \" + chat(\"Heloo LLM\"))  # Test the chat function \n\nchat_reset()  # Reset chat history for next cells\n\nSetup complete. `client`, `model`, and `chat()` are available.\nTesting chat function...\nUser: Hello LLM\nAssistant: Hello. It's nice to meet you. Is there something I can help you with or would you like to chat? I'm here to assist you with any questions or topics you'd like to discuss.",
-    "crumbs": [
-      "02_theory_and_concepts"
-    ]
-  },
-  {
-    "objectID": "02_theory_and_concepts.html#hallucinations-what-they-are-and-how-to-handle-them",
-    "href": "02_theory_and_concepts.html#hallucinations-what-they-are-and-how-to-handle-them",
-    "title": "02) Core concepts",
-    "section": "2) Hallucinations (what they are and how to handle them)",
-    "text": "2) Hallucinations (what they are and how to handle them)\nHallucination = the model produces a confident-looking statement that is not grounded in your provided context.\nIn research, this shows up as: - invented citations / DOIs - incorrect numbers or claims - fabricated details about a paper that sounds plausible\nRule of thumb: treat the model as a drafting and reasoning tool, not as an authoritative source. Always verify critical facts against primary sources.\n\n2.1 A quick demonstration\nWe will ask the model for very specific facts without giving it any sources. Then we will ask it to provide a verification plan.\n\nThe point is not to “trick” the model. The point is to learn the habit: ask for checks.\n\n\n# --- Hallucination demo ---\n\n# We ask a very specific question *without giving any citations or context*.\n# In real research, this is where hallucinations can sneak in.\nquestion = \"What is the exact DOI of the first paper that introduced the Transformer architecture? Provide the DOI and the full citation.\"\n\n# We use a low temperature to reduce randomness (but hallucinations can still happen).\nanswer = chat(question, temperature=0.2)\n\nprint(answer)\n\nThe first paper that introduced the Transformer architecture is:\n\n\"Attention Is All You Need\" by Vaswani et al.\n\nThe DOI of this paper is: 10.5555/3295222.3295349\n\nThe full citation is:\nVaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... & Polosukhin, I. (2017). Attention is all you need. In Advances in neural information processing systems (pp. 5998-6008).\n\nHowever, a more commonly used citation format is:\n\nVaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... & Polosukhin, I. (2017). Attention is all you need. Advances in Neural Information Processing Systems, 30.\n\n\n\n\n2.2 A better pattern: ask for uncertainty + a verification plan\nInstead of trusting the first answer, ask the model to: - state what it knows vs. guesses - propose how to verify - provide queries you could run in Google Scholar / arXiv / Semantic Scholar\nThis turns the model into a research assistant rather than a source of truth.\n\n# --- Verification plan prompt ---\n\nprompt = \"\"\"\nYou may be wrong. Do NOT guess.\n1) Say whether you are certain about the DOI (yes/no).\n2) If not certain, propose a verification plan with 3-5 concrete steps.\n3) Provide 3 search queries I can paste into Google Scholar.\n\"\"\"\n\nplan = chat(prompt, temperature=0.2)\n\nprint(plan)\n\n1. No, I am not certain about the DOI.\n\n2. To verify the DOI, I propose the following verification plan:\n* Step 1: Check the official NeurIPS (Conference on Neural Information Processing Systems) website for the paper \"Attention Is All You Need\" by Vaswani et al.\n* Step 2: Search for the paper on academic databases such as Google Scholar, arXiv, or ResearchGate to find the correct DOI.\n* Step 3: Verify the DOI on the paper's official publication page or through a reliable citation manager like Crossref or PubMed.\n* Step 4: Cross-check the DOI with other trusted sources, such as the authors' personal websites or institutional repositories.\n* Step 5: If necessary, contact the authors or the publication team to confirm the correct DOI.\n\n3. Here are three search queries you can paste into Google Scholar:\n* \"Attention Is All You Need\" Vaswani\n* \"Vaswani et al. 2017 Attention Is All You Need\"\n* \"Transformer architecture introduction paper Vaswani\"",
-    "crumbs": [
-      "02_theory_and_concepts"
-    ]
-  },
-  {
-    "objectID": "02_theory_and_concepts.html#context-why-it-matters",
-    "href": "02_theory_and_concepts.html#context-why-it-matters",
-    "title": "02) Core concepts",
-    "section": "3) Context: why it matters",
-    "text": "3) Context: why it matters\nLLMs generate answers based on the messages you provide (system + conversation history + any pasted content).\nIf you don’t provide: - the relevant paragraphs - the table / figure description - the definitions / constraints\n…then the model must guess, which increases error risk.\nTwo practical tricks: 1) Keep the prompt short and specific 2) Provide just enough context (not everything)\n\n3.1 Context budgeting (a practical habit)\nBelow is a template you can reuse: - Task: what you want - Context: pasted text (only the relevant parts) - Output format: what you want back (table, bullets, JSON) - Checks: ask the model to quote supporting lines / highlight uncertainty\n\n# --- Context budgeting template ---\n\ntask = \"Summarise the key claim and the main limitation.\"\ncontext = \"\"\"\n[Paste 1-3 relevant paragraphs here. Keep it short.]\n\"\"\"\n\nprompt = f\"\"\"\nTASK:\n{task}\n\nCONTEXT:\n{context}\n\nOUTPUT FORMAT:\n- Key claim (1 sentence)\n- Main limitation (1 sentence)\n- 1 quote from the context that supports the key claim\n- 1 quote from the context that supports the limitation\n\nIf the context is insufficient, say what is missing.\n\"\"\"\n\nprint(chat(prompt, temperature=0.2))\n\nThere is no context provided. To complete the task, I need 1-3 relevant paragraphs from the paper \"Attention Is All You Need\" by Vaswani et al. Please provide the context, and I will be happy to assist you in summarizing the key claim and the main limitation.",
-    "crumbs": [
-      "02_theory_and_concepts"
-    ]
-  },
-  {
-    "objectID": "02_theory_and_concepts.html#temperature-practical-guidance",
-    "href": "02_theory_and_concepts.html#temperature-practical-guidance",
-    "title": "02) Core concepts",
-    "section": "4) Temperature: practical guidance",
-    "text": "4) Temperature: practical guidance\nTemperature controls randomness in the model’s outputs.\nPractical defaults: - 0.0–0.3: summarisation, extraction, careful writing - 0.4–0.8: brainstorming, alternatives, creative ideation - 0.9+: rarely needed for research workflows\n\nIn this workshop, we mostly stay around 0.2.\n\n\n# --- Temperature demo (short) ---\n\nprompt = \"Give me one concise sentence describing how RAG helps with literature review.\"\n\n# Low temperature: more consistent phrasing.\nprint(\"Temperature 0.05:\")\nfor i in range(3):\n    chat_reset()\n    print(chat(prompt, temperature=0.05))\n\n# Higher temperature: more variation / creativity.\nprint(\"\\nTemperature 0.95:\")\nfor i in range(3):\n    chat_reset()\n    print(chat(prompt, temperature=0.95))\n\nTemperature 0.05:\nRAG (Retrieval-Augmented Generation) assists with literature review by efficiently retrieving and summarizing relevant existing research, saving time and effort in identifying key studies and synthesizing findings.\nRAG (Retrieval-Augmented Generation) assists with literature review by efficiently retrieving and summarizing relevant existing research, saving time and effort in identifying key studies and synthesizing findings.\nRAG (Retrieval-Augmented Generation) assists with literature review by efficiently retrieving and summarizing relevant existing research, saving time and effort in identifying key studies and synthesizing findings.\n\nTemperature 0.95:\nRAG (Retrieval-Augmented Generator) helps with literature review by efficiently searching and summarizing relevant papers, allowing researchers to quickly identify key findings and gaps in existing research.\nRAG (Retrieve, Augment, Generate) assists with literature reviews by efficiently retrieving relevant papers, augmenting the search with additional sources, and generating summaries to help researchers quickly identify key findings and trends.\nRAG (Retrieval-Augmented Generator) assists with literature reviews by efficiently retrieving and summarizing relevant existing research, saving time and effort in identifying and synthesizing key findings and concepts.",
-    "crumbs": [
-      "02_theory_and_concepts"
-    ]
-  },
-  {
-    "objectID": "02_theory_and_concepts.html#prompt-patterns-that-work-in-research",
-    "href": "02_theory_and_concepts.html#prompt-patterns-that-work-in-research",
-    "title": "02) Core concepts",
-    "section": "5) Prompt patterns that work in research",
-    "text": "5) Prompt patterns that work in research\nMost failures in LLM usage come from underspecified prompts.\nHere are reliable patterns: 1) Role + task + constraints 2) Ask for structured outputs (tables / JSON / bullet fields) 3) Ask for caveats (“what could be wrong?”) 4) Ask for sources (“cite from the provided context”), or explicitly say “no external claims”\n\n5.1 Structured output example\nIn later notebooks, we will extract structured fields from abstracts. Here is the basic pattern with a small example text.\n\n# --- Structured output example ---\n\nabstract = \"\"\"\nWe propose a method for improving retrieval-augmented generation by re-ranking passages using a lightweight classifier.\nAcross three benchmarks, we show improved factual consistency and a reduction in citation errors.\nLimitations include dependence on retrieval quality and reduced performance on highly novel queries.\n\"\"\"\n\nprompt = f\"\"\"\nExtract the following fields from the text.\n\nTEXT:\n{abstract}\n\nReturn a JSON object with exactly these keys:\n- research_goal\n- method\n- evidence\n- limitation\n\nRules:\n- Do not invent anything not present in the text.\n- Keep each value under 25 words.\n\"\"\"\n\nprint(chat(prompt, temperature=0.2))\n\n```\n{\n  \"research_goal\": \"improving retrieval-augmented generation\",\n  \"method\": \"re-ranking passages using classifier\",\n  \"evidence\": \"improved factual consistency\",\n  \"limitation\": \"dependence on retrieval quality\"\n}\n```\n\n\n\n\n5.2 Safety check: force the model to separate facts from assumptions\nThis is especially useful when you ask the model to interpret results or summarise claims.\n\n# --- Facts vs assumptions prompt pattern ---\n\ntext = \"\"\"\nThis approach improves performance and should generalise to other datasets.\n\"\"\"\n\nprompt = f\"\"\"\nAnalyse the text below and separate:\n1) Facts explicitly stated\n2) Assumptions / claims that would need evidence\n\nTEXT:\n{text}\n\"\"\"\n\nprint(chat(prompt, temperature=0.2))\n\n**Facts explicitly stated:**\n None, the text only mentions a claim about the approach.\n\n**Assumptions / claims that would need evidence:**\n1. This approach improves performance.\n2. The approach should generalise to other datasets.",
-    "crumbs": [
-      "02_theory_and_concepts"
-    ]
-  },
-  {
-    "objectID": "02_theory_and_concepts.html#rag-in-one-minute-concept-only",
-    "href": "02_theory_and_concepts.html#rag-in-one-minute-concept-only",
-    "title": "02) Core concepts",
-    "section": "6) RAG in one minute (concept only)",
-    "text": "6) RAG in one minute (concept only)\nRAG (Retrieval-Augmented Generation) means: 1) retrieve relevant documents (papers, notes, PDFs) 2) pass the most relevant parts into the model as context 3) generate an answer that is grounded in that context\nWhy it matters: - reduces hallucination risk - enables citations (links / quotes) from provided sources - makes answers checkable\n\nWe implement RAG hands-on in the merged literature workflow notebook.",
-    "crumbs": [
-      "02_theory_and_concepts"
-    ]
-  },
-  {
-    "objectID": "02_theory_and_concepts.html#mini-exercise-23-minutes",
-    "href": "02_theory_and_concepts.html#mini-exercise-23-minutes",
-    "title": "02) Core concepts",
-    "section": "7) Mini exercise (2–3 minutes)",
-    "text": "7) Mini exercise (2–3 minutes)\nPick one research topic you care about. Ask the model for: - 3 subquestions worth investigating - a structured table describing what evidence you would need\nKeep temperature around 0.4 for this brainstorming task.\n\n# --- Mini exercise ---\n\ntopic = \"Your topic here (e.g., 'LLMs for systematic reviews in medicine')\"\n\nprompt = f\"\"\"\nTopic: {topic}\n\n1) Propose 3 specific research subquestions.\n2) For each subquestion, give a 2-column table:\n   - What evidence/data would answer it?\n   - What risks/biases could mislead us?\n\"\"\"\n\nprint(chat(prompt, temperature=0.4))\n\n**Topic: LLMs for Systematic Reviews in Medicine**\n\nHere are 3 specific research subquestions:\n\n1. Can LLMs accurately extract relevant data from medical literature?\n2. How do LLMs compare to human reviewers in terms of efficiency and accuracy in systematic reviews?\n3. Can LLMs help reduce bias in systematic reviews by identifying and mitigating potential sources of error?\n\nHere are the 2-column tables for each subquestion:\n\n**Subquestion 1: Can LLMs accurately extract relevant data from medical literature?**\n\n| What evidence/data would answer it? | What risks/biases could mislead us? |\n| --- | --- |\n| Benchmarking datasets with annotated medical texts | Overfitting to specific datasets or domains |\n| Comparison of LLM-extracted data to human-annotated gold standards | Lack of generalizability to diverse medical literature |\n\n**Subquestion 2: How do LLMs compare to human reviewers in terms of efficiency and accuracy in systematic reviews?**\n\n| What evidence/data would answer it? | What risks/biases could mislead us? |\n| --- | --- |\n| Head-to-head comparisons of LLMs and human reviewers on systematic review tasks | Selection bias in choosing which reviews to compare |\n| Time-to-completion and accuracy metrics for LLMs and human reviewers | Differences in training data or expertise between LLMs and human reviewers |\n\n**Subquestion 3: Can LLMs help reduce bias in systematic reviews by identifying and mitigating potential sources of error?**\n\n| What evidence/data would answer it? | What risks/biases could mislead us? |\n| --- | --- |\n| Analysis of LLM-identified biases and errors in systematic reviews | Overreliance on LLMs to detect biases, rather than human critical appraisal |\n| Comparison of bias detection and mitigation strategies with and without LLMs | Failure to account for LLMs' own potential biases or limitations |",
-    "crumbs": [
-      "02_theory_and_concepts"
-    ]
-  },
-  {
-    "objectID": "02_theory_and_concepts.html#wrap-up",
-    "href": "02_theory_and_concepts.html#wrap-up",
-    "title": "02) Core concepts",
-    "section": "8) Wrap-up",
-    "text": "8) Wrap-up\nKey takeaways: - Hallucinations happen — mitigate with context + structured outputs + verification prompts - Context is your strongest control lever - Temperature is a simple knob: low for extraction, medium for brainstorming - RAG makes answers more checkable (we do it next)",
-    "crumbs": [
-      "02_theory_and_concepts"
-    ]
-  },
-  {
-    "objectID": "04_llms_for_code_and_data_analysis.html",
-    "href": "04_llms_for_code_and_data_analysis.html",
-    "title": "04) LLMs for coding + data cleaning (workshop style)",
-    "section": "",
-    "text": "Goal (25–30 min): learn a reliable workflow for using an LLM to write useful code for research — with one realistic data-cleaning example.\nBy the end you will be able to: - Ask for a function with a clear goal (inputs/outputs) - Ask for test code to validate it quickly - Ask for edge cases and improve robustness - Ask the LLM to explain the code line-by-line - Ask about failure modes (when your approach can mislead)",
-    "crumbs": [
-      "04_llms_for_code_and_data_analysis"
-    ]
-  },
-  {
-    "objectID": "04_llms_for_code_and_data_analysis.html#quick-setup",
-    "href": "04_llms_for_code_and_data_analysis.html#quick-setup",
-    "title": "04) LLMs for coding + data cleaning (workshop style)",
-    "section": "1) Quick setup",
-    "text": "1) Quick setup\n\n# remove # from the line below and run if packages are not installed \n# !pip install numpy pandas matplotlib openai requests\n\n\n# We import only what we need.\nimport os  # Environment variables for API keys and configuration\nfrom openai import OpenAI  # OpenAI-compatible client (works with Groq base_url too)\n\n\nPaste your Groq API key below\nYou can also change the model if you like.\nchat() can be used to have a continuous chat. Usage: chat(“Your question”)\nchat_reset() can used to delete the history and set a new system prompt. Usage: chat_reset(“You are a helper for a bioinformatician.”) or simply chat_reset()\n\n\n# --- Setup ---\n\n# paste your key here for the session.\nos.environ[\"GROQ_API_KEY\"] = \"\"  # &lt;-- Paste key for workshop only. Do NOT share publicly.\n\n# Keep the same model string used in the workshop.\nmodel = \"llama-3.3-70b-versatile\"  # You can change this later if needed.\n\n# Keep the same base URL pattern used in the workshop.\nos.environ[\"BASE_URL\"] = \"https://api.groq.com/openai/v1\"  # Groq's OpenAI-compatible endpoint\n\n\n\n\n# Create the client using the API key and base URL.\nclient = OpenAI(\n    api_key=os.environ[\"GROQ_API_KEY\"],  # Read the key from the environment variable\n    base_url=os.environ[\"BASE_URL\"],     # Read the base URL from the environment variable\n)\n\n# We keep a small conversation history in memory to make multi-turn interactions easy.\nchat_history = []\n\ndef chat_reset(system_prompt=\"You are a helpful research assistant.\"):\n    \"\"\"Reset chat history to a single system message (in-place).\"\"\"\n    chat_history[:] = [{\"role\": \"system\", \"content\": system_prompt}]\n\nchat_reset()\n\ndef chat(user_text, temperature=0.2, max_turns=8):\n    \"\"\"Multi-turn helper that keeps a short conversation history.\n    Use this instead of calling the API directly in most workshop cells.\n    \"\"\"\n    # Add the user's message to the conversation history.\n    chat_history.append({\"role\": \"user\", \"content\": user_text})\n    \n    # Keep only the system message plus the most recent turns (to manage context length).\n    system = chat_history[:1]  # First message is the system instruction\n    recent = chat_history[-(max_turns * 2):]  # Each turn has user+assistant, hence *2\n    window = system + recent  # Final message window sent to the model\n    \n    # Make the API call.\n    resp = client.chat.completions.create(\n        model=model,         # Model name\n        messages=window,     # Conversation history window\n        temperature=temperature,  # Randomness / creativity control\n    )\n    \n    # Extract the assistant's reply text.\n    reply = resp.choices[0].message.content\n    \n    # Store the assistant reply so the next call has memory.\n    chat_history.append({\"role\": \"assistant\", \"content\": reply})\n    \n    # Return just the text (simple and workshop-friendly).\n    return reply\n\n\n\nprint(\"Setup complete. `client`, `model`, and `chat()` are available.\")\nprint(\"Testing chat function...\")\nprint(\"User: Hello LLM\")\nprint(\"Assistant: \" + chat(\"Heloo LLM\"))  # Test the chat function \n\nchat_reset()  # Reset chat history for next cells\n\nSetup complete. `client`, `model`, and `chat()` are available.\nTesting chat function...\nUser: Hello LLM\nAssistant: Hello. It's nice to meet you. Is there something I can help you with or would you like to chat? I'm here to assist you with any questions or topics you'd like to discuss.",
-    "crumbs": [
-      "04_llms_for_code_and_data_analysis"
-    ]
-  },
-  {
-    "objectID": "04_llms_for_code_and_data_analysis.html#the-llm-coding-checklist-fast",
-    "href": "04_llms_for_code_and_data_analysis.html#the-llm-coding-checklist-fast",
-    "title": "04) LLMs for coding + data cleaning (workshop style)",
-    "section": "2) The LLM coding checklist (fast)",
-    "text": "2) The LLM coding checklist (fast)\nWhen you ask an LLM to write code, include:\n\nClear goal — what the function should do\nInputs/outputs — types, columns, shapes\nConstraints — e.g. do not modify inputs in place\nEdge cases — what could break it\nExplanation — ask it to explain the code back to you\nFailure modes — ask when this approach could mislead\nIterate — run the code, show errors/output, refine\n\n\nIn this notebook we will apply most of these using one data-cleaning example.",
-    "crumbs": [
-      "04_llms_for_code_and_data_analysis"
-    ]
-  },
-  {
-    "objectID": "04_llms_for_code_and_data_analysis.html#a-realistic-example-cleaning-a-messy-dataset",
-    "href": "04_llms_for_code_and_data_analysis.html#a-realistic-example-cleaning-a-messy-dataset",
-    "title": "04) LLMs for coding + data cleaning (workshop style)",
-    "section": "3) A realistic example: cleaning a messy dataset",
-    "text": "3) A realistic example: cleaning a messy dataset\nImagine you received a CSV from a collaborator. It contains: - missing values - numeric columns stored as strings - stray whitespace in text fields - an optional date column that might need parsing\nWe will use the LLM to: 1) generate a reusable cleaning function 2) generate a small test dataset 3) improve the function for edge cases 4) discuss failure modes (when cleaning choices can bias results)\n\n# --- Create a tiny \"messy\" dataset to motivate the task ---\n\nimport pandas as pd  # Tables\nimport numpy as np   # NaN values and numeric helpers\n\n# We build a small DataFrame with common messiness patterns.\ndf_raw = pd.DataFrame({\n    \"patient_id\": [\" 001\", \"002 \", \"003\", \"004\"],          # whitespace around IDs\n    \"age\": [\"34\", None, \"29\", \"unknown\"],                   # numeric stored as strings + missing + bad token\n    \"biomarker\": [1.2, np.nan, 0.9, 1.5],                         # numeric + NaN\n    \"group\": [\" control\", \"treatment \", None, \"control\"],   # whitespace + missing\n    \"date\": [\"2024-01-05\", \"05/01/2024\", \"\", None],         # mixed formats + empty + missing\n})\n\ndf_raw\n\n\n\n\n\n\n\n\npatient_id\nage\nbiomarker\ngroup\ndate\n\n\n\n\n0\n001\n34\n1.2\ncontrol\n2024-01-05\n\n\n1\n002\nNone\nNaN\ntreatment\n05/01/2024\n\n\n2\n003\n29\n0.9\nNone\n\n\n\n3\n004\nunknown\n1.5\ncontrol\nNone",
-    "crumbs": [
-      "04_llms_for_code_and_data_analysis"
-    ]
-  },
-  {
-    "objectID": "04_llms_for_code_and_data_analysis.html#step-a-ask-for-a-cleaning-function-prompt-code",
-    "href": "04_llms_for_code_and_data_analysis.html#step-a-ask-for-a-cleaning-function-prompt-code",
-    "title": "04) LLMs for coding + data cleaning (workshop style)",
-    "section": "4) Step A — Ask for a cleaning function (prompt → code)",
-    "text": "4) Step A — Ask for a cleaning function (prompt → code)\n\nPrompt pattern\nAsk for: - a function with a clear signature - no in-place modification - minimal dependencies - readable code\nBelow we ask the LLM to generate a function named clean_research_df(df).\n\n# --- Ask the LLM for a cleaning function ---\n\n# We reset chat history so earlier prompts don't influence this code generation.\nchat_reset(\"You are a senior Python data scientist. Write clean, readable code.\")\n\nprompt = \"\"\"\nWrite a Python function named clean_research_df(df) that cleans a pandas DataFrame.\n\nRequirements:\n1) Input: a pandas DataFrame.\n2) Output: a NEW cleaned DataFrame (do NOT modify the input df in place).\n3) Strip whitespace from ALL string/object columns.\n4) For numeric-looking columns that may contain strings (e.g., '34', '29', 'unknown'):\n   - convert to numeric with errors coerced to NaN.\n5) For numeric columns, fill missing values with the column mean.\n6) If a column named 'date' exists:\n   - parse it to datetime with errors coerced to NaT.\n7) Keep the code minimal and readable (no classes).\n\nReturn ONLY Python code (no markdown).\n\"\"\"\n\ngenerated_code = chat(prompt, temperature=0.2)\n\nprint(generated_code)\n\n```python\nimport pandas as pd\nimport numpy as np\n\ndef clean_research_df(df):\n    # Create a copy of the input DataFrame to avoid modifying it in place\n    cleaned_df = df.copy()\n\n    # Strip whitespace from all string/object columns\n    for col in cleaned_df.select_dtypes(include=['object']).columns:\n        cleaned_df[col] = cleaned_df[col].str.strip()\n\n    # Convert numeric-looking columns to numeric with errors coerced to NaN\n    for col in cleaned_df.select_dtypes(include=['object']).columns:\n        cleaned_df[col] = pd.to_numeric(cleaned_df[col], errors='coerce')\n\n    # Fill missing values in numeric columns with the column mean\n    for col in cleaned_df.select_dtypes(include=['int64', 'float64']).columns:\n        cleaned_df[col] = cleaned_df[col].fillna(cleaned_df[col].mean())\n\n    # Parse 'date' column to datetime with errors coerced to NaT if it exists\n    if 'date' in cleaned_df.columns:\n        cleaned_df['date'] = pd.to_datetime(cleaned_df['date'], errors='coerce')\n\n    return cleaned_df\n```\n\n\n\n\nRun the generated code\nCopy/paste the generated function into the cell below.\n\nIn a workshop, this copy/paste step is intentional: it makes it clear what code came from the model.\n\n\n# --- Paste the generated function here ---\n# After pasting, run this cell.\n\n# Example:\n# def clean_research_df(df):\n#     ...\n\nimport pandas as pd\nimport numpy as np\n\ndef clean_research_df(df):\n    # Create a copy of the input DataFrame to avoid modifying it in place\n    cleaned_df = df.copy()\n\n    # Strip whitespace from all string/object columns\n    for col in cleaned_df.select_dtypes(include=['object', 'string']).columns:\n        cleaned_df[col] = cleaned_df[col].str.strip()\n\n    # Convert numeric-looking columns to numeric with errors coerced to NaN\n    for col in cleaned_df.select_dtypes(include=['object', 'string']).columns:\n        cleaned_df[col] = pd.to_numeric(cleaned_df[col], errors='coerce')\n\n    # Fill missing values in numeric columns with the column mean\n    for col in cleaned_df.select_dtypes(include=['int64', 'float64']).columns:\n        cleaned_df[col] = cleaned_df[col].fillna(cleaned_df[col].mean())\n\n    # Parse 'date' column to datetime with errors coerced to NaT if it exists\n    if 'date' in cleaned_df.columns:\n        cleaned_df['date'] = pd.to_datetime(cleaned_df['date'], errors='coerce')\n\n    return cleaned_df\n\n\n\nApply the function\nOnce you have pasted the function, run it on df_raw.\n\n# --- Apply the cleaning function (after you pasted it above) ---\n\ndf_clean = clean_research_df(df_raw)\ndf_clean\n\n# pass\n\n\n\n\n\n\n\n\npatient_id\nage\nbiomarker\ngroup\ndate\n\n\n\n\n0\n1\n34.0\n1.2\nNaN\nNaT\n\n\n1\n2\n31.5\n1.2\nNaN\nNaT\n\n\n2\n3\n29.0\n0.9\nNaN\nNaT\n\n\n3\n4\n31.5\n1.5\nNaN\nNaT",
-    "crumbs": [
-      "04_llms_for_code_and_data_analysis"
-    ]
-  },
-  {
-    "objectID": "04_llms_for_code_and_data_analysis.html#step-b-ask-for-test-code",
-    "href": "04_llms_for_code_and_data_analysis.html#step-b-ask-for-test-code",
-    "title": "04) LLMs for coding + data cleaning (workshop style)",
-    "section": "5) Step B — Ask for test code",
-    "text": "5) Step B — Ask for test code\nTesting doesn’t have to be fancy. Even a small “toy” test dataset plus a few checks can catch many mistakes.\n\nPrompt pattern\nAsk for a minimal test that verifies: - input not modified - whitespace removed - numeric conversion works - NaNs filled for numeric columns - date parsed if present\n\n# --- Ask the LLM for simple test code ---\n\nchat_reset(\"You write short, practical test code for a workshop.\")\n\nprompt = \"\"\"\nWrite a small Python test snippet (no pytest) to validate a function clean_research_df(df).\n\nAssume pandas is imported.\n\nThe test should:\n1) Create a small messy DataFrame.\n2) Call clean_research_df(df).\n3) Print checks that demonstrate:\n   - the original DataFrame did not change\n   - whitespace stripping worked\n   - numeric conversion worked (bad tokens become NaN)\n   - missing numeric values were filled\n   - 'date' column was parsed to datetime if present\n\nReturn ONLY Python code (no markdown).\n\"\"\"\n\ntest_code = chat(prompt, temperature=0.2)\nprint(test_code)\n\n```python\nimport pandas as pd\nimport numpy as np\n\ndef clean_research_df(df):\n    df = df.copy()\n    df = df.apply(lambda x: x.str.strip() if x.dtype == 'object' else x)\n    df = df.apply(pd.to_numeric, errors='coerce')\n    df = df.fillna(0)\n    if 'date' in df.columns:\n        df['date'] = pd.to_datetime(df['date'], errors='coerce')\n    return df\n\n# Create a small messy DataFrame\ndf = pd.DataFrame({\n    'id': [' 1 ', ' 2 ', ' 3 '],\n    'name': [' John ', ' Mary ', ' David '],\n    'age': [' 25 ', ' thirty ', ' 30 '],\n    'date': ['2022-01-01', '2022-02-02', 'not a date']\n})\n\n# Store the original DataFrame\noriginal_df = df.copy()\n\n# Call clean_research_df(df)\nclean_df = clean_research_df(df)\n\n# Print checks\nprint(\"Original DataFrame did not change:\")\nprint(original_df.equals(df))\n\nprint(\"\\nWhitespace stripping worked:\")\nprint(clean_df['name'].equals(pd.Series(['John', 'Mary', 'David'])))\n\nprint(\"\\nNumeric conversion worked:\")\nprint(clean_df['age'].equals(pd.Series([25.0, np.nan, 30.0])))\n\nprint(\"\\nMissing numeric values were filled:\")\nprint(clean_df['age'].equals(pd.Series([25.0, 0.0, 30.0])))\n\nprint(\"\\n'date' column was parsed to datetime:\")\nprint(clean_df['date'].dtype == 'datetime64[ns]')\n```",
-    "crumbs": [
-      "04_llms_for_code_and_data_analysis"
-    ]
-  },
-  {
-    "objectID": "04_llms_for_code_and_data_analysis.html#step-c-edge-cases-ask-what-could-break",
-    "href": "04_llms_for_code_and_data_analysis.html#step-c-edge-cases-ask-what-could-break",
-    "title": "04) LLMs for coding + data cleaning (workshop style)",
-    "section": "6) Step C — Edge cases: ask what could break",
-    "text": "6) Step C — Edge cases: ask what could break\nAfter you run the function once, ask: - What edge cases could break this? - How should we handle them?\nExamples: - column already numeric - all values missing (mean is NaN) - mixed types (numbers + strings) - date formats inconsistent\n\n# --- Ask for edge cases + an improved version (FIXED: includes the actual function) ---\n\nimport inspect  # Lets us extract the actual function source code from the notebook\n\n# Reset chat so the model follows instructions cleanly (but we will INCLUDE the function code explicitly)\nchat_reset(\"You are careful. Identify edge cases and improve the function. Follow instructions exactly.\")\n\n# Try to capture the function code the user actually pasted/ran earlier in the notebook.\n# This avoids triple-quote issues and ensures the LLM is reasoning about the real function.\ntry:\n    function_code = inspect.getsource(clean_research_df)\nexcept Exception as e:\n    # Fallback: if inspect can't retrieve it (rare), ask the user to paste it.\n    function_code = \"PASTE clean_research_df(df) FUNCTION CODE HERE\"\n\nprompt = f\"\"\"\nYou are reviewing and improving a Python function.\n\nFUNCTION:\n{function_code}\n\nTASK:\n1) List 5 realistic edge cases that could break this function or produce surprising results.\n2) Provide an improved version of the function that handles those edge cases.\n\nOUTPUT FORMAT:\n- Bullet list of edge cases (short)\n- Then ONLY Python code for the improved function (no markdown, no extra commentary)\n\nRULES:\n- Keep code minimal and readable.\n- Do not add extra dependencies.\n- Do not change the function name (must remain clean_research_df).\n\"\"\"\n\nedge_case_response = chat(prompt, temperature=0.2)\nprint(edge_case_response)\n\n* Empty DataFrame\n* DataFrame with no string or object columns\n* DataFrame with no numeric columns\n* DataFrame with a 'date' column that is not in a parseable format\n* DataFrame with columns that have a mix of numeric and non-numeric data\n\n```python\nimport pandas as pd\nimport numpy as np\n\ndef clean_research_df(df):\n    if df.empty:\n        return df\n\n    cleaned_df = df.copy()\n\n    for col in cleaned_df.select_dtypes(include=['object', 'string']).columns:\n        cleaned_df[col] = cleaned_df[col].str.strip()\n\n    for col in cleaned_df.select_dtypes(include=['object', 'string']).columns:\n        try:\n            cleaned_df[col] = pd.to_numeric(cleaned_df[col], errors='coerce')\n        except ValueError:\n            pass\n\n    for col in cleaned_df.select_dtypes(include=['int64', 'float64']).columns:\n        if cleaned_df[col].notnull().any():\n            cleaned_df[col] = cleaned_df[col].fillna(cleaned_df[col].mean())\n        else:\n            cleaned_df[col] = cleaned_df[col].fillna(0)\n\n    if 'date' in cleaned_df.columns:\n        try:\n            cleaned_df['date'] = pd.to_datetime(cleaned_df['date'], errors='coerce')\n        except ValueError:\n            pass\n\n    return cleaned_df\n```",
-    "crumbs": [
-      "04_llms_for_code_and_data_analysis"
-    ]
-  },
-  {
-    "objectID": "04_llms_for_code_and_data_analysis.html#step-d-ask-the-model-to-explain-the-code",
-    "href": "04_llms_for_code_and_data_analysis.html#step-d-ask-the-model-to-explain-the-code",
-    "title": "04) LLMs for coding + data cleaning (workshop style)",
-    "section": "7) Step D — Ask the model to explain the code",
-    "text": "7) Step D — Ask the model to explain the code\nThis is a very effective habit. It helps you: - understand what the model wrote - spot silent errors - learn patterns you can reuse\n\n# --- Ask for an explanation of YOUR function (correct version) ---\n\nchat_reset(\"Explain code clearly to a researcher. Be concise.\")\n\n# Try to capture the function code the user actually pasted/ran earlier in the notebook.\n# This avoids triple-quote issues and ensures the LLM is reasoning about the real function.\ntry:\n    function_code = inspect.getsource(clean_research_df)\nexcept Exception as e:\n    # Fallback: if inspect can't retrieve it (rare), ask the user to paste it.\n    function_code = \"PASTE clean_research_df(df) FUNCTION CODE HERE\"\n    \n    \n\nprompt = f'''Explain the following Python function line by line in simple terms.\nAlso point out 3 places where silent mistakes could happen.\n\nFUNCTION:\n{function_code}\n'''\n\nexplanation = chat(prompt, temperature=0.2)\nprint(explanation)\n\nHere's a line-by-line explanation of the function:\n\n1. `def clean_research_df(df):` \n   - This line defines a function named `clean_research_df` that takes one argument, `df`, which is expected to be a pandas DataFrame.\n\n2. `cleaned_df = df.copy()` \n   - This line creates a copy of the input DataFrame `df` and assigns it to `cleaned_df`. This is done to avoid modifying the original DataFrame.\n\n3. `for col in cleaned_df.select_dtypes(include=['object', 'string']).columns:` \n   - This line starts a loop that will iterate over all columns in `cleaned_df` that contain string or object data types.\n\n4. `cleaned_df[col] = cleaned_df[col].str.strip()` \n   - Inside the loop, this line removes leading and trailing whitespace from all string values in the current column.\n\n5. `for col in cleaned_df.select_dtypes(include=['object', 'string']).columns:` \n   - This line starts another loop that will iterate over the same columns as before (those with string or object data types).\n\n6. `cleaned_df[col] = pd.to_numeric(cleaned_df[col], errors='coerce')` \n   - Inside the loop, this line attempts to convert the values in the current column to numeric values. If a value cannot be converted, it will be replaced with NaN (Not a Number).\n\n7. `for col in cleaned_df.select_dtypes(include=['int64', 'float64']).columns:` \n   - This line starts a loop that will iterate over all columns in `cleaned_df` that contain integer or floating-point data types.\n\n8. `cleaned_df[col] = cleaned_df[col].fillna(cleaned_df[col].mean())` \n   - Inside the loop, this line replaces any missing values (NaN) in the current column with the mean value of that column.\n\n9. `if 'date' in cleaned_df.columns:` \n   - This line checks if `cleaned_df` has a column named 'date'.\n\n10. `cleaned_df['date'] = pd.to_datetime(cleaned_df['date'], errors='coerce')` \n    - If the 'date' column exists, this line attempts to convert its values to datetime format. If a value cannot be converted, it will be replaced with NaT (Not a Time).\n\n11. `return cleaned_df` \n    - This line returns the cleaned DataFrame.\n\nAs for silent mistakes, here are three potential issues:\n\n1. **Overwriting numeric columns**: In the second loop, the function attempts to convert all string/object columns to numeric. However, if a column was previously converted to numeric in the first loop (because it contained numeric-looking strings), this conversion will overwrite the existing numeric values with NaN if they cannot be converted again. To avoid this, the function should only attempt to convert columns that were not already converted to numeric.\n\n2. **Mean calculation with NaN**: When calculating the mean of a column to fill missing values, the function will ignore NaN values. However, if a column contains only NaN values, the mean will also be NaN, and the function will not replace the NaN values. To avoid this, the function should check if a column contains only NaN values before attempting to calculate its mean.\n\n3. **Loss of original data types**: The function converts all string/object columns to numeric, which can lead to loss of original data types. For example, if a column contains a mix of numeric and non-numeric strings, the non-numeric strings will be replaced with NaN. To avoid this, the function should preserve the original data types of columns that cannot be converted to numeric.",
-    "crumbs": [
-      "04_llms_for_code_and_data_analysis"
-    ]
-  },
-  {
-    "objectID": "04_llms_for_code_and_data_analysis.html#step-e-failure-modes-research-thinking",
-    "href": "04_llms_for_code_and_data_analysis.html#step-e-failure-modes-research-thinking",
-    "title": "04) LLMs for coding + data cleaning (workshop style)",
-    "section": "8) Step E — Failure modes (research thinking)",
-    "text": "8) Step E — Failure modes (research thinking)\nCleaning choices can change your conclusions.\nFor example: - mean imputation can shrink variance - missingness might be systematic (not random) - stripping whitespace might merge categories unintentionally - date parsing might silently fail and create missing timestamps\nHere we ask the model to reason about when this approach could mislead.\n\n# --- Ask about failure modes ---\n\nchat_reset(\"You are a careful applied statistician. Focus on research risks.\")\n\n# Try to capture the function code the user actually pasted/ran earlier in the notebook.\n# This avoids triple-quote issues and ensures the LLM is reasoning about the real function.\ntry:\n    function_code = inspect.getsource(clean_research_df)\nexcept Exception as e:\n    # Fallback: if inspect can't retrieve it (rare), ask the user to paste it.\n    function_code = \"PASTE clean_research_df(df) FUNCTION CODE HERE\"\n    \n\nprompt = \"\"\"\nIn the cleaning approach we used (whitespace stripping, numeric coercion, mean imputation, date parsing):\n\n1) List 5 ways these choices could mislead downstream analysis.\n2) For each, suggest one simple mitigation a researcher could do quickly.\n\nKeep it practical and not too long.\n\nFUNCTION:\n{function_code}\n\"\"\"\n\nrisks = chat(prompt, temperature=0.2)\nprint(risks)\n\nHere are 5 ways the cleaning approach could mislead downstream analysis, along with a simple mitigation for each:\n\n1. **Loss of meaningful zeros**: Whitespace stripping and numeric coercion might remove meaningful zeros, leading to incorrect interpretations.\nMitigation: Verify that zeros are correctly preserved by checking a sample of data before and after cleaning.\n\n2. **Over-imputation**: Mean imputation might over-estimate or under-estimate values, especially for skewed distributions.\nMitigation: Use a simple visualization (e.g., histogram) to check the distribution of imputed values against the original data.\n\n3. **Date parsing errors**: Incorrect date parsing might lead to incorrect time-related analyses.\nMitigation: Spot-check a sample of parsed dates against the original data to ensure accuracy.\n\n4. **Masking of outliers**: Mean imputation might mask outliers, leading to incorrect models or conclusions.\nMitigation: Use a simple outlier detection method (e.g., boxplot) to identify potential outliers before imputing missing values.\n\n5. **Ignoring data context**: Automated cleaning might ignore important context-specific information (e.g., missing values indicating a specific condition).\nMitigation: Review the data cleaning process with a domain expert to ensure that context-specific information is preserved and correctly interpreted.\n\nThese mitigations can help researchers quickly identify and address potential issues in their data cleaning approach.",
-    "crumbs": [
-      "04_llms_for_code_and_data_analysis"
-    ]
-  },
-  {
-    "objectID": "04_llms_for_code_and_data_analysis.html#wrap-up",
-    "href": "04_llms_for_code_and_data_analysis.html#wrap-up",
-    "title": "04) LLMs for coding + data cleaning (workshop style)",
-    "section": "9) Wrap-up",
-    "text": "9) Wrap-up\nWhat you learned: - How to prompt for a function with a clear goal - How to prompt for quick test code - How to improve robustness via edge cases - How to use explanation + failure modes to build trust\nKey habit: treat the LLM like a fast collaborator. You still run the code, check outputs, and decide what is scientifically appropriate.",
-    "crumbs": [
-      "04_llms_for_code_and_data_analysis"
     ]
   }
 ]

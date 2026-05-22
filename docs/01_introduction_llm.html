@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>01 — Introduction to LLMs for Research (Hands‑on) – Fundamentals of Regression</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -67,15 +70,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-a35d343c8bdbcb87d3b82ed68e48a46c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-a2a938b4dd5711f7a799c87bd16ba44c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -130,9 +132,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="./index.html" class="sidebar-logo-link">
-      </a>
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Large Language Models for Research</a> 
     </div>
@@ -251,7 +251,7 @@ You <em>can</em> look at the underlying API call, but you don’t need to.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove # from the line below and run if packages are not installed </span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># !pip install numpy pandas matplotlib openai requests</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="99e9c1ee" class="cell" data-execution_count="1">
+<div id="99e9c1ee" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard library: access environment variables safely</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os  <span class="co"># used for storing API keys and configuration</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -270,28 +270,34 @@ In a real project, it’s better to set keys as environment variables (not in a 
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># For safer setups, prefer environment variables or secret managers (especially if sharing notebooks).</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"GROQ_API_KEY"</span>] <span class="op">=</span> <span class="st">""</span>  <span class="co"># &lt;-- replace with your key.</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="st">"llama-3.3-70b-versatile"</span>  <span class="co"># Select a model: https://console.groq.com/docs/models</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"BASE_URL"</span>] <span class="op">=</span> <span class="st">"https://api.groq.com/openai/v1"</span>  <span class="co"># Groq uses an OpenAI-compatible API base URL.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"BASE_URL"</span>] <span class="op">=</span> <span class="st">"https://api.groq.com/openai/v1"</span>  <span class="co"># Groq uses an OpenAI-compatible API base URL.</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"MODEL"</span>] <span class="op">=</span> <span class="st">"llama-3.3-70b-versatile"</span>  <span class="co"># Select a model: https://console.groq.com/docs/models</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="create-a-client" class="level2">
 <h2 class="anchored" data-anchor-id="create-a-client">3) Create a client</h2>
 <p>The <code>OpenAI</code> client can point to different providers as long as they implement the OpenAI API. Here we point it to Groq’s base URL and authenticate using your key.</p>
-<div id="7749485c" class="cell" data-execution_count="3">
+<div id="7749485c" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read configuration from the environment (so it’s in one place).</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If the key is missing, calls will fail with an authentication error.</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>api_key <span class="op">=</span> os.environ[<span class="st">"GROQ_API_KEY"</span>]  <span class="co"># your Groq API key (string)</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>base_url <span class="op">=</span> os.environ[<span class="st">"BASE_URL"</span>]     <span class="co"># Groq's OpenAI-compatible endpoint base URL</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a client instance.</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># This object will be reused for the rest of the workshop.</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI(</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span>api_key,   <span class="co"># authentication</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span>base_url  <span class="co"># provider endpoint</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick sanity check: print a short confirmation message.</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"✅ Client initialized"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>base_url <span class="op">=</span> os.environ.get(<span class="st">"BASE_URL"</span>, <span class="st">"https://api.groq.com/openai/v1"</span>)     <span class="co"># Groq's OpenAI-compatible endpoint base URL</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> os.environ.get(<span class="st">"MODEL"</span>, <span class="st">"llama-3.3-70b-versatile"</span>)  <span class="co"># Select a model: https://console.groq.com/docs/models</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a client instance.</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># This object will be reused for the rest of the workshop.</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI(</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span>api_key,   <span class="co"># authentication</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span>base_url  <span class="co"># provider endpoint</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.responses.create(</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span>model,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span><span class="op">=</span><span class="st">"Tell me a fun fact about the moon in one sentence."</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick sanity check: print a short confirmation message.</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"✅ Client initialized"</span>)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.output_text)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>✅ Client initialized</code></pre>
 </div>
@@ -305,7 +311,7 @@ In a real project, it’s better to set keys as environment variables (not in a 
 <li><code>content</code>: the text for that message</li>
 </ul>
 <p>The model reads the messages and returns the assistant’s next reply.</p>
-<div id="9a08e730" class="cell" data-execution_count="4">
+<div id="9a08e730" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a minimal message list.</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># - The system message sets the style/rules.</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># - The user message is your question/instruction.</span></span>
@@ -315,14 +321,14 @@ In a real project, it’s better to set keys as environment variables (not in a 
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>]</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Call the chat completion endpoint.</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.responses.create(</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span>model,        <span class="co"># which model to use</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>messages,  <span class="co"># conversation so far</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    temperature<span class="op">=</span><span class="fl">0.2</span>,    <span class="co"># low randomness for factual, stable answers</span></span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the assistant text safely (this is the part you usually want).</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>reply_text <span class="op">=</span> response.choices[<span class="dv">0</span>].message.content  <span class="co"># the generated assistant reply</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>reply_text <span class="op">=</span> response.output_text  <span class="co"># the generated assistant reply</span></span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(reply_text)  <span class="co"># display the result</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A large language model (LLM) is a type of artificial intelligence (AI) designed to process and understand human language, typically trained on vast amounts of text data to generate human-like responses. LLMs use complex algorithms and neural networks to learn patterns and relationships in language, enabling them to perform tasks such as language translation, text summarization, and conversation generation.</code></pre>
@@ -332,7 +338,7 @@ In a real project, it’s better to set keys as environment variables (not in a 
 <section id="optional-inspect-the-response-object" class="level2">
 <h2 class="anchored" data-anchor-id="optional-inspect-the-response-object">5) (Optional) Inspect the response object</h2>
 <p>Sometimes you want to debug: - which model was used - token usage / metadata (if provided) - full structured payload</p>
-<div id="511424fc" class="cell" data-execution_count="5">
+<div id="511424fc" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Many modern OpenAI-style clients support `model_dump()` (Pydantic-style).</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If it's not available, we fall back to casting to a plain dict (best-effort).</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> response.model_dump() <span class="cf">if</span> <span class="bu">hasattr</span>(response, <span class="st">"model_dump"</span>) <span class="cf">else</span> <span class="bu">dict</span>(response)  <span class="co"># safe conversion</span></span>
@@ -367,60 +373,57 @@ Usage: {'completion_tokens': 75, 'prompt_tokens': 61, 'total_tokens': 136, 'comp
 <li><code>chat_reset(...)</code> — deletes history and sets system prompt</li>
 </ol>
 <p>This keeps things simple: participants only need to call <code>chat()</code> without worrying about API details.</p>
-<div id="7158ffc7" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the client using the API key and base URL.</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI(</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span>os.environ[<span class="st">"GROQ_API_KEY"</span>],  <span class="co"># Read the key from the environment variable</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span>os.environ[<span class="st">"BASE_URL"</span>],     <span class="co"># Read the base URL from the environment variable</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># We keep a small conversation history in memory to make multi-turn interactions easy.</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>chat_history <span class="op">=</span> []</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chat_reset(system_prompt<span class="op">=</span><span class="st">"You are a helpful research assistant."</span>):</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Reset chat history to a single system message (in-place)."""</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    chat_history[:] <span class="op">=</span> [{<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: system_prompt}]</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>chat_reset()</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chat(user_text, temperature<span class="op">=</span><span class="fl">0.2</span>, max_turns<span class="op">=</span><span class="dv">8</span>):</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Multi-turn helper that keeps a short conversation history.</span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">    Use this instead of calling the API directly in most workshop cells.</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add the user's message to the conversation history.</span></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: user_text})</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Keep only the system message plus the most recent turns (to manage context length).</span></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    system <span class="op">=</span> chat_history[:<span class="dv">1</span>]  <span class="co"># First message is the system instruction</span></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    recent <span class="op">=</span> chat_history[<span class="op">-</span>(max_turns <span class="op">*</span> <span class="dv">2</span>):]  <span class="co"># Each turn has user+assistant, hence *2</span></span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> system <span class="op">+</span> recent  <span class="co"># Final message window sent to the model</span></span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make the API call.</span></span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    resp <span class="op">=</span> client.chat.completions.create(</span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>model,         <span class="co"># Model name</span></span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>window,     <span class="co"># Conversation history window</span></span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>        temperature<span class="op">=</span>temperature,  <span class="co"># Randomness / creativity control</span></span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract the assistant's reply text.</span></span>
-<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    reply <span class="op">=</span> resp.choices[<span class="dv">0</span>].message.content</span>
-<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Store the assistant reply so the next call has memory.</span></span>
-<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: reply})</span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return just the text (simple and workshop-friendly).</span></span>
-<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> reply</span>
-<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Setup complete. `client`, `model`, and `chat()` are available."</span>)</span>
-<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Testing chat function..."</span>)</span>
-<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"User: Hello LLM"</span>)</span>
-<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Assistant: "</span> <span class="op">+</span> chat(<span class="st">"Heloo LLM"</span>))  <span class="co"># Test the chat function </span></span>
-<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>chat_reset()  <span class="co"># Reset chat history for next cells</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="7158ffc7" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the client using the API key and base URL.</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span>os.environ[<span class="st">"GROQ_API_KEY"</span>],  <span class="co"># Read the key from the environment variable</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span>os.environ.get(<span class="st">"BASE_URL"</span>, <span class="st">"https://api.groq.com/openai/v1"</span>)    <span class="co"># Read the base URL from the environment variable</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> os.environ.get(<span class="st">"MODEL"</span>, <span class="st">"llama-3.3-70b-versatile"</span>)  <span class="co"># Select a model: https://console.groq.com/docs/models</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># We keep a small conversation history in memory to make multi-turn interactions easy.</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>chat_history <span class="op">=</span> []</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chat_reset(system_prompt<span class="op">=</span><span class="st">"You are a helpful research assistant."</span>):</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Reset chat history to a single system message (in-place)."""</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    chat_history[:] <span class="op">=</span> [{<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: system_prompt}]</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>chat_reset()</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chat(user_text, temperature<span class="op">=</span><span class="fl">0.2</span>, max_turns<span class="op">=</span><span class="dv">8</span>):</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Multi-turn helper that keeps a short conversation history.</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">    Use this instead of calling the API directly in most workshop cells.</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add the user's message to the conversation history.</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: user_text})</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Keep only the system message plus the most recent turns (to manage context length).</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    system <span class="op">=</span> chat_history[:<span class="dv">1</span>]  <span class="co"># First message is the system instruction</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    recent <span class="op">=</span> chat_history[<span class="op">-</span>(max_turns <span class="op">*</span> <span class="dv">2</span>):]  <span class="co"># Each turn has user+assistant, hence *2</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> system <span class="op">+</span> recent  <span class="co"># Final message window sent to the model</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make the API call.</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    resp <span class="op">=</span> client.responses.create(</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>model,         <span class="co"># Model name</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>window,     <span class="co"># Conversation history window</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        temperature<span class="op">=</span>temperature,  <span class="co"># Randomness / creativity control</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract the assistant's reply text.</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    reply <span class="op">=</span> resp.output_text</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Store the assistant reply so the next call has memory.</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    chat_history.append({<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: reply})</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return just the text (simple and workshop-friendly).</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> reply</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Setup complete. `client`, `model`, and `chat()` are available."</span>)</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Testing chat function..."</span>)</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"User: Hello LLM"</span>)</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Assistant: "</span> <span class="op">+</span> chat(<span class="st">"Hello LLM"</span>))  <span class="co"># Test the chat function </span></span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>chat_reset()  <span class="co"># Reset chat history for next cells</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Setup complete. `client`, `model`, and `chat()` are available.
 Testing chat function...
@@ -442,13 +445,12 @@ Assistant: Hello. It's nice to meet you. Is there something I can help you with 
 <section id="exercise-c-propose-search-keywords" class="level3">
 <h3 class="anchored" data-anchor-id="exercise-c-propose-search-keywords">Exercise C — propose search keywords</h3>
 <p>Ask the model to propose arXiv/Google Scholar keywords for a research question.</p>
-<div id="8296dec0" class="cell" data-execution_count="7">
+<div id="8296dec0" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise A: rewrite for clarity (replace the text with your own).</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> <span class="st">"This paper introduces a method that can potentially improve performance in some tasks."</span>  <span class="co"># example sentence</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="st">"Rewrite this sentence to be clearer and more specific, without adding new facts:</span><span class="ch">\n\n</span><span class="st">"</span> <span class="op">+</span> text</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(prompt</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(prompt))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>This paper presents a method that may enhance performance in certain specific tasks.</code></pre>
 </div>
@@ -482,7 +484,7 @@ Assistant: Hello. It's nice to meet you. Is there something I can help you with 
 ```</code></pre>
 </div>
 </div>
-<div id="f3bac598" class="cell" data-execution_count="9">
+<div id="f3bac598" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise C: generate search keywords for a literature review.</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>question <span class="op">=</span> <span class="st">"How are LLMs used to accelerate hypothesis generation in biomedical research?"</span>  <span class="co"># example topic</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -490,9 +492,7 @@ Assistant: Hello. It's nice to meet you. Is there something I can help you with 
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="st">    Group them into 3 themes and keep them concise.</span><span class="ch">\n\n</span><span class="st">"</span></span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="st">    Question: """</span> <span class="op">+</span> question</span>
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(prompt</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(chat(prompt))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Here are 10 search keywords/phrases grouped into 3 themes:
 
@@ -605,7 +605,7 @@ Assistant: Hello. It's nice to meet you. Is there something I can help you with 
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/qcif-training\.github\.io\/llm_workshop\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
