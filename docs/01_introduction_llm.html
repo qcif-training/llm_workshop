@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -74,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-a2a938b4dd5711f7a799c87bd16ba44c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -202,13 +202,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#your-first-chat-call" id="toc-your-first-chat-call" class="nav-link" data-scroll-target="#your-first-chat-call">4) Your first chat call</a></li>
   <li><a href="#optional-inspect-the-response-object" id="toc-optional-inspect-the-response-object" class="nav-link" data-scroll-target="#optional-inspect-the-response-object">5) (Optional) Inspect the response object</a></li>
   <li><a href="#helper-functions-the-workshop-style" id="toc-helper-functions-the-workshop-style" class="nav-link" data-scroll-target="#helper-functions-the-workshop-style">6) Helper functions (the workshop style)</a></li>
-  <li><a href="#quick-exercises" id="toc-quick-exercises" class="nav-link" data-scroll-target="#quick-exercises">8) Quick exercises</a>
+  <li><a href="#quick-exercises" id="toc-quick-exercises" class="nav-link" data-scroll-target="#quick-exercises">7) Quick exercises</a>
   <ul class="collapse">
   <li><a href="#exercise-a-rewrite-for-clarity" id="toc-exercise-a-rewrite-for-clarity" class="nav-link" data-scroll-target="#exercise-a-rewrite-for-clarity">Exercise A — rewrite for clarity</a></li>
   <li><a href="#exercise-b-extract-structured-fields" id="toc-exercise-b-extract-structured-fields" class="nav-link" data-scroll-target="#exercise-b-extract-structured-fields">Exercise B — extract structured fields</a></li>
   <li><a href="#exercise-c-propose-search-keywords" id="toc-exercise-c-propose-search-keywords" class="nav-link" data-scroll-target="#exercise-c-propose-search-keywords">Exercise C — propose search keywords</a></li>
   </ul></li>
-  <li><a href="#wrap-up" id="toc-wrap-up" class="nav-link" data-scroll-target="#wrap-up">9) Wrap-up</a></li>
+  <li><a href="#wrap-up" id="toc-wrap-up" class="nav-link" data-scroll-target="#wrap-up">8) Wrap-up</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/blob/main/01_introduction_llm.ipynb" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Moji131/Fundamentals-of-Regression/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -320,10 +320,10 @@ In a real project, it’s better to set keys as environment variables (not in a 
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"Explain what a large language model (LLM) is in two sentences."</span>},  <span class="co"># task</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>]</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Call the chat completion endpoint.</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Call the response API endpoint.</span></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.responses.create(</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span>model,        <span class="co"># which model to use</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>messages,  <span class="co"># conversation so far</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span><span class="op">=</span>messages,     <span class="co"># conversation so far</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    temperature<span class="op">=</span><span class="fl">0.2</span>,    <span class="co"># low randomness for factual, stable answers</span></span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
@@ -405,7 +405,7 @@ Usage: {'completion_tokens': 75, 'prompt_tokens': 61, 'total_tokens': 136, 'comp
 <span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make the API call.</span></span>
 <span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    resp <span class="op">=</span> client.responses.create(</span>
 <span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>model,         <span class="co"># Model name</span></span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>window,     <span class="co"># Conversation history window</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        <span class="bu">input</span><span class="op">=</span>window,     <span class="co"># Conversation history window</span></span>
 <span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        temperature<span class="op">=</span>temperature,  <span class="co"># Randomness / creativity control</span></span>
 <span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -433,7 +433,7 @@ Assistant: Hello. It's nice to meet you. Is there something I can help you with 
 </div>
 </section>
 <section id="quick-exercises" class="level2">
-<h2 class="anchored" data-anchor-id="quick-exercises">8) Quick exercises</h2>
+<h2 class="anchored" data-anchor-id="quick-exercises">7) Quick exercises</h2>
 <section id="exercise-a-rewrite-for-clarity" class="level3">
 <h3 class="anchored" data-anchor-id="exercise-a-rewrite-for-clarity">Exercise A — rewrite for clarity</h3>
 <p>Provide a sentence from your current draft and ask for a clearer version.</p>
@@ -516,7 +516,7 @@ Assistant: Hello. It's nice to meet you. Is there something I can help you with 
 </section>
 </section>
 <section id="wrap-up" class="level2">
-<h2 class="anchored" data-anchor-id="wrap-up">9) Wrap-up</h2>
+<h2 class="anchored" data-anchor-id="wrap-up">8) Wrap-up</h2>
 <p>You now have:</p>
 <ul>
 <li>A working Groq/OpenAI-compatible client</li>
