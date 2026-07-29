@@ -25,7 +25,7 @@ website:
       - text: 05_ethics_and_wrapup
         href: 05_ethics_and_wrapup.ipynb
       - text: 📦 Download All Notebooks
-        href: notebooks.zip
+        href: llm_notebooks.zip
 
   repo-url: "https://github.com/Moji131/llm_workshop"   # <-- replace after creating repo
   repo-actions: [source, issue]
