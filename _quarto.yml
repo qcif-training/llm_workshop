@@ -6,7 +6,7 @@ project:
 
 website:
   # The title of your website, which appears in the browser tab and sidebar.
-  title: "Fundamentals of Regression"
+  title: "Large Language Models for Research"
 
   sidebar:
     title: "Large Language Models for Research"
@@ -27,7 +27,7 @@ website:
       - text: 📦 Download All Notebooks
         href: notebooks.zip
 
-  repo-url: "https://github.com/Moji131/Fundamentals-of-Regression"   # <-- replace after creating repo
+  repo-url: "https://github.com/Moji131/llm_workshop"   # <-- replace after creating repo
   repo-actions: [source, issue]
 
 # This section controls the default appearance and formatting for the HTML output.
